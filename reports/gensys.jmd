@@ -1,0 +1,68 @@
+---
+title: A Julia Implementation of Gensys
+author: Gilberto Boareto & Daniel Coutinho
+date: October, 2019
+options:
+  md2tex:
+    out_path: output/gensys.tex
+  md2html:
+      out_path: output/gensys.html
+  out_path: output/gensys.md
+---
+
+# Introduction
+
+This document is a white paper on our implementation of gensys, the solution method developed by Sims (2002). Our implementation follows closely Sims's paper and the description in Miao (2014). In general, one takes a model written as:
+
+$$\Gamma_0 y_t = \Gamma_1 y_{t-1} + \Psi \varepsilon_t + \Pi \eta_t$$
+
+In which $y_t$ are the variables today, $\varepsilon_t$ is a vector of exogenous shocks and $\eta_t$ is a vector of endogenous errors, i.e. expectational errors.
+
+ Sims's method allows for a $\Gamma_0$ that is singular. Instead of determining some variables as _jump_ and others as _predetermined_, as Blanchard and Khan (1980) or Klein (2000), Sims's allows it to be done endogenously by the algorithm.
+
+Sims's method has another remarkable difference from the previous methods: instead of "root counting" - checking that the number of eigenvalues larger than 1 equals the number of _jump_ variables and the number of eigenvalues smaller than 1 equals the number of _predetermined_ variables - Sims's algorithm relies on ensuring that the expectational errors are linear combinations of the exogenous shocks. We will go into more details in the next section.
+
+We implement this in Julia. Julia is a modern programming language focused on scientific computing, trying to balance speed and ease to use. Julia has reached maturity only recently. However, there is a large number of packages written for Julia. Thomas Sargent is probably the most famous economist with ties with Julia, dedicating a whole section of his website to the language and how-to solve standard models in economics using Julia - although this does not include large scale DSGEs. [The Federal Reserve Bank of New York (FED-NY) implemented their DSGE on Julia.](https://juliacomputing.com/case-studies/ny-fed.html) By their own account, this sped up estimation ten fold and solving the model was eleven times faster. Given the time it takes to estimate even a medium DSGE model, these gains are not negligibles. Moreover, Julia has a large numerical linear algebra library that comes out of the box (you don't need to install anything besides Julia). This is valuable given that we will work with _linear_ models.
+
+This white paper is divided as follows: in the next section, we briefly discuss two methods of numerical linear algebra that will be used in our implementation: the Schur Decomposition (also called the QZ decomposition) and the Singular Value Decomposition (SVD); section three concisely presents the algorithm and our implementation; section four presents a small example from Gali (2008), which has analytical solution - this allows us to make sure that our implementation is sound; section five concludes.
+
+# Numerical Linear Algebra
+
+We will use two decompositions of matrices: the Schur Decomposition and the Singular Value Decomposition (SVD). Both are closely related to the more well known eigenvalue decomposition:
+
+$$A = P^{-1}\Lambda P$$
+
+In which $\Lambda$ is a diagonal matrix. In general, $P$ is not orthonormal. The eigenvectors matrix, $P$, is orthonormal, i.e. $P^{-1} = P'$ in some cases, for example, if A is normal (Symmetric matrices are normal).  
+
+The Schur Decomposition tries to find a decomposition	of the same form of the eigenvalue decomposition, but instead of imposing that $\Lambda$ is diagonal, we now want that P$ be orthonormal. So the Schur Decomposition then finds:
+
+$$A = Q'SQ$$
+
+Remarkably $S$ is always an upper triangular matrix.
+
+We will be actually interested in the Generalized Schur Decomposition. To understand this one, lets first understand what is the generalized eigenvalue. In the usual eigenvalue problem, we want to find a vector $\mathbf{x}$ and a value $\lambda$ such that:
+
+$$Ax = \lambda x$$
+
+Rewritting this in matricial terms, we want:
+
+$$(A - \lambda I)x = 0$$
+
+In which $I$ stands for the identity matrix. Now, what if we want to solve the following problem:
+
+$$Ax = \lambda{}Bx$$
+
+We can find matrices such that $B = P^{-1}P$ and $A = P^{-1}\Lambda{}P$, in which $\Lambda$ is a diagonal matrix.   
+
+The idea for the Generalized Schur Decomposition will be the same, but now we want to find matrices $Q,Z,S,T$ such that:
+
+1. $Q$ and $Z$ are orthonormal
+2. $S$ and $T$ are upper triangular
+3. $A = QSZ$
+4. $B = QTZ$
+5. $\forall i$ $S_{ii}, T_{ii}$ are not zero
+6. The pairs $(S_{ii}, T_{ii})$ can be arranged in any order
+
+Item 6 will be particularly useful in what follows
+
+The SVD also follows the idea from the eigenvalue problem. Now the idea is to decompose A as $USV'$, in which S is a diagonal matrix and both $U$ and $V$ are orthonormal.
