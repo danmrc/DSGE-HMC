@@ -27,6 +27,8 @@ LAMBDA_v = ((1-bet*rho_v)*(sig*(1-rho_v)+phi_y)+kappa*(phi_pi-rho_v))^(-1)
 
 y_irf(v) = -(1-bet*rho_v)*LAMBDA_v*v
 pi_irf(v) = -kappa*LAMBDA_v*v
+r_irf(v) = sig*(1-rho_v)*(1-bet*rho_v)*LAMBDA_v*v
+i_irf(v) = (sig*(1-rho_v)*(1-bet*rho_v) - rho_v*kappa)*LAMBDA_v*v
 v(v,uu) = rho_v*v + uu
 
 ## Test drive: lets see if this gives the same IRFs that we get in Gali's book
@@ -34,7 +36,7 @@ v(v,uu) = rho_v*v + uu
 
 using Plots
 
-irfs = zeros(13,3)
+irfs = zeros(13,5)
 
 irfs[1,1] = 0
 
@@ -44,9 +46,13 @@ for t in 2:13
     irfs[t,1] = v(irfs[t-1,1],uu)
     irfs[t,2] = pi_irf(irfs[t,1])
     irfs[t,3] = y_irf(irfs[t,1])
+    irfs[t,4] = i_irf(irfs[t,1])
+    irfs[t,5] = r_irf(irfs[t,1])
     global uu = 0
 end
 
 plot(irfs[2:13,1], label = "v")
 plot(irfs[2:13,2]*4, label = "pi")
 plot(irfs[2:13,3], label = "y")
+plot(4*irfs[2:13,4], label = "i")
+plot(4*irfs[2:13,5], label = "r")
