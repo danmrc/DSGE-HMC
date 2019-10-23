@@ -676,7 +676,7 @@ div.title {text-align: center;}
 <p class="math">\[
 A = P^{-1}\Lambda P
 \]</p>
-<p>In which <span class="math">$\Lambda$</span> is a diagonal matrix. In general, <span class="math">$P$</span> is not orthonormal. The eigenvectors matrix, <span class="math">$P$</span>, is orthonormal, i.e. <span class="math">$P^{-1} = P'$</span> in some cases, for example, if A is normal &#40;Symmetric matrices are normal&#41;.  </p>
+<p>In which <span class="math">$\Lambda$</span> is a diagonal matrix. In general, <span class="math">$P$</span> is not orthonormal. The eigenvectors matrix, <span class="math">$P$</span>, is orthonormal, i.e. <span class="math">$P^{-1} = P'$</span> in some cases, for example, if A is normal &#40;Symmetric matrices are normal&#41;.</p>
 <p>The Schur Decomposition tries to find a decomposition	of the same form of the eigenvalue decomposition, but instead of imposing that <span class="math">$\Lambda$</span> is diagonal, we now want that P&#36; be orthonormal. So the Schur Decomposition then finds:</p>
 <p class="math">\[
 A = Q'SQ
@@ -694,7 +694,7 @@ Ax = \lambda x
 <p class="math">\[
 Ax = \lambda{}Bx
 \]</p>
-<p>We can find matrices such that <span class="math">$B = P^{-1}P$</span> and <span class="math">$A = P^{-1}\Lambda{}P$</span>, in which <span class="math">$\Lambda$</span> is a diagonal matrix.   </p>
+<p>We can find matrices such that <span class="math">$B = P^{-1}P$</span> and <span class="math">$A = P^{-1}\Lambda{}P$</span>, in which <span class="math">$\Lambda$</span> is a diagonal matrix.</p>
 <p>The idea for the Generalized Schur Decomposition will be the same, but now we want to find matrices <span class="math">$Q,Z,S,T$</span> such that:</p>
 <ol>
 <li><p class="math">\[
@@ -773,7 +773,37 @@ irf &#40;generic function with 1 method&#41;
 i_t = \phi_{\pi} \pi_t + \phi_{\tilde{y}} \tilde{y}_t + v_t
 v_t = \rho_v v_{t-1} + \varepsilon_t^v
 \]</p>
-<p>The first step is to write <span class="math">$\eta_t^{\pi} = \pi_t - E_{t-1} \pi_t$</span> and <span class="math">$\eta_t^{\tilde{y}} = \tilde{y}_t - E_{t-1} \tilde{y}_t$</span></p>
+<p>The first step is to write <span class="math">$\eta_t^{\pi} = \pi_t - E_{t-1} \pi_t$</span> and <span class="math">$\eta_t^{\tilde{y}} = \tilde{y}_t - E_{t-1} \tilde{y}_t$</span>. Now, use this to isolate to write the expectations as function of the true value plus the expectational error - <span class="math">$E_t(\pi_{t+1}) = \pi_t + \eta_t^{\pi}$</span> for example.</p>
+<p>This allows us to write the system above as follows:</p>
+<p>And it is straight foward to write the matrices<span class="math">$\Gamma_0$</span>, <span class="math">$\Gamma_1$</span>, <span class="math">$\Psi$</span>, <span class="math">$\Pi$</span>, as follows:</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>GAMMA_0</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-n'>bet</span><span class='hljl-t'>    </span><span class='hljl-ni'>0</span><span class='hljl-t'>     </span><span class='hljl-ni'>0</span><span class='hljl-t'>  </span><span class='hljl-ni'>0</span><span class='hljl-p'>;</span><span class='hljl-t'>
+           </span><span class='hljl-ni'>1</span><span class='hljl-t'>      </span><span class='hljl-n'>sig</span><span class='hljl-t'>   </span><span class='hljl-ni'>0</span><span class='hljl-t'>  </span><span class='hljl-ni'>0</span><span class='hljl-p'>;</span><span class='hljl-t'>
+           </span><span class='hljl-ni'>0</span><span class='hljl-t'>      </span><span class='hljl-ni'>0</span><span class='hljl-t'>     </span><span class='hljl-ni'>0</span><span class='hljl-t'>  </span><span class='hljl-ni'>0</span><span class='hljl-p'>;</span><span class='hljl-t'>
+           </span><span class='hljl-ni'>0</span><span class='hljl-t'>      </span><span class='hljl-ni'>0</span><span class='hljl-t'>     </span><span class='hljl-ni'>0</span><span class='hljl-t'>  </span><span class='hljl-ni'>1</span><span class='hljl-p'>]</span><span class='hljl-t'>
+
+</span><span class='hljl-n'>GAMMA_1</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-t'>      </span><span class='hljl-oB'>-</span><span class='hljl-n'>kappa</span><span class='hljl-t'>  </span><span class='hljl-ni'>0</span><span class='hljl-t'>  </span><span class='hljl-ni'>0</span><span class='hljl-p'>;</span><span class='hljl-t'>
+           </span><span class='hljl-ni'>0</span><span class='hljl-t'>       </span><span class='hljl-n'>sig</span><span class='hljl-t'>    </span><span class='hljl-ni'>1</span><span class='hljl-t'>  </span><span class='hljl-ni'>0</span><span class='hljl-p'>;</span><span class='hljl-t'>
+           </span><span class='hljl-oB'>-</span><span class='hljl-n'>phi_pi</span><span class='hljl-t'>  </span><span class='hljl-oB'>-</span><span class='hljl-n'>phi_y</span><span class='hljl-t'>  </span><span class='hljl-ni'>1</span><span class='hljl-t'> </span><span class='hljl-oB'>-</span><span class='hljl-ni'>1</span><span class='hljl-p'>;</span><span class='hljl-t'>
+           </span><span class='hljl-ni'>0</span><span class='hljl-t'>       </span><span class='hljl-ni'>0</span><span class='hljl-t'>      </span><span class='hljl-ni'>0</span><span class='hljl-t'>  </span><span class='hljl-n'>rho_v</span><span class='hljl-p'>]</span><span class='hljl-t'>
+
+</span><span class='hljl-n'>PSI</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-ni'>0</span><span class='hljl-p'>;</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-p'>;</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-p'>;</span><span class='hljl-t'> </span><span class='hljl-ni'>1</span><span class='hljl-p'>]</span><span class='hljl-t'>
+
+</span><span class='hljl-n'>PI</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-n'>bet</span><span class='hljl-t'>  </span><span class='hljl-ni'>0</span><span class='hljl-p'>;</span><span class='hljl-t'>
+      </span><span class='hljl-ni'>1</span><span class='hljl-t'>    </span><span class='hljl-n'>sig</span><span class='hljl-p'>;</span><span class='hljl-t'>
+      </span><span class='hljl-ni'>0</span><span class='hljl-t'>    </span><span class='hljl-ni'>0</span><span class='hljl-p'>;</span><span class='hljl-t'>
+      </span><span class='hljl-ni'>0</span><span class='hljl-t'>    </span><span class='hljl-ni'>0</span><span class='hljl-p'>]</span>
+</pre>
+
+
+4×2 Array{Float64,2}:
+ 0.99  0.0
+ 1.0   1.0
+ 0.0   0.0
+ 0.0   0.0
+
 
 
 

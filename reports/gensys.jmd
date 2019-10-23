@@ -32,7 +32,7 @@ We will use two decompositions of matrices: the Schur Decomposition and the Sing
 
 $$A = P^{-1}\Lambda P$$
 
-In which $\Lambda$ is a diagonal matrix. In general, $P$ is not orthonormal. The eigenvectors matrix, $P$, is orthonormal, i.e. $P^{-1} = P'$ in some cases, for example, if A is normal (Symmetric matrices are normal).  
+In which $\Lambda$ is a diagonal matrix. In general, $P$ is not orthonormal. The eigenvectors matrix, $P$, is orthonormal, i.e. $P^{-1} = P'$ in some cases, for example, if A is normal (Symmetric matrices are normal).
 
 The Schur Decomposition tries to find a decomposition	of the same form of the eigenvalue decomposition, but instead of imposing that $\Lambda$ is diagonal, we now want that P$ be orthonormal. So the Schur Decomposition then finds:
 
@@ -52,7 +52,7 @@ In which $I$ stands for the identity matrix. Now, what if we want to solve the f
 
 $$Ax = \lambda{}Bx$$
 
-We can find matrices such that $B = P^{-1}P$ and $A = P^{-1}\Lambda{}P$, in which $\Lambda$ is a diagonal matrix.   
+We can find matrices such that $B = P^{-1}P$ and $A = P^{-1}\Lambda{}P$, in which $\Lambda$ is a diagonal matrix.
 
 The idea for the Generalized Schur Decomposition will be the same, but now we want to find matrices $Q,Z,S,T$ such that:
 
@@ -95,8 +95,8 @@ rho_v = 0.5
 THETA = (1-alfa)/(1-alfa+alfa*epsilon)
 lamb = (1-theta)*(1-bet*theta)/theta*THETA
 kappa = lamb*(sig+(phi+alfa)/(1-alfa))
+```
 
-```  
 We refer the reader to Gali's book for knowing what each parameter means. Next, we need to write the usual model in Sim's format. Let us repeat the three equations of the usual model:
 
 $$
@@ -106,4 +106,77 @@ i_t = \phi_{\pi} \pi_t + \phi_{\tilde{y}} \tilde{y}_t + v_t
 v_t = \rho_v v_{t-1} + \varepsilon_t^v
 $$
 
-The first step is to write $\eta_t^{\pi} = \pi_t - E_{t-1} \pi_t$ and $\eta_t^{\tilde{y}} = \tilde{y}_t - E_{t-1} \tilde{y}_t$
+Gali's book gives an analytical solution for the impulse response functions for a shock v_t. This can be found on page 51. We implement them in Julia as well:
+
+```julia
+
+LAMBDA_v = ((1-bet*rho_v)*(sig*(1-rho_v)+phi_y)+kappa*(phi_pi-rho_v))^(-1)
+
+y_irf(v) = -(1-bet*rho_v)*LAMBDA_v*v
+pi_irf(v) = -kappa*LAMBDA_v*v
+r_irf(v) = sig*(1-rho_v)*(1-bet*rho_v)*LAMBDA_v*v
+i_irf(v) = (sig*(1-rho_v)*(1-bet*rho_v) - rho_v*kappa)*LAMBDA_v*v
+v(v,uu) = rho_v*v + uu
+```
+
+And we compute a sample IRF for a positive 25 basis shock in the interest rate:
+
+
+```julia
+
+irfs_true = zeros(15,5)
+
+irfs_true[1,1] = 0
+
+uu = 0.25
+
+for t in 2:15
+    irfs_true[t,4] = v(irfs_true[t-1,4],uu)
+    irfs_true[t,1] = pi_irf(irfs_true[t,4])
+    irfs_true[t,2] = y_irf(irfs_true[t,4])
+    irfs_true[t,3] = i_irf(irfs_true[t,4])
+    irfs_true[t,5] = r_irf(irfs_true[t,4])
+    global uu = 0
+end
+```
+
+Now lets solve it numerically: the first step is to write $\eta_t^{\pi} = \pi_t - E_{t-1} \pi_t$ and $\eta_t^{\tilde{y}} = \tilde{y}_t - E_{t-1} \tilde{y}_t$. Now, use this to isolate to write the expectations as function of the true value plus the expectational error - $E_t(\pi_{t+1}) = \pi_t + \eta_t^{\pi}$ for example.
+
+This allows us to write the system above as follows:
+
+And it is straight foward to write the matrices$\Gamma_0$, $\Gamma_1$, $\Psi$, $\Pi$, as follows:
+
+```julia
+
+GAMMA_0 = [bet    0     0  0;
+           1      sig   0  0;
+           0      0     0  0;
+           0      0     0  1]
+
+GAMMA_1 = [1      -kappa  0  0;
+           0       sig    1  0;
+           -phi_pi  -phi_y  1 -1;
+           0       0      0  rho_v]
+
+PSI = [0; 0; 0; 1]
+
+PI = [bet  0;
+      1    sig;
+      0    0;
+      0    0]
+```
+
+And we just call the function with this matrices:
+
+```julia
+T1,T2,eu = gensys(GAMMA_0,GAMMA_1,PSI,PI)
+
+irfs = irf(T1,T2,15,0.25)
+```
+
+Lets compare the IRFs. Starting with the Inflation response:
+
+```julia
+plot(4*irfs[:,1], label = "Inflation gensys")
+plot!(4*irfs_true[2:15,1], label = "Inflation True", )
+```
