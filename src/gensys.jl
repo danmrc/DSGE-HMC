@@ -42,11 +42,16 @@ function gensys(G0,G1,Psi,Pi)
         @info "Unique and Stable Solution"
         U1 = svd_Q2Pi.U[:,1:r]
         Xi = Q1*Pi*svd_Q2Pi.V*inv(Diagonal(svd_Q2Pi.S))*U1' #bottom of p 46
+
         Aux1 = S12-Xi*S22
+
         larg1 = size(Aux1,2)
         Aux2 = [S11 Aux1;zeros(larg1,size(S11,2)) Matrix(I,larg1,larg1)]
         larg2 = size(Aux2,2)
         larg2 = larg2 - size(T11,1)
+
+        ##Matrices on top of p. 46
+
         Theta1 = [T11 T12-Xi*T22;zeros(larg2,n)]
         Theta1 = decomp_1.Z*inv(Aux2)*Theta1*decomp_1.Z'
         Theta2 = [Q1 - Xi*Q2;zeros(larg2,n)]
