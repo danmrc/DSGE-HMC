@@ -7,7 +7,7 @@ using LinearAlgebra
 
 function gensys(G0,G1,Psi,Pi)
     decomp_1 = schur(G0,G1)
-    gen_eigen = abs.(decomp_1.alpha ./ decomp_1.beta)
+    gen_eigen = abs.(decomp_1.beta ./ decomp_1.alpha)
     ordschur!(decomp_1, gen_eigen .< 1)
     n = size(G0,1)
     ns = findfirst(sort(gen_eigen) .> 1) -1 #finding the number of stable roots
@@ -23,7 +23,7 @@ function gensys(G0,G1,Psi,Pi)
     Q1 = decomp_1.Q[1:ns,:]
     Q2 = decomp_1.Q[(ns+1):n,:]
 
-    Q2Pi = Q2*Pi #This is equation2.25 in p. 46 Miao (2014)
+    Q2Pi = Q2*Pi #This is equation 2.25 in p. 46 Miao (2014)
 
     m = size(Q2Pi,2)
 
@@ -33,7 +33,7 @@ function gensys(G0,G1,Psi,Pi)
     #Checking existence and uniqueness see p. 46-47, Miao (2014)
     if m > r
         eu = [1;0]
-        @warn "Not Unique Solution"
+        @warn "No Unique Solution"
     elseif m < r
         eu = [0;0]
         @warn "No solution"

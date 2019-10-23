@@ -2,9 +2,6 @@
 ### We use this as a consistency check of gensys implementation
 ### By Daniel Coutinho and Gilberto Boaretto
 
-### TODO
-### IRF for interest rate, real and nominal
-
 #### Parameters from Gali's book example, chapter 3, page 52, first edition
 
 bet = 0.99
@@ -34,7 +31,7 @@ v(v,uu) = rho_v*v + uu
 ## Test drive: lets see if this gives the same IRFs that we get in Gali's book
 ## This is just for debugging, so comment it out when using it to check gensys consistency
 
-using Plots
+#using Plots
 
 irfs = zeros(13,5)
 
@@ -51,8 +48,8 @@ for t in 2:13
     global uu = 0
 end
 
-plot(irfs[2:13,1], label = "v")
-plot(irfs[2:13,2]*4, label = "pi")
-plot(irfs[2:13,3], label = "y")
-plot(4*irfs[2:13,4], label = "i")
-plot(4*irfs[2:13,5], label = "r")
+#plot(irfs[2:13,1], label = "v")
+#plot(irfs[2:13,2]*4, label = "pi")
+#plot(irfs[2:13,3], label = "y")
+#plot(4*irfs[2:13,4], label = "i")
+#plot(4*irfs[2:13,5], label = "r")

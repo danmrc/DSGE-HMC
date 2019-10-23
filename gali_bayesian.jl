@@ -1,3 +1,5 @@
+include("galis_example.jl")
+
 GAMMA_0 = [bet    0     0  0;
            1      sig  -1  0;
            0      0     1  0;
