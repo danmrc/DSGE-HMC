@@ -5,12 +5,19 @@
 
 using LinearAlgebra
 
+struct Sims
+    Theta1
+    Theta2
+    Theta3
+    eu
+end
+
 function gensys(G0,G1,Psi,Pi)
     decomp_1 = schur(G0,G1)
     gen_eigen = abs.(decomp_1.beta ./ decomp_1.alpha)
     ordschur!(decomp_1, gen_eigen .< 1)
     n = size(G0,1)
-    ns = findfirst(sort(gen_eigen) .> 1) -1 #finding the number of stable roots
+    ns = findfirst(sort(gen_eigen) .> 1) -1 #finding the number of stable roots: find first unstable root
     nu = n - ns
     S11 = decomp_1.S[1:ns,1:ns]
     S12 = decomp_1.S[1:ns,(ns+1):n]
@@ -20,8 +27,10 @@ function gensys(G0,G1,Psi,Pi)
     T12 = decomp_1.T[1:ns,(ns+1):n]
     T22 = decomp_1.T[(ns+1):n,(ns+1):n]
 
-    Q1 = decomp_1.Q[1:ns,:]
-    Q2 = decomp_1.Q[(ns+1):n,:]
+    Qt = decomp_1.Q'
+
+    Q1 = Qt[1:ns,:]
+    Q2 = Qt[(ns+1):n,:]
 
     Q2Pi = Q2*Pi #This is equation 2.25 in p. 46 Miao (2014)
 
@@ -56,6 +65,8 @@ function gensys(G0,G1,Psi,Pi)
         Theta1 = decomp_1.Z*inv(Aux2)*Theta1*decomp_1.Z'
         Theta2 = [Q1 - Xi*Q2;zeros(larg2,n)]
         Theta2 = decomp_1.Z*inv(Aux2)*Theta2*Psi
+        Theta3 = zeros(n,n)
+        #ans = Sims(Theta1,Theta2,Theta3,eu)
         return Theta1,Theta2,eu
     end
 end
