@@ -38,12 +38,27 @@ function gensys(G0,G1,Psi,Pi)
         eu = [0;0]
         @warn "No solution"
     else
+        eu = [1;1]
         @info "Unique and Stable Solution"
         U1 = svd_Q2Pi.U[:,1:r]
-        Xi = Q1*Pi*svd_Q2Pi.V*inv(Diagonal(svd_Q2Pi.S))*U1'
-
+        Xi = Q1*Pi*svd_Q2Pi.V*inv(Diagonal(svd_Q2Pi.S))*U1' #bottom of p 46
+        Aux1 = S12-Xi*S22
+        larg1 = size(Aux1,2)
+        Aux2 = [S11 Aux1;zeros(larg1,size(S11,2)) Matrix(I,larg1,larg1)]
+        larg2 = size(Aux2,2)
+        larg2 = larg2 - size(T11,1)
+        Theta1 = [T11 T12-Xi*T22;zeros(larg2,n)]
+        Theta1 = decomp_1.Z*inv(Aux2)*Theta1*decomp_1.Z'
+        Theta2 = [Q1 - Xi*Q2;zeros(larg2,n)]
+        Theta2 = decomp_1.Z*inv(Aux2)*Theta2*Psi
+        return Theta1,Theta2,eu
     end
+end
 
-
-
+function irf(Theta1,Theta2,t,impulse)
+    ans = zeros((t+1),size(Theta1,1))
+    for j in 0:t
+        ans[(j+1),:] = Theta1^j*Theta2*impulse
+    end
+    return ans
 end

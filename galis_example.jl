@@ -33,18 +33,18 @@ v(v,uu) = rho_v*v + uu
 
 #using Plots
 
-irfs = zeros(13,5)
+irfs_true = zeros(15,5)
 
-irfs[1,1] = 0
+irfs_true[1,1] = 0
 
 uu = 0.25
 
-for t in 2:13
-    irfs[t,1] = v(irfs[t-1,1],uu)
-    irfs[t,2] = pi_irf(irfs[t,1])
-    irfs[t,3] = y_irf(irfs[t,1])
-    irfs[t,4] = i_irf(irfs[t,1])
-    irfs[t,5] = r_irf(irfs[t,1])
+for t in 2:15
+    irfs_true[t,4] = v(irfs_true[t-1,4],uu)
+    irfs_true[t,1] = pi_irf(irfs_true[t,4])
+    irfs_true[t,2] = y_irf(irfs_true[t,4])
+    irfs_true[t,3] = i_irf(irfs_true[t,4])
+    irfs_true[t,5] = r_irf(irfs_true[t,4])
     global uu = 0
 end
 
