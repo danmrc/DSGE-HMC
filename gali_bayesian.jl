@@ -11,7 +11,7 @@ GAMMA_1 = [1      -kappa  0  0;
 PSI = [0; 0; 0; 1]
 
 PI = [bet  0;
-      1   -sig;
+      1    sig;
       0    0;
       0    0]
 
