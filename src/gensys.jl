@@ -66,8 +66,8 @@ function gensys(G0,G1,Psi,Pi)
         Theta2 = [Q1 - Xi*Q2;zeros(larg2,n)]
         Theta2 = decomp_1.Z*inv(Aux2)*Theta2*Psi
         Theta3 = zeros(n,n)
-        #ans = Sims(Theta1,Theta2,Theta3,eu)
-        return Theta1,Theta2,eu
+        ans = Sims(Theta1,Theta2,Theta3,eu)
+        return ans#Theta1,Theta2,eu
     end
 end
 
@@ -77,4 +77,8 @@ function irf(Theta1,Theta2,t,impulse)
         ans[(j+1),:] = Theta1^j*Theta2*impulse
     end
     return ans
+end
+
+function irf(model::Sims,t,impulse)
+    irf(model.Theta1,model.Theta2,t,impulse)
 end
