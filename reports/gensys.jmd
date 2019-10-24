@@ -203,9 +203,9 @@ print(string("\$\$\\Pi = \$\$",latexify(PI)))
 And we just call the function with this matrices:
 
 ```julia
-T1,T2,eu = gensys(GAMMA_0,GAMMA_1,PSI,PI)
+sol = gensys(GAMMA_0,GAMMA_1,PSI,PI)
 
-irfs = irf(T1,T2,15,0.25)
+irfs = irf(sol,15,0.25)
 ```
 
 Lets compare the IRFs generated analyticaly and by our implementation of Gensys:
