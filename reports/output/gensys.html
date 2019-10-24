@@ -773,7 +773,7 @@ irf &#40;generic function with 1 method&#41;
 i_t = \phi_{\pi} \pi_t + \phi_{\tilde{y}} \tilde{y}_t + v_t\\
 v_t = \rho_v v_{t-1} + \varepsilon_t^v
 \]</p>
-<p>Gali&#39;s book gives an analytical solution for the impulse response functions for a shock v_t. This can be found on page 51. We implement them in Julia as well:</p>
+<p>Gali&#39;s book gives an analytical solution for the impulse response functions for a shock <span class="math">$v_t$</span>. This can be found on page 51. We implement them in Julia as well:</p>
 
 
 <pre class='hljl'>
@@ -816,7 +816,13 @@ v &#40;generic function with 1 method&#41;
 
 <p>Now lets solve it numerically: the first step is to write <span class="math">$\eta_t^{\pi} = \pi_t - E_{t-1} \pi_t$</span> and <span class="math">$\eta_t^{\tilde{y}} = \tilde{y}_t - E_{t-1} \tilde{y}_t$</span>. Now, use this to isolate to write the expectations as function of the true value plus the expectational error - <span class="math">$E_t(\pi_{t+1}) = \pi_t + \eta_t^{\pi}$</span> for example.</p>
 <p>This allows us to write the system above as follows:</p>
-<p>And it is straight foward to write the matrices<span class="math">$\Gamma_0$</span>, <span class="math">$\Gamma_1$</span>, <span class="math">$\Psi$</span>, <span class="math">$\Pi$</span>, as follows:</p>
+<p class="math">\[
+\pi_{t-1} - \kappa \tilde{y}_{t-1} + \beta \eta_t^{\pi} = \beta \pi_t\\
+\sigma\tilde{y}_{t-1} + i_{t-1} + \eta_t^{\pi} + \sigma \eta_t^{\tilde{y}} = \pi_t + \sigma \tilde{y}_t\\
+i_{t-1} - \phi_{\pi}\pi_{t-1} - \phi_{\tilde{y}} \tilde{y}_{t-1} - v_{t-1} = 0\\
+v_t = \rho v_{t-1} + \varepsilon^v_t
+\]</p>
+<p>And it is straight foward to write the matrices <span class="math">$\Gamma_0$</span>, <span class="math">$\Gamma_1$</span>, <span class="math">$\Psi$</span>, <span class="math">$\Pi$</span>, as follows:</p>
 
 
 <pre class='hljl'>
@@ -846,6 +852,82 @@ v &#40;generic function with 1 method&#41;
  0.0   0.0
  0.0   0.0
 </pre>
+
+
+<p>Here are LaTeX versions of the matrices generated automatically with the package <em>latexify</em>, from the inputed matrices for Julia:</p>
+
+
+<pre class='hljl'>
+<span class='hljl-k'>using</span><span class='hljl-t'> </span><span class='hljl-n'>Latexify</span><span class='hljl-t'>
+
+</span><span class='hljl-nf'>print</span><span class='hljl-p'>(</span><span class='hljl-nf'>string</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;</span><span class='hljl-se'>\$\$\\</span><span class='hljl-s'>Gamma_0 = </span><span class='hljl-se'>\$\$</span><span class='hljl-s'>&quot;</span><span class='hljl-p'>,</span><span class='hljl-nf'>latexify</span><span class='hljl-p'>(</span><span class='hljl-n'>GAMMA_0</span><span class='hljl-p'>)))</span>
+</pre>
+
+
+$$\Gamma_0 = $$\begin{equation}
+\left[
+\begin{array}{cccc}
+0.99 & 0.0 & 0.0 & 0.0 \\
+1.0 & 1.0 & 0.0 & 0.0 \\
+0.0 & 0.0 & 0.0 & 0.0 \\
+0.0 & 0.0 & 0.0 & 1.0 \\
+\end{array}
+\right]
+\end{equation}
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>print</span><span class='hljl-p'>(</span><span class='hljl-nf'>string</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;</span><span class='hljl-se'>\$\$\\</span><span class='hljl-s'>Gamma_1 = </span><span class='hljl-se'>\$\$</span><span class='hljl-s'>&quot;</span><span class='hljl-p'>,</span><span class='hljl-nf'>latexify</span><span class='hljl-p'>(</span><span class='hljl-n'>GAMMA_1</span><span class='hljl-p'>)))</span>
+</pre>
+
+
+$$\Gamma_1 = $$\begin{equation}
+\left[
+\begin{array}{cccc}
+1.0 & -0.12750000000000006 & 0.0 & 0.0 \\
+0.0 & 1.0 & 1.0 & 0.0 \\
+-1.5 & -0.125 & 1.0 & -1.0 \\
+0.0 & 0.0 & 0.0 & 0.5 \\
+\end{array}
+\right]
+\end{equation}
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>print</span><span class='hljl-p'>(</span><span class='hljl-nf'>string</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;</span><span class='hljl-se'>\$\$\\</span><span class='hljl-s'>Psi = </span><span class='hljl-se'>\$\$</span><span class='hljl-s'>&quot;</span><span class='hljl-p'>,</span><span class='hljl-nf'>latexify</span><span class='hljl-p'>(</span><span class='hljl-n'>PSI</span><span class='hljl-p'>)))</span>
+</pre>
+
+
+$$\Psi = $$\begin{equation}
+\left[
+\begin{array}{c}
+0 \\
+0 \\
+0 \\
+1 \\
+\end{array}
+\right]
+\end{equation}
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>print</span><span class='hljl-p'>(</span><span class='hljl-nf'>string</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;</span><span class='hljl-se'>\$\$\\</span><span class='hljl-s'>Pi = </span><span class='hljl-se'>\$\$</span><span class='hljl-s'>&quot;</span><span class='hljl-p'>,</span><span class='hljl-nf'>latexify</span><span class='hljl-p'>(</span><span class='hljl-n'>PI</span><span class='hljl-p'>)))</span>
+</pre>
+
+
+$$\Pi = $$\begin{equation}
+\left[
+\begin{array}{cc}
+0.99 & 0.0 \\
+1.0 & 1.0 \\
+0.0 & 0.0 \\
+0.0 & 0.0 \\
+\end{array}
+\right]
+\end{equation}
 
 
 <p>And we just call the function with this matrices:</p>
@@ -929,7 +1011,7 @@ v &#40;generic function with 1 method&#41;
           <div class="footer"><p>
           Published from <a href="gensys.jmd">gensys.jmd</a> using
           <a href="http://github.com/mpastell/Weave.jl">Weave.jl</a>
-           on 2019-10-23.
+           on 2019-10-24.
           <p></div>
 
 

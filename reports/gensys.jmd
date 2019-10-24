@@ -106,7 +106,7 @@ i_t = \phi_{\pi} \pi_t + \phi_{\tilde{y}} \tilde{y}_t + v_t\\
 v_t = \rho_v v_{t-1} + \varepsilon_t^v
 $$
 
-Gali's book gives an analytical solution for the impulse response functions for a shock v_t. This can be found on page 51. We implement them in Julia as well:
+Gali's book gives an analytical solution for the impulse response functions for a shock $v_t$. This can be found on page 51. We implement them in Julia as well:
 
 ```julia
 
@@ -144,7 +144,14 @@ Now lets solve it numerically: the first step is to write $\eta_t^{\pi} = \pi_t 
 
 This allows us to write the system above as follows:
 
-And it is straight foward to write the matrices$\Gamma_0$, $\Gamma_1$, $\Psi$, $\Pi$, as follows:
+$$
+\pi_{t-1} - \kappa \tilde{y}_{t-1} + \beta \eta_t^{\pi} = \beta \pi_t\\
+\sigma\tilde{y}_{t-1} + i_{t-1} + \eta_t^{\pi} + \sigma \eta_t^{\tilde{y}} = \pi_t + \sigma \tilde{y}_t\\
+i_{t-1} - \phi_{\pi}\pi_{t-1} - \phi_{\tilde{y}} \tilde{y}_{t-1} - v_{t-1} = 0\\
+v_t = \rho v_{t-1} + \varepsilon^v_t
+$$
+
+And it is straight foward to write the matrices $\Gamma_0$, $\Gamma_1$, $\Psi$, $\Pi$, as follows:
 
 ```julia
 
@@ -164,6 +171,33 @@ PI = [bet  0;
       1    sig;
       0    0;
       0    0]
+```
+
+Here are LaTeX versions of the matrices generated automatically with the package _latexify_, from the inputed matrices for Julia:
+
+```julia; results = "tex"
+
+using Latexify
+
+print(string("\$\$\\Gamma_0 = \$\$",latexify(GAMMA_0)))
+
+```
+
+```julia; results = "tex"
+
+print(string("\$\$\\Gamma_1 = \$\$",latexify(GAMMA_1)))
+
+```
+```julia; results = "tex"
+
+print(string("\$\$\\Psi = \$\$",latexify(PSI)))
+
+```
+
+```julia; results = "tex"
+
+print(string("\$\$\\Pi = \$\$",latexify(PI)))
+
 ```
 
 And we just call the function with this matrices:
