@@ -102,7 +102,7 @@ We refer the reader to Gali's book for knowing what each parameter means. Next, 
 $$
 \pi_t = \beta E_t(\pi_{t+1}) + \kappa \tilde{y}_t\\
 \tilde{y}_t = -\frac{1}{\sigma} (i_t - E_t(\pi_{t+1})) + E_t(\tilde{y}_{t+1})\\
-i_t = \phi_{\pi} \pi_t + \phi_{\tilde{y}} \tilde{y}_t + v_t
+i_t = \phi_{\pi} \pi_t + \phi_{\tilde{y}} \tilde{y}_t + v_t\\
 v_t = \rho_v v_{t-1} + \varepsilon_t^v
 $$
 
@@ -174,9 +174,30 @@ T1,T2,eu = gensys(GAMMA_0,GAMMA_1,PSI,PI)
 irfs = irf(T1,T2,15,0.25)
 ```
 
-Lets compare the IRFs. Starting with the Inflation response:
+Lets compare the IRFs generated analyticaly and by our implementation of Gensys:
 
 ```julia
-plot(4*irfs[:,1], label = "Inflation gensys")
-plot!(4*irfs_true[2:15,1], label = "Inflation True", )
+plot(4*irfs[:,1], label = "Inflation Gensys", w =3)
+plot!(4*irfs_true[2:15,1], label = "Inflation Analytical", line = :dash, w =3)
+title!("Inflation response for a 0.25 shock in interest rate")
 ```
+
+```julia
+plot(irfs[:,2], label = "Output Gap Gensys", w = 3)
+plot!(irfs_true[2:15,2], label = "Output Gap Analytical", line = :dash, w = 3)
+title!("Output Gap response for a 0.25 shock in interest rate")
+```
+
+```julia
+plot(4*irfs[:,3], label = "Interest Rate Gensys", w = 3)
+plot!(4*irfs_true[2:15,3], label = "Interest Rate Analytical", line = :dash, w = 3)
+title!("Nominal Interest response for a 0.25 shock in interest rate")
+```
+
+```julia
+plot(irfs[:,4], label = "v Gensys", w = 3)
+plot!(irfs_true[2:15,4], label = "v Analytical", line = :dash, w = 3)
+title!("v response for a 0.25 shock in interest rate")
+```
+
+The impulse response are identical between the two methods, which is a strong evidence of the reliability and precision of our implementation of Gensys, Gensys itself and Julia capabilities to handle linear algebra routines.
