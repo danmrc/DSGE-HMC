@@ -26,7 +26,7 @@ y_irf(v) = -(1-bet*rho_v)*LAMBDA_v*v
 pi_irf(v) = -kappa*LAMBDA_v*v
 r_irf(v) = sig*(1-rho_v)*(1-bet*rho_v)*LAMBDA_v*v
 i_irf(v) = (sig*(1-rho_v)*(1-bet*rho_v) - rho_v*kappa)*LAMBDA_v*v
-v(v,uu) = rho_v*v + uu
+v_irf(v,uu) = rho_v*v + uu
 
 ## Test drive: lets see if this gives the same IRFs that we get in Gali's book
 ## This is just for debugging, so comment it out when using it to check gensys consistency
@@ -40,7 +40,7 @@ irfs_true[1,1] = 0
 uu = 0.25
 
 for t in 2:15
-    irfs_true[t,4] = v(irfs_true[t-1,4],uu)
+    irfs_true[t,4] = v_irf(irfs_true[t-1,4],uu)
     irfs_true[t,1] = pi_irf(irfs_true[t,4])
     irfs_true[t,2] = y_irf(irfs_true[t,4])
     irfs_true[t,3] = i_irf(irfs_true[t,4])
