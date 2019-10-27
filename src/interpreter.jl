@@ -1,10 +1,13 @@
 using DynamicPolynomials
+using NamedArrays
 
 struct gensys_sys
     Gamma0::AbstractArray
     Gamma1::AbstractArray
     Psi::AbstractArray
     Pi::AbstractArray
+    backward::AbstractArray
+    forward::AbstractArray
 end
 
 function find_expectations(variables)
@@ -125,6 +128,8 @@ function model2gensys(model,shocks)
     lags = find_lags(vari_all)
     f_vars, expec_errors, expecs_aux = declare_aux_variables(expecs)
 
+    expec_errors_names = expec_errors
+
     expecs_aux = eval.(Meta.parse.(expecs_aux))
     f_vars = eval.(Meta.parse.(f_vars))
     expec_errors = eval.(Meta.parse.(expec_errors))
@@ -134,6 +139,9 @@ function model2gensys(model,shocks)
     cur_w_f = get_current_from_foward(vari_all,f_vars)
     only_cur = setdiff(currents,[cur_w_lags;cur_w_f;shocks])
 
+    #print(only_cur)
+
+    #SUbstituting the expectations variable by their counterpart true value + expectation error
 
     for j in 1:length(expecs)
         for i in keys(model)
@@ -144,12 +152,31 @@ function model2gensys(model,shocks)
     foward_variables = [f_vars;setdiff(currents,[cur_w_f; shocks; only_cur])]
     backward_variables = [setdiff(currents,[cur_w_lags; shocks;only_cur]); lags; only_cur]
 
+    if length(foward_variables) >= length(backward_variables)
+        var_names = [repr(vars) for vars in foward_variables]
+    else
+        var_names = [repr(vars) for vars in backward_variables]
+    end
+
+    shock_names = [repr(vars) for vars in shocks]
+
+    #println(backward_variables)
+    #println(foward_variables)
+
     #Building each matrix
 
-    Gamma1 = zeros(length(model),length(model))
-    Gamma0 = zeros(length(model),length(model))
-    Psi = zeros(length(model),length(shocks))
-    Pi =  zeros(length(model),length(expec_errors))
+    Gamma1 = NamedArray(zeros(length(model),length(model)))
+    setnames!(Gamma1,var_names,1)
+    setnames!(Gamma1,var_names,2)
+    Gamma0 = NamedArray(zeros(length(model),length(model)))
+    setnames!(Gamma0,var_names,1)
+    setnames!(Gamma0,var_names,1)
+    Psi = NamedArray(zeros(length(model),length(shocks)))
+    setnames!(Psi,var_names,1)
+    setnames!(Psi,shock_names,2)
+    Pi =  NamedArray(zeros(length(model),length(expec_errors)))
+    setnames!(Pi,var_names,1)
+    setnames!(Pi,expec_errors_names,2)
 
     #Gamma 0
 
@@ -186,5 +213,17 @@ function model2gensys(model,shocks)
             Pi[index,j] = coefficient(model[i],expec_errors[j])
         end
     end
-    return gensys_sys(Gamma0,Gamma1,Psi,Pi)
+    return gensys_sys(Gamma0,Gamma1,Psi,Pi,backward_variables,foward_variables)
+end
+
+function gensys(gensys_sys::gensys_sys)
+    var_names = names(gensys_sys.Gamma0,1)
+    ans = gensys(Array(gensys_sys.Gamma0),Array(gensys_sys.Gamma1),Array(gensys_sys.Psi),Array(gensys_sys.Pi))
+    T1 = NamedArray(ans.Theta1)
+    setnames!(T1,var_names,1)
+    T2 = NamedArray(ans.Theta2)
+    setnames!(T2,var_names,1)
+    T3 = NamedArray(ans.Theta3)
+    setnames!(T3,var_names,1)
+    return Sims(T1,T2,T3,ans.eu)
 end

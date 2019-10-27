@@ -18,13 +18,13 @@ $$\Gamma_0 y_t = \Gamma_1 y_{t-1} + \Psi \varepsilon_t + \Pi \eta_t$$
 
 In which $y_t$ are the variables today, $\varepsilon_t$ is a vector of exogenous shocks and $\eta_t$ is a vector of endogenous errors, i.e. expectational errors.
 
- Sims's method allows for a $\Gamma_0$ that is singular. Instead of determining some variables as _jump_ and others as _predetermined_, as Blanchard and Khan (1980) or Klein (2000), Sims's allows it to be done endogenously by the algorithm.
+ Sims's method allows for a $\Gamma_0$ that is singular. Instead of determining some variables as _jump_ and others as _predetermined_, as Blanchard and Khan (1980) or Klein (2000), Sims allows it to be done endogenously by the algorithm.
 
-Sims's method has another remarkable difference from the previous methods: instead of "root counting" - checking that the number of eigenvalues larger than 1 equals the number of _jump_ variables and the number of eigenvalues smaller than 1 equals the number of _predetermined_ variables - Sims's algorithm relies on ensuring that the expectational errors are linear combinations of the exogenous shocks. We will go into more details in the next section.
+Sims's method has another remarkable difference from the previous methods: instead of "root counting" - checking that the number of eigenvalues larger than 1 equals the number of _jump_ variables and the number of eigenvalues smaller than 1 equals the number of _predetermined_ variables - Sims's algorithm relies on ensuring that the expectational errors are linear combinations of the exogenous shocks. We will go into more details in the next sections.
 
 We implement this in Julia. Julia is a modern programming language focused on scientific computing, trying to balance speed and ease to use. Julia has reached maturity only recently. However, there is a large number of packages written for Julia. Thomas Sargent is probably the most famous economist with ties with Julia, dedicating a whole section of his website to the language and how-to solve standard models in economics using Julia - although this does not include large scale DSGEs. [The Federal Reserve Bank of New York (FED-NY) implemented their DSGE on Julia.](https://juliacomputing.com/case-studies/ny-fed.html) By their own account, this sped up estimation ten fold and solving the model was eleven times faster. Given the time it takes to estimate even a medium DSGE model, these gains are not negligibles. Moreover, Julia has a large numerical linear algebra library that comes out of the box (you don't need to install anything besides Julia). This is valuable given that we will work with _linear_ models.
 
-This white paper is divided as follows: in the next section, we briefly discuss two methods of numerical linear algebra that will be used in our implementation: the Schur Decomposition (also called the QZ decomposition) and the Singular Value Decomposition (SVD); section three concisely presents the algorithm and our implementation; section four presents a small example from Gali (2008), which has analytical solution - this allows us to make sure that our implementation is sound; section five concludes.
+This white paper is divided as follows: in the next section, we briefly discuss two methods of numerical linear algebra that will be used in our implementation: the Schur Decomposition (also called the QZ decomposition) and the Singular Value Decomposition (SVD); section three concisely presents the algorithm and our implementation; section four presents a small example from Gali (2008), which has analytical solution - this allows us to make sure that our implementation is sound; section five discusses the interpreter; the last section concludes.
 
 # Numerical Linear Algebra
 
@@ -116,7 +116,7 @@ y_irf(v) = -(1-bet*rho_v)*LAMBDA_v*v
 pi_irf(v) = -kappa*LAMBDA_v*v
 r_irf(v) = sig*(1-rho_v)*(1-bet*rho_v)*LAMBDA_v*v
 i_irf(v) = (sig*(1-rho_v)*(1-bet*rho_v) - rho_v*kappa)*LAMBDA_v*v
-v(v,uu) = rho_v*v + uu
+v_irf(v,uu) = rho_v*v + uu
 ```
 
 And we compute a sample IRF for a positive 25 basis shock in the interest rate:
@@ -131,7 +131,7 @@ irfs_true[1,1] = 0
 uu = 0.25
 
 for t in 2:15
-    irfs_true[t,4] = v(irfs_true[t-1,4],uu)
+    irfs_true[t,4] = v_irf(irfs_true[t-1,4],uu)
     irfs_true[t,1] = pi_irf(irfs_true[t,4])
     irfs_true[t,2] = y_irf(irfs_true[t,4])
     irfs_true[t,3] = i_irf(irfs_true[t,4])
@@ -211,27 +211,123 @@ irfs = irf(sol,15,0.25)
 Lets compare the IRFs generated analyticaly and by our implementation of Gensys:
 
 ```julia
+
 plot(4*irfs[:,1], label = "Inflation Gensys", w =3)
 plot!(4*irfs_true[2:15,1], label = "Inflation Analytical", line = :dash, w =3)
 title!("Inflation response for a 0.25 shock in interest rate")
 ```
 
 ```julia
+
 plot(irfs[:,2], label = "Output Gap Gensys", w = 3)
 plot!(irfs_true[2:15,2], label = "Output Gap Analytical", line = :dash, w = 3)
 title!("Output Gap response for a 0.25 shock in interest rate")
 ```
 
 ```julia
+
 plot(4*irfs[:,3], label = "Interest Rate Gensys", w = 3)
 plot!(4*irfs_true[2:15,3], label = "Interest Rate Analytical", line = :dash, w = 3)
 title!("Nominal Interest response for a 0.25 shock in interest rate")
 ```
 
 ```julia
+
 plot(irfs[:,4], label = "v Gensys", w = 3)
 plot!(irfs_true[2:15,4], label = "v Analytical", line = :dash, w = 3)
 title!("v response for a 0.25 shock in interest rate")
 ```
 
 The impulse response are identical between the two methods, which is a strong evidence of the reliability and precision of our implementation of Gensys, Gensys itself and Julia capabilities to handle linear algebra routines.
+
+# Interpreter
+
+While our gensys implementation is sound, it has a downside: one needs to substitute the expectation variables by hand and build the matrices $\Gamma_0$,$\Gamma_1$,$\Psi$,$\Pi$ by hand. While this is feasible and not too painful for a model with 4 equations, it is prone to errors and cumbersome, especially for larger systems. Besides, this is not extremely user friendly. One would like to achieve a somewhat similar capacity to Dynare, in which the reasearcher just inputs the equations in a natural way and the whole system takes care of building the matrices and solving it. We will use the package **DynamicPolynomials**, since our system is always linear (a polynomial). Although the name may be misleading, the packages *was not* made to work with difference equations. One has to use a bit of ingenuity to write the interpreter. We adopt the following convention for the variables:
+
+* `x_e` means the expected value of x
+* `x_l` means the lag of x
+
+And Sims's method relies on substituting $E_t(x_{t+1}) = x_{t+1} + \eta_t^{x}$. All one has to do is:
+
+1. Write a program that automatic detects `_e` on variables
+2. Automatically create the variables $x_{t+1}$ and $\eta_t^x$
+3. Substitute every expected variable as its true future value plus expectation error.
+4. Recovers the coefficient associated with each variables and puts them in the right matrix
+
+While we won't bother the reader with all the details, the rough outline of how we do each is step is as following:
+
+1. Regular Expressions can do it just fine
+2. Every program in Julia starts its life as a string, so concatenation of strings allow us to do the second step, with some `eval()`.
+3. and 4. Are mainly delt by the functions in the **DynamicPolynomials** package and some loops.
+
+The model needs to be written into a Dictionary, and unlike Dynare, all the variables have to be on the same side of the equation. So the model by Gali could be written as follows. One needs first to declare the variables so **DynamicPolynomials** can deal with them, using the macro `@polyvar`:
+
+```julia
+
+ include(string(pwd(), "/src/interpreter.jl"))
+
+ @polyvar pi pi_e y y_e i v v_l ep
+```
+
+Lets write the four equations:
+
+```julia
+
+ eq1 = pi - bet*pi_e - kappa*y
+ eq2 = y + 1/sig*(i - pi_e) - y_e
+ eq3 = i - phi_pi*pi - phi_y*y - v_l
+ eq4 = v - rho_v*v_l - ep
+```
+
+And now the Dictionary with all the equations. We can choose any key we like for the dictionary and to make it easy to anyone to understand what each equation is, we will give them their usual names:
+
+```julia
+
+model = Dict("IS"=>eq2,"Phillips"=>eq1,"Taylor"=>eq3,"Ar Shock"=>eq4)
+```
+
+The interpreter itself takes the model and which variables represent shocks. Everything else is dealt internally:
+
+```julia
+
+modelgensys = model2gensys(model,[ep])
+```
+
+The object `modelgensys` contains $\Gamma_0$,$\Gamma_1$,$\Psi$ and $\Pi$. We wrote a `gensys` function that takes the whole model and automatically computes the solutions - this is only possible because Julia allows for multiple dispatch (the same function can do different things, deppending on which type of object is passed to them):
+
+```julia
+
+sol = gensys(modelgensys)
+```
+
+The IRFs should match the analytical results:
+
+```julia
+
+ fris = irf(sol,15,0.25)
+
+ plot(4*fris[:,1], label = "Inflation Gensys", w =3)
+ plot!(4*irfs_true[2:15,1], label = "Inflation Analytical", line = :dash, w =3)
+ title!("Inflation response for a 0.25 shock in interest rate")
+```
+
+```julia
+
+plot(fris[:,2], label = "Output Gap Gensys", w = 3)
+plot!(irfs_true[2:15,2], label = "Output Gap Analytical", line = :dash, w = 3)
+title!("Output Gap response for a 0.25 shock in interest rate")
+```
+
+```julia
+
+plot(4*fris[:,4], label = "Interest Rate Gensys", w = 3)
+plot!(4*irfs_true[2:15,3], label = "Interest Rate Analytical", line = :dash, w = 3)
+title!("Nominal Interest response for a 0.25 shock in interest rate")
+```
+
+```julia
+
+plot(fris[:,3], label = "v Gensys", w = 3)
+plot!(irfs_true[2:15,4], label = "v Analytical", line = :dash, w = 3)
+title!("v response for a 0.25 shock in interest rate")
+```

@@ -1,7 +1,7 @@
 using Plots
 
-include(string(pwd(), "/src/gensys.jl"))
 include(string(pwd(), "/src/interpreter.jl"))
+include(string(pwd(), "/src/gensys.jl"))
 include(string(pwd(), "/galis_example.jl"))
 
 @polyvar pi pi_e y y_e i v v_l ep
@@ -17,11 +17,11 @@ eq4 = v - rho_v*v_l - ep
 
 #Dictionary with all the equations
 
-model = Dict("Phillips"=>eq1,"IS"=>eq2,"Taylor"=>eq3,"Ar Shock"=>eq4)
+model = Dict("IS"=>eq2,"Phillips"=>eq1,"Taylor"=>eq3,"Ar Shock"=>eq4)
 
 modelgensys = model2gensys(model,[ep])
 
-sol = gensys(modelgensys.Gamma0,modelgensys.Gamma1,modelgensys.Psi,modelgensys.Pi)
+sol = gensys(modelgensys)
 
 fris = irf(sol,15,0.25)
 
