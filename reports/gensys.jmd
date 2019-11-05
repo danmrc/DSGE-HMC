@@ -1,6 +1,6 @@
 ---
 title: A Julia Implementation of Gensys
-author: Gilberto Boareto & Daniel Coutinho
+author: Gilberto Boaretto & Daniel Coutinho
 date: October, 2019
 options:
   md2tex:
@@ -66,6 +66,135 @@ The idea for the Generalized Schur Decomposition will be the same, but now we wa
 Item 6 will be particularly useful in what follows
 
 The SVD also follows the idea from the eigenvalue problem. Now the idea is to decompose A as $USV'$, in which S is a diagonal matrix and both $U$ and $V$ are orthonormal.
+
+
+# Gensys: algebra
+
+In this section we describe the \cites{sims2002} method for solution of linear rational expectations models -- the \texttt{gensys} solver. Following \citet{miao2014}, the start point is the model with demeaned variables given by
+\begin{equation} \label{model}
+    \Gamma_0 y_t = \Gamma_1 y_{t-1} + \Psi \varepsilon_t + \Pi \eta_t, \quad \mathbb{E}_{t}\varepsilon_{t+1} = 0,\quad \mathbb{E}_t \eta_{t+1}=0,
+\end{equation}
+where $y_t$ is an $n \times 1$ random vector, $\varepsilon_t$ is an $n_z \times 1$ vector of exogenous random shocks, $\eta_t$ is an $m \times 1$ vector of endogenously determined expectation errors, $\Gamma_0$ and $\Gamma_1$ are $n \times n$ matrices, $\Psi$ is an $n \times m$ matrix, and $\Pi$ is an $n \times m$ matrix.
+
+Employing the generalized Schur decomposition to $(\Gamma_0,\Gamma_1)$ we obtain $Q\Gamma_0Z = S$ and $Q\Gamma_1Z=T$, where $Q$ and $Z$ are $n \times n$ unitary complex matrices, and $S$ and $T$ are $n \times n$ upper triangular matrices. Now we order $S$ and $T$ in order to we have the first $n_s$ generalized eigenvalues followed by the remaining $n_u$ unstable generalized eigenvalues and we define the partition
+\begin{equation} \label{partition}
+    y_t^* = Z^H y_t = \begin{bmatrix} Z^H_1 \\ Z^H_2 \end{bmatrix} y_t = \begin{bmatrix} s_t \\ u_t \end{bmatrix},
+\end{equation}
+where $s_t$ is an $n_s \times 1$ vector and $u_t$ is an $n_u \times 1$ vector.
+
+Premultiplying \eqref{model} by $Q$ we obtain
+\begin{align*}
+    Q \Gamma_0 y_t &= Q \Gamma_1 y_{t-1} + Q(\Psi \varepsilon_t + \Pi \eta_t)\\
+    Q Q^H S Z^H y_t &= Q Q^H T Z^H y_{t-1} + Q(\Psi \varepsilon_t + \Pi \eta_t)\\
+    S y_t^* &= T y_{t-1}^* + Q(\Psi \varepsilon_t + \Pi \eta_t)
+\end{align*}
+and given the partition in \eqref{partition} we can rewrite
+\begin{equation} \label{system}
+     \begin{bmatrix} S_{11} & S_{12} \\ 0 & S_{22} \end{bmatrix} \begin{bmatrix} s_t \\ u_t \end{bmatrix} = \begin{bmatrix} T_{11} & T_{12} \\ 0 & T_{22} \end{bmatrix} \begin{bmatrix} s_{t-1} \\ u_{t-1}\end{bmatrix} + \begin{bmatrix} Q_1 \\ Q_2 \end{bmatrix} (\Psi \varepsilon_t + \Pi \eta_t)
+\end{equation}
+where $Q_1$ and $Q_2$ are the first $n_s$ and last $n_u$ rows of $Q$, respectively.
+
+Since $u_t$ corresponds to unstable generalized eigenvalues, we solve it forward:
+\begin{gather*}
+    S_{22} u_t = T_{22} u_{t-1} + Q_2 (\Psi \varepsilon_t + \Pi \eta_t) \\
+    - T_{22} u_{t-1} = - S_{22} u_t + Q_2 (\Psi \varepsilon_t + \Pi \eta_t) \quad \Rightarrow \quad - T_{22} u_{t} = - S_{22} u_{t+1} + Q_2 (\Psi \varepsilon_{t+1} + \Pi \eta_{t+1}) \\
+    u_{t} = T_{22}^{-1} S_{22} u_{t+1} - T_{22}^{-1} Q_2 (\Psi \varepsilon_{t+1} + \Pi \eta_{t+1})
+\end{gather*}
+since $u_{t+1} = T_{22}^{-1} S_{22} u_{t+2} - T_{22}^{-1} Q_2 (\Psi \varepsilon_{t+2} + \Pi \eta_{t+2})$ we have that
+\begin{align*}
+    u_{t} &= T_{22}^{-1} S_{22} \Big( T_{22}^{-1} S_{22} u_{t+2} - T_{22}^{-1} Q_2 (\Psi \varepsilon_{t+2} + \Pi \eta_{t+2}) \Big) - T_{22}^{-1} Q_2 (\Psi \varepsilon_{t+1} + \Pi \eta_{t+1}) \\
+    &= (T_{22}^{-1} S_{22})^2 u_{t+2} - T_{22}^{-1} S_{22} T_{22}^{-1} Q_2 (\Psi \varepsilon_{t+2} + \Pi \eta_{t+2}) - T_{22}^{-1} Q_2 (\Psi \varepsilon_{t+1} + \Pi \eta_{t+1}) \\
+    &= (T_{22}^{-1} S_{22})^2 u_{t+2} - \sum_{j=1}^{2-1} (T_{22}^{-1} S_{22})^j T_{22}^{-1} Q_2 (\Psi \varepsilon_{t+j} + \Pi \eta_{t+j})\\
+    & \text{} \quad \vdots \\
+    &= \cancelto{0}{ \lim_{j \rightarrow \infty} (T_{22}^{-1} S_{22})^j u_{t+j} } \quad - \sum_{j=1}^\infty (T_{22}^{-1} S_{22})^{j-1} T_{22}^{-1} Q_2 (\Psi \varepsilon_{t+j} + \Pi \eta_{t+j}),
+\end{align*}
+that is,
+\red{
+\begin{equation*}
+    u_t = - \sum_{j=1}^\infty (T_{22}^{-1} S_{22})^{j-1} T_{22}^{-1} Q_2 (\Psi \varepsilon_{t+j} + \Pi \eta_{t+j})
+\end{equation*}
+}
+
+Taking expectations,
+\begin{equation*}
+    \mathbb{E}_t u_t = u_t = 0, \quad \forall t \qquad \Rightarrow \qquad u_t = Z_2^H y_t = 0, \quad \forall t \geq 0.%,
+\end{equation*}
+%which gives condition to determine the initial value $y_0$.
+
+Combining \eqref{system} and $u_t=0$ we obtain
+\begin{equation}
+    Q_2 (\Psi \varepsilon_t + \Pi \eta_t) = 0
+\end{equation}
+and our goal is to solve for $\eta_t$ in terms of $\varepsilon_t$. Thus, for existence and uniqueness of solution of \eqref{model}, following two assumptions are necessary and sufficient:
+
+\vspace{0.3cm}
+
+\noindent \textbf{Assumption 1 (for existence).} There exists $m \times n_z$ matrix $\Lambda $ such that $Q_2 \Psi = Q_2 \Pi \Lambda$.
+
+\vspace{0.15cm}
+
+\noindent \textbf{Assumption 2 (for uniqueness).} There exists $n_s \times n_u$ matrix $\Xi$ such that $Q_1 \Pi = \Xi Q_2 \Pi$.
+
+\vspace{0.3cm}
+
+Premultiplying \eqref{system} by $\begin{bmatrix} 0 & -\Xi \end{bmatrix}$:
+\begin{align*}
+    \begin{bmatrix} 0 & -\Xi \end{bmatrix} \begin{bmatrix} S_{11} & S_{12} \\ 0 & S_{22} \end{bmatrix} \begin{bmatrix} s_t \\ u_t \end{bmatrix} &= \begin{bmatrix} 0 & -\Xi \end{bmatrix} \begin{bmatrix} T_{11} & T_{12} \\ 0 & T_{22} \end{bmatrix} \begin{bmatrix} s_{t-1} \\ u_{t-1} \end{bmatrix} + \begin{bmatrix} 0 & -\Xi \end{bmatrix} \begin{bmatrix} Q_1 \\ Q_2 \end{bmatrix} (\Psi \varepsilon_t + \Pi \eta_t) \\
+    \begin{bmatrix} S_{11} & S_{12}-\Xi S_{22} \end{bmatrix} \begin{bmatrix} s_t \\ u_t \end{bmatrix} &= \begin{bmatrix} T_{11} & T_{12}-\xi T_{22} \end{bmatrix} \begin{bmatrix} s_{t-1} \\ u_{t-1} \end{bmatrix} + (Q_1 - \Xi Q_2)(\Psi \varepsilon_t + \Pi \eta_t)
+\end{align*}
+
+Extending the system to the result $u_t = 0$:
+\begin{equation} \label{system2}
+    \begin{bmatrix} S_{11} & S_{12}-\Xi S_{22} \\ 0 & I \end{bmatrix} \begin{bmatrix} s_t \\ u_t \end{bmatrix} = \begin{bmatrix} T_{11} & T_{12}-\xi T_{22} \\ 0 & 0 \end{bmatrix} \begin{bmatrix} s_{t-1} \\ u_{t-1} \end{bmatrix} + \begin{bmatrix} Q_1 - \Xi Q_2 \\ 0 \end{bmatrix} (\Psi \varepsilon_t + \Pi \eta_t)
+\end{equation}
+
+Employing assumption 2 we have that
+\begin{align*}
+    (Q_1 - \Xi Q_2)(\Psi \varepsilon_t + \Pi \eta_t) &= Q_1\Psi\varepsilon_t + Q_1\Pi\eta_t - \Xi Q_2\Psi\varepsilon_t - \Xi Q_2\Pi\eta_t \\
+    &= Q_1\Psi\varepsilon_t + \cancel{\Xi Q_2\Pi\eta_t} - \Xi Q_2\Psi\varepsilon_t - \cancel{\Xi Q_2\Pi\eta_t} \\
+    &= Q_1\Psi\varepsilon_t - \Xi Q_2\Psi\varepsilon_t \\
+    &= (Q_1 - \Xi Q_2)\Psi\varepsilon_t
+\end{align*}
+
+Thus the system \eqref{system2} take the form
+\begin{equation*}
+    \begin{bmatrix} S_{11} & S_{12}-\Xi S_{22} \\ 0 & I \end{bmatrix} \begin{bmatrix} s_t \\ u_t \end{bmatrix} = \begin{bmatrix} T_{11} & T_{12}-\xi T_{22} \\ 0 & 0 \end{bmatrix} \begin{bmatrix} s_{t-1} \\ u_{t-1} \end{bmatrix} + \begin{bmatrix} Q_1 - \Xi Q_2 \\ 0 \end{bmatrix} \Psi \varepsilon_t
+\end{equation*}
+
+Since $y_t^* = \begin{bmatrix} s_t \\ u_t \end{bmatrix} = Z^H y_t$, we can rewrite
+\begin{gather*}
+    \begin{bmatrix} S_{11} & S_{12}-\Xi S_{22} \\ 0 & I \end{bmatrix} Z^H y_t = \begin{bmatrix} T_{11} & T_{12}-\xi T_{22} \\ 0 & 0 \end{bmatrix} Z^H y_{t-1} + \begin{bmatrix} Q_1 - \Xi Q_2 \\ 0 \end{bmatrix} \Psi \varepsilon_t \\
+    \Rightarrow \quad y_t = \Bigg( \begin{bmatrix} S_{11} & S_{12}-\Xi S_{22} \\ 0 & I \end{bmatrix} Z^H \Bigg)^{-1} \begin{bmatrix} T_{11} & T_{12}-\xi T_{22} \\ 0 & 0 \end{bmatrix} Z^H y_{t-1} + \qquad \qquad \qquad \qquad \qquad \qquad \qquad \\ \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \Bigg( \begin{bmatrix} S_{11} & S_{12}-\Xi S_{22} \\ 0 & I \end{bmatrix} Z^H \Bigg)^{-1} \begin{bmatrix} Q_1 - \Xi Q_2 \\ 0 \end{bmatrix} \Psi \varepsilon_t
+\end{gather*}
+
+and the solution of \eqref{model} is given by
+\begin{equation*}
+    y_t = \Theta_1 y_{t-1} + \Theta_2 \varepsilon_t
+\end{equation*}
+where
+\begin{align*}
+    \Theta_1 &= Z \begin{bmatrix} S_{11} & S_{12}-\Xi S_{22} \\ 0 & I \end{bmatrix}^{-1} \begin{bmatrix} T_{11} & T_{12}-\xi T_{22} \\ 0 & 0 \end{bmatrix} Z^H \quad \text{and} \\
+    \Theta_2 &= Z \begin{bmatrix} S_{11} & S_{12}-\Xi S_{22} \\ 0 & I \end{bmatrix}^{-1} \begin{bmatrix} Q_1 - \Xi Q_2 \\ 0 \end{bmatrix} Z^H.
+\end{align*}
+
+To implement the solution, we need to apply the singular value decomposition (SVD) to $Q_2\Pi$ since its rows in general are linearly dependent. Thus,
+\begin{equation}
+    Q_2\Pi = U D V^H = \begin{bmatrix} U_1 & U_2 \end{bmatrix} \begin{bmatrix} D_{11} & 0 \\ 0 & 0 \end{bmatrix} \begin{bmatrix} V_1^H \\ V_2^H \end{bmatrix} = U_1 D_{11} V_1^H
+\end{equation}
+where $D_{11}$ is a non-singular $r \times r$ diagonal matrices, and $U$ and $V$ are $n_u \times n_u$ and $m \times m$ unitary matrices, respectively. Thus $U_1$, $D_{11} $ and $V_1^H$ are $n_u \times r$, $r \times r$ and $r \times m$ matrices, respectively.
+
+If $m=r$, that is, if the number of expectation errors is equals to the number of nonzero singular values of $Q_2\Pi$, then $V_2 = 0$ and from Assumption 1, $Q_2 \Pi \Lambda = Q_2 \Pi$, thus
+\begin{equation*}
+    U_1 D_{11} V_1^H \Lambda = Q_2 \Pi \quad \Rightarrow \quad \Lambda = V_1 D{11}^{-1} U_1^H Q_2 \Pi,
+\end{equation*}
+and from Assumption 2, $\Xi Q_2 \Pi = Q_1 \Pi$, thus
+\begin{equation*}
+    \Xi U_1 D_{11} V_1^H = Q_1 \Pi \quad \Rightarrow \quad \Xi = Q_1 \Pi V_1 D_{11}^{-1} U_1^H.
+\end{equation*}
+
+Notice that the last expression can be obtained from the Assumption 1 under $m=r$. Hence, if $m=r$, Assumption 1 alone is able to guarantee existence and uniqueness of solution for \eqref{model}.
+
+If $m>r$, that is, if the number of expectation errors is greater than the number of nonzero singular values of $Q_2\Pi$, then there exists a infinity of stables solutions (due to so-called sunspot shocks). For more detail see \citet{miao2014} pp. 47-48.
 
 
 # An example
