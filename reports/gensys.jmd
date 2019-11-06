@@ -293,7 +293,7 @@ The interpreter itself takes the model and which variables represent shocks. Eve
 modelgensys = model2gensys(model,[ep])
 ```
 
-The object `modelgensys` contains $\Gamma_0$,$\Gamma_1$,$\Psi$ and $\Pi$. We wrote a `gensys` function that takes the whole model and automatically computes the solutions - this is only possible because Julia allows for multiple dispatch (the same function can do different things, deppending on which type of object is passed to them):
+The object `modelgensys` contains $\Gamma_0$,$\Gamma_1$,$\Psi$ and $\Pi$. We wrote a `gensys` function that takes the whole model and automatically computes the solutions - this is only possible because Julia allows for multiple dispatch (the same function can do different things, depending on which type of object is passed to them):
 
 ```julia
 

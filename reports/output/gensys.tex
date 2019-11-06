@@ -11,7 +11,7 @@
 \setlength{\parskip}{1.2ex}
 
 \hypersetup
-       {   pdfauthor = { Gilberto Boareto \& Daniel Coutinho },
+       {   pdfauthor = { Gilberto Boaretto & Daniel Coutinho },
            pdftitle={ A Julia Implementation of Gensys },
            colorlinks=TRUE,
            linkcolor=black,
@@ -21,7 +21,7 @@
 
 \title{ A Julia Implementation of Gensys }
 
-\author{ Gilberto Boareto \& Daniel Coutinho }
+\author{ Gilberto Boaretto & Daniel Coutinho }
 
 \date{ October, 2019 }
 
@@ -132,13 +132,13 @@ This document is a white paper on our implementation of gensys, the solution met
 \]
 In which $y_t$ are the variables today, $\varepsilon_t$ is a vector of exogenous shocks and $\eta_t$ is a vector of endogenous errors, i.e. expectational errors.
 
-Sims's method allows for a $\Gamma_0$ that is singular. Instead of determining some variables as \emph{jump} and others as \emph{predetermined}, as Blanchard and Khan (1980) or Klein (2000), Sims's allows it to be done endogenously by the algorithm.
+Sims's method allows for a $\Gamma_0$ that is singular. Instead of determining some variables as \emph{jump} and others as \emph{predetermined}, as Blanchard and Khan (1980) or Klein (2000), Sims allows it to be done endogenously by the algorithm.
 
-Sims's method has another remarkable difference from the previous methods: instead of "root counting" - checking that the number of eigenvalues larger than 1 equals the number of \emph{jump} variables and the number of eigenvalues smaller than 1 equals the number of \emph{predetermined} variables - Sims's algorithm relies on ensuring that the expectational errors are linear combinations of the exogenous shocks. We will go into more details in the next section.
+Sims's method has another remarkable difference from the previous methods: instead of "root counting" - checking that the number of eigenvalues larger than 1 equals the number of \emph{jump} variables and the number of eigenvalues smaller than 1 equals the number of \emph{predetermined} variables - Sims's algorithm relies on ensuring that the expectational errors are linear combinations of the exogenous shocks. We will go into more details in the next sections.
 
 We implement this in Julia. Julia is a modern programming language focused on scientific computing, trying to balance speed and ease to use. Julia has reached maturity only recently. However, there is a large number of packages written for Julia. Thomas Sargent is probably the most famous economist with ties with Julia, dedicating a whole section of his website to the language and how-to solve standard models in economics using Julia - although this does not include large scale DSGEs. \href{https://juliacomputing.com/case-studies/ny-fed.html}{The Federal Reserve Bank of New York (FED-NY) implemented their DSGE on Julia.} By their own account, this sped up estimation ten fold and solving the model was eleven times faster. Given the time it takes to estimate even a medium DSGE model, these gains are not negligibles. Moreover, Julia has a large numerical linear algebra library that comes out of the box (you don't need to install anything besides Julia). This is valuable given that we will work with \emph{linear} models.
 
-This white paper is divided as follows: in the next section, we briefly discuss two methods of numerical linear algebra that will be used in our implementation: the Schur Decomposition (also called the QZ decomposition) and the Singular Value Decomposition (SVD); section three concisely presents the algorithm and our implementation; section four presents a small example from Gali (2008), which has analytical solution - this allows us to make sure that our implementation is sound; section five concludes.
+This white paper is divided as follows: in the next section, we briefly discuss two methods of numerical linear algebra that will be used in our implementation: the Schur Decomposition (also called the QZ decomposition) and the Singular Value Decomposition (SVD); section three concisely presents the algorithm and our implementation; section four presents a small example from Gali (2008), which has analytical solution - this allows us to make sure that our implementation is sound; section five discusses the interpreter; the last section concludes.
 
 \section{Numerical Linear Algebra}
 We will use two decompositions of matrices: the Schur Decomposition and the Singular Value Decomposition (SVD). Both are closely related to the more well known eigenvalue decomposition:
@@ -265,11 +265,11 @@ Gali's book gives an analytical solution for the impulse response functions for 
 (*@\HLJLnf{pi{\_}irf}@*)(*@\HLJLp{(}@*)(*@\HLJLn{v}@*)(*@\HLJLp{)}@*) (*@\HLJLoB{=}@*) (*@\HLJLoB{-}@*)(*@\HLJLn{kappa}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{LAMBDA{\_}v}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{v}@*)
 (*@\HLJLnf{r{\_}irf}@*)(*@\HLJLp{(}@*)(*@\HLJLn{v}@*)(*@\HLJLp{)}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{sig}@*)(*@\HLJLoB{*}@*)(*@\HLJLp{(}@*)(*@\HLJLni{1}@*)(*@\HLJLoB{-}@*)(*@\HLJLn{rho{\_}v}@*)(*@\HLJLp{)}@*)(*@\HLJLoB{*}@*)(*@\HLJLp{(}@*)(*@\HLJLni{1}@*)(*@\HLJLoB{-}@*)(*@\HLJLn{bet}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{rho{\_}v}@*)(*@\HLJLp{)}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{LAMBDA{\_}v}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{v}@*)
 (*@\HLJLnf{i{\_}irf}@*)(*@\HLJLp{(}@*)(*@\HLJLn{v}@*)(*@\HLJLp{)}@*) (*@\HLJLoB{=}@*) (*@\HLJLp{(}@*)(*@\HLJLn{sig}@*)(*@\HLJLoB{*}@*)(*@\HLJLp{(}@*)(*@\HLJLni{1}@*)(*@\HLJLoB{-}@*)(*@\HLJLn{rho{\_}v}@*)(*@\HLJLp{)}@*)(*@\HLJLoB{*}@*)(*@\HLJLp{(}@*)(*@\HLJLni{1}@*)(*@\HLJLoB{-}@*)(*@\HLJLn{bet}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{rho{\_}v}@*)(*@\HLJLp{)}@*) (*@\HLJLoB{-}@*) (*@\HLJLn{rho{\_}v}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{kappa}@*)(*@\HLJLp{)}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{LAMBDA{\_}v}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{v}@*)
-(*@\HLJLnf{v}@*)(*@\HLJLp{(}@*)(*@\HLJLn{v}@*)(*@\HLJLp{,}@*)(*@\HLJLn{uu}@*)(*@\HLJLp{)}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{rho{\_}v}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{v}@*) (*@\HLJLoB{+}@*) (*@\HLJLn{uu}@*)
+(*@\HLJLnf{v{\_}irf}@*)(*@\HLJLp{(}@*)(*@\HLJLn{v}@*)(*@\HLJLp{,}@*)(*@\HLJLn{uu}@*)(*@\HLJLp{)}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{rho{\_}v}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{v}@*) (*@\HLJLoB{+}@*) (*@\HLJLn{uu}@*)
 \end{lstlisting}
 
 \begin{lstlisting}
-v (generic function with 1 method)
+v_irf (generic function with 1 method)
 \end{lstlisting}
 
 
@@ -284,7 +284,7 @@ And we compute a sample IRF for a positive 25 basis shock in the interest rate:
 (*@\HLJLn{uu}@*) (*@\HLJLoB{=}@*) (*@\HLJLnfB{0.25}@*)
 
 (*@\HLJLk{for}@*) (*@\HLJLn{t}@*) (*@\HLJLkp{in}@*) (*@\HLJLni{2}@*)(*@\HLJLoB{:}@*)(*@\HLJLni{15}@*)
-    (*@\HLJLn{irfs{\_}true}@*)(*@\HLJLp{[}@*)(*@\HLJLn{t}@*)(*@\HLJLp{,}@*)(*@\HLJLni{4}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLnf{v}@*)(*@\HLJLp{(}@*)(*@\HLJLn{irfs{\_}true}@*)(*@\HLJLp{[}@*)(*@\HLJLn{t}@*)(*@\HLJLoB{-}@*)(*@\HLJLni{1}@*)(*@\HLJLp{,}@*)(*@\HLJLni{4}@*)(*@\HLJLp{],}@*)(*@\HLJLn{uu}@*)(*@\HLJLp{)}@*)
+    (*@\HLJLn{irfs{\_}true}@*)(*@\HLJLp{[}@*)(*@\HLJLn{t}@*)(*@\HLJLp{,}@*)(*@\HLJLni{4}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLnf{v{\_}irf}@*)(*@\HLJLp{(}@*)(*@\HLJLn{irfs{\_}true}@*)(*@\HLJLp{[}@*)(*@\HLJLn{t}@*)(*@\HLJLoB{-}@*)(*@\HLJLni{1}@*)(*@\HLJLp{,}@*)(*@\HLJLni{4}@*)(*@\HLJLp{],}@*)(*@\HLJLn{uu}@*)(*@\HLJLp{)}@*)
     (*@\HLJLn{irfs{\_}true}@*)(*@\HLJLp{[}@*)(*@\HLJLn{t}@*)(*@\HLJLp{,}@*)(*@\HLJLni{1}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLnf{pi{\_}irf}@*)(*@\HLJLp{(}@*)(*@\HLJLn{irfs{\_}true}@*)(*@\HLJLp{[}@*)(*@\HLJLn{t}@*)(*@\HLJLp{,}@*)(*@\HLJLni{4}@*)(*@\HLJLp{])}@*)
     (*@\HLJLn{irfs{\_}true}@*)(*@\HLJLp{[}@*)(*@\HLJLn{t}@*)(*@\HLJLp{,}@*)(*@\HLJLni{2}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLnf{y{\_}irf}@*)(*@\HLJLp{(}@*)(*@\HLJLn{irfs{\_}true}@*)(*@\HLJLp{[}@*)(*@\HLJLn{t}@*)(*@\HLJLp{,}@*)(*@\HLJLni{4}@*)(*@\HLJLp{])}@*)
     (*@\HLJLn{irfs{\_}true}@*)(*@\HLJLp{[}@*)(*@\HLJLn{t}@*)(*@\HLJLp{,}@*)(*@\HLJLni{3}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLnf{i{\_}irf}@*)(*@\HLJLp{(}@*)(*@\HLJLn{irfs{\_}true}@*)(*@\HLJLp{[}@*)(*@\HLJLn{t}@*)(*@\HLJLp{,}@*)(*@\HLJLni{4}@*)(*@\HLJLp{])}@*)
@@ -471,6 +471,193 @@ Lets compare the IRFs generated analyticaly and by our implementation of Gensys:
 
 The impulse response are identical between the two methods, which is a strong evidence of the reliability and precision of our implementation of Gensys, Gensys itself and Julia capabilities to handle linear algebra routines.
 
+\section{Interpreter}
+While our gensys implementation is sound, it has a downside: one needs to substitute the expectation variables by hand and build the matrices $\Gamma_0$,$\Gamma_1$,$\Psi$,$\Pi$ by hand. While this is feasible and not too painful for a model with 4 equations, it is prone to errors and cumbersome, especially for larger systems. Besides, this is not extremely user friendly. One would like to achieve a somewhat similar capacity to Dynare, in which the reasearcher just inputs the equations in a natural way and the whole system takes care of building the matrices and solving it. We will use the package \textbf{DynamicPolynomials}, since our system is always linear (a polynomial). Although the name may be misleading, the packages \emph{was not} made to work with difference equations. One has to use a bit of ingenuity to write the interpreter. We adopt the following convention for the variables:
+
+\begin{itemize}
+\item \texttt{x\_e} means the expected value of x
+
+
+\item \texttt{x\_l} means the lag of x
+
+\end{itemize}
+And Sims's method relies on substituting $E_t(x_{t+1}) = x_{t+1} + \eta_t^{x}$. All one has to do is:
+
+\begin{itemize}
+\item[1. ] Write a program that automatic detects \texttt{\_e} on variables
+
+
+\item[2. ] Automatically create the variables $x_{t+1}$ and $\eta_t^x$
+
+
+\item[3. ] Substitute every expected variable as its true future value plus expectation error.
+
+
+\item[4. ] Recovers the coefficient associated with each variables and puts them in the right matrix
+
+\end{itemize}
+While we won't bother the reader with all the details, the rough outline of how we do each is step is as following:
+
+\begin{itemize}
+\item[1. ] Regular Expressions can do it just fine
+
+
+\item[2. ] Every program in Julia starts its life as a string, so concatenation of strings allow us to do the second step, with some \texttt{eval()}.
+
+
+\item[3. ] and 4. Are mainly delt by the functions in the \textbf{DynamicPolynomials} package and some loops.
+
+\end{itemize}
+The model needs to be written into a Dictionary, and unlike Dynare, all the variables have to be on the same side of the equation. So the model by Gali could be written as follows. One needs first to declare the variables so \textbf{DynamicPolynomials} can deal with them, using the macro \texttt{@polyvar}:
+
+
+\begin{lstlisting}
+(*@\HLJLnf{include}@*)(*@\HLJLp{(}@*)(*@\HLJLnf{string}@*)(*@\HLJLp{(}@*)(*@\HLJLnf{pwd}@*)(*@\HLJLp{(),}@*) (*@\HLJLs{"{}/src/interpreter.jl"{}}@*)(*@\HLJLp{))}@*)
+
+ (*@\HLJLnd{@polyvar}@*) (*@\HLJLn{pi}@*) (*@\HLJLn{pi{\_}e}@*) (*@\HLJLn{y}@*) (*@\HLJLn{y{\_}e}@*) (*@\HLJLn{i}@*) (*@\HLJLn{v}@*) (*@\HLJLn{v{\_}l}@*) (*@\HLJLn{ep}@*)
+\end{lstlisting}
+
+\begin{lstlisting}
+(pi, pi_e, y, y_e, i, v, v_l, ep)
+\end{lstlisting}
+
+
+Lets write the four equations:
+
+
+\begin{lstlisting}
+(*@\HLJLn{eq1}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{pi}@*) (*@\HLJLoB{-}@*) (*@\HLJLn{bet}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{pi{\_}e}@*) (*@\HLJLoB{-}@*) (*@\HLJLn{kappa}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{y}@*)
+ (*@\HLJLn{eq2}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{y}@*) (*@\HLJLoB{+}@*) (*@\HLJLni{1}@*)(*@\HLJLoB{/}@*)(*@\HLJLn{sig}@*)(*@\HLJLoB{*}@*)(*@\HLJLp{(}@*)(*@\HLJLn{i}@*) (*@\HLJLoB{-}@*) (*@\HLJLn{pi{\_}e}@*)(*@\HLJLp{)}@*) (*@\HLJLoB{-}@*) (*@\HLJLn{y{\_}e}@*)
+ (*@\HLJLn{eq3}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{i}@*) (*@\HLJLoB{-}@*) (*@\HLJLn{phi{\_}pi}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{pi}@*) (*@\HLJLoB{-}@*) (*@\HLJLn{phi{\_}y}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{y}@*) (*@\HLJLoB{-}@*) (*@\HLJLn{v{\_}l}@*)
+ (*@\HLJLn{eq4}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{v}@*) (*@\HLJLoB{-}@*) (*@\HLJLn{rho{\_}v}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{v{\_}l}@*) (*@\HLJLoB{-}@*) (*@\HLJLn{ep}@*)
+\end{lstlisting}
+
+
+$$ v - 0.5v_l - ep $$
+
+And now the Dictionary with all the equations. We can choose any key we like for the dictionary and to make it easy to anyone to understand what each equation is, we will give them their usual names:
+
+
+\begin{lstlisting}
+(*@\HLJLn{model}@*) (*@\HLJLoB{=}@*) (*@\HLJLnf{Dict}@*)(*@\HLJLp{(}@*)(*@\HLJLs{"{}IS"{}}@*)(*@\HLJLoB{=>}@*)(*@\HLJLn{eq2}@*)(*@\HLJLp{,}@*)(*@\HLJLs{"{}Phillips"{}}@*)(*@\HLJLoB{=>}@*)(*@\HLJLn{eq1}@*)(*@\HLJLp{,}@*)(*@\HLJLs{"{}Taylor"{}}@*)(*@\HLJLoB{=>}@*)(*@\HLJLn{eq3}@*)(*@\HLJLp{,}@*)(*@\HLJLs{"{}Ar}@*) (*@\HLJLs{Shock"{}}@*)(*@\HLJLoB{=>}@*)(*@\HLJLn{eq4}@*)(*@\HLJLp{)}@*)
+\end{lstlisting}
+
+\begin{lstlisting}
+Dict{String,DynamicPolynomials.Polynomial{true,Float64}} with 4 entries:
+  "Taylor"   => -1.5pi - 0.125y + i - v_l
+  "Ar Shock" => v - 0.5v_l - ep
+  "Phillips" => pi - 0.99pi_e - 0.1275y
+  "IS"       => -pi_e + y - y_e + i
+\end{lstlisting}
+
+
+The interpreter itself takes the model and which variables represent shocks. Everything else is dealt internally:
+
+
+\begin{lstlisting}
+(*@\HLJLn{modelgensys}@*) (*@\HLJLoB{=}@*) (*@\HLJLnf{model2gensys}@*)(*@\HLJLp{(}@*)(*@\HLJLn{model}@*)(*@\HLJLp{,[}@*)(*@\HLJLn{ep}@*)(*@\HLJLp{])}@*)
+\end{lstlisting}
+
+\begin{lstlisting}
+Found 2 expectations variables
+Found 1 lags variables
+Found 5 current variables
+Main.WeaveSandBox0.gensys_sys(4(*@\ensuremath{\times}@*)4 Named Array{Float64,2}
+A (*@\ensuremath{\diagdown}@*) B │    1     2     3     4
+──────┼───────────────────────
+pi    │ -0.0  -0.0  -0.0   0.0
+y     │ -0.0  -0.0  -1.0   0.0
+v_l   │ 0.99  -0.0  -0.0   0.0
+i     │  1.0   1.0  -0.0   0.0, 4(*@\ensuremath{\times}@*)4 Named Array{Float64,2}
+A (*@\ensuremath{\diagdown}@*) B │      pi        y      v_l        i
+──────┼───────────────────────────────────
+pi    │    -1.5   -0.125     -1.0      1.0
+y     │     0.0      0.0     -0.5      0.0
+v_l   │     1.0  -0.1275      0.0      0.0
+i     │     0.0      1.0      0.0      1.0, 4(*@\ensuremath{\times}@*)1 Named Array{Float64,2}
+A (*@\ensuremath{\diagdown}@*) B │   ep
+──────┼─────
+pi    │  0.0
+y     │ -1.0
+v_l   │  0.0
+i     │  0.0, 4(*@\ensuremath{\times}@*)2 Named Array{Float64,2}
+A (*@\ensuremath{\diagdown}@*) B │ nu_pi   nu_y
+──────┼─────────────
+pi    │   0.0    0.0
+y     │   0.0    0.0
+v_l   │ -0.99    0.0
+i     │  -1.0   -1.0, DynamicPolynomials.PolyVar{true}[pi, y, v_l, i], Dyna
+micPolynomials.PolyVar{true}[pi_f, y_f, v])
+\end{lstlisting}
+
+
+The object \texttt{modelgensys} contains $\Gamma_0$,$\Gamma_1$,$\Psi$ and $\Pi$. We wrote a \texttt{gensys} function that takes the whole model and automatically computes the solutions - this is only possible because Julia allows for multiple dispatch (the same function can do different things, deppending on which type of object is passed to them):
+
+
+\begin{lstlisting}
+(*@\HLJLn{sol}@*) (*@\HLJLoB{=}@*) (*@\HLJLnf{gensys}@*)(*@\HLJLp{(}@*)(*@\HLJLn{modelgensys}@*)(*@\HLJLp{)}@*)
+\end{lstlisting}
+
+\begin{lstlisting}
+Main.WeaveSandBox0.Sims(4(*@\ensuremath{\times}@*)4 Named Array{Float64,2}
+A (*@\ensuremath{\diagdown}@*) B │            1             2             3             4
+──────┼───────────────────────────────────────────────────────
+pi    │  9.02056e-17  -8.32667e-17     -0.143865  -7.92572e-17
+y     │  3.33067e-16  -3.33067e-16     -0.569817  -3.17322e-16
+v_l   │ -2.77556e-16   2.22045e-16           0.5   2.79318e-16
+i     │   -1.249e-16   8.32667e-17      0.212976   1.13828e-16, 4(*@\ensuremath{\times}@*)1 Named A
+rray{Float64,2}
+A (*@\ensuremath{\diagdown}@*) B │         1
+──────┼──────────
+pi    │ -0.287729
+y     │  -1.13963
+v_l   │       1.0
+i     │  0.425952, 4(*@\ensuremath{\times}@*)4 Named Array{Float64,2}
+A (*@\ensuremath{\diagdown}@*) B │   1    2    3    4
+──────┼───────────────────
+pi    │ 0.0  0.0  0.0  0.0
+y     │ 0.0  0.0  0.0  0.0
+v_l   │ 0.0  0.0  0.0  0.0
+i     │ 0.0  0.0  0.0  0.0, [1, 1])
+\end{lstlisting}
+
+
+The IRFs should match the analytical results:
+
+
+\begin{lstlisting}
+(*@\HLJLn{fris}@*) (*@\HLJLoB{=}@*) (*@\HLJLnf{irf}@*)(*@\HLJLp{(}@*)(*@\HLJLn{sol}@*)(*@\HLJLp{,}@*)(*@\HLJLni{15}@*)(*@\HLJLp{,}@*)(*@\HLJLnfB{0.25}@*)(*@\HLJLp{)}@*)
+
+ (*@\HLJLnf{plot}@*)(*@\HLJLp{(}@*)(*@\HLJLni{4}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{fris}@*)(*@\HLJLp{[}@*)(*@\HLJLoB{:}@*)(*@\HLJLp{,}@*)(*@\HLJLni{1}@*)(*@\HLJLp{],}@*) (*@\HLJLn{label}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}Inflation}@*) (*@\HLJLs{Gensys"{}}@*)(*@\HLJLp{,}@*) (*@\HLJLn{w}@*) (*@\HLJLoB{=}@*)(*@\HLJLni{3}@*)(*@\HLJLp{)}@*)
+ (*@\HLJLnf{plot!}@*)(*@\HLJLp{(}@*)(*@\HLJLni{4}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{irfs{\_}true}@*)(*@\HLJLp{[}@*)(*@\HLJLni{2}@*)(*@\HLJLoB{:}@*)(*@\HLJLni{15}@*)(*@\HLJLp{,}@*)(*@\HLJLni{1}@*)(*@\HLJLp{],}@*) (*@\HLJLn{label}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}Inflation}@*) (*@\HLJLs{Analytical"{}}@*)(*@\HLJLp{,}@*) (*@\HLJLn{line}@*) (*@\HLJLoB{=}@*) (*@\HLJLsc{:dash}@*)(*@\HLJLp{,}@*) (*@\HLJLn{w}@*) (*@\HLJLoB{=}@*)(*@\HLJLni{3}@*)(*@\HLJLp{)}@*)
+ (*@\HLJLnf{title!}@*)(*@\HLJLp{(}@*)(*@\HLJLs{"{}Inflation}@*) (*@\HLJLs{response}@*) (*@\HLJLs{for}@*) (*@\HLJLs{a}@*) (*@\HLJLs{0.25}@*) (*@\HLJLs{shock}@*) (*@\HLJLs{in}@*) (*@\HLJLs{interest}@*) (*@\HLJLs{rate"{}}@*)(*@\HLJLp{)}@*)
+\end{lstlisting}
+
+\includegraphics[width=\linewidth]{figures/gensys_20_1.pdf}
+
+\begin{lstlisting}
+(*@\HLJLnf{plot}@*)(*@\HLJLp{(}@*)(*@\HLJLn{fris}@*)(*@\HLJLp{[}@*)(*@\HLJLoB{:}@*)(*@\HLJLp{,}@*)(*@\HLJLni{2}@*)(*@\HLJLp{],}@*) (*@\HLJLn{label}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}Output}@*) (*@\HLJLs{Gap}@*) (*@\HLJLs{Gensys"{}}@*)(*@\HLJLp{,}@*) (*@\HLJLn{w}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{3}@*)(*@\HLJLp{)}@*)
+(*@\HLJLnf{plot!}@*)(*@\HLJLp{(}@*)(*@\HLJLn{irfs{\_}true}@*)(*@\HLJLp{[}@*)(*@\HLJLni{2}@*)(*@\HLJLoB{:}@*)(*@\HLJLni{15}@*)(*@\HLJLp{,}@*)(*@\HLJLni{2}@*)(*@\HLJLp{],}@*) (*@\HLJLn{label}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}Output}@*) (*@\HLJLs{Gap}@*) (*@\HLJLs{Analytical"{}}@*)(*@\HLJLp{,}@*) (*@\HLJLn{line}@*) (*@\HLJLoB{=}@*) (*@\HLJLsc{:dash}@*)(*@\HLJLp{,}@*) (*@\HLJLn{w}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{3}@*)(*@\HLJLp{)}@*)
+(*@\HLJLnf{title!}@*)(*@\HLJLp{(}@*)(*@\HLJLs{"{}Output}@*) (*@\HLJLs{Gap}@*) (*@\HLJLs{response}@*) (*@\HLJLs{for}@*) (*@\HLJLs{a}@*) (*@\HLJLs{0.25}@*) (*@\HLJLs{shock}@*) (*@\HLJLs{in}@*) (*@\HLJLs{interest}@*) (*@\HLJLs{rate"{}}@*)(*@\HLJLp{)}@*)
+\end{lstlisting}
+
+\includegraphics[width=\linewidth]{figures/gensys_21_1.pdf}
+
+\begin{lstlisting}
+(*@\HLJLnf{plot}@*)(*@\HLJLp{(}@*)(*@\HLJLni{4}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{fris}@*)(*@\HLJLp{[}@*)(*@\HLJLoB{:}@*)(*@\HLJLp{,}@*)(*@\HLJLni{4}@*)(*@\HLJLp{],}@*) (*@\HLJLn{label}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}Interest}@*) (*@\HLJLs{Rate}@*) (*@\HLJLs{Gensys"{}}@*)(*@\HLJLp{,}@*) (*@\HLJLn{w}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{3}@*)(*@\HLJLp{)}@*)
+(*@\HLJLnf{plot!}@*)(*@\HLJLp{(}@*)(*@\HLJLni{4}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{irfs{\_}true}@*)(*@\HLJLp{[}@*)(*@\HLJLni{2}@*)(*@\HLJLoB{:}@*)(*@\HLJLni{15}@*)(*@\HLJLp{,}@*)(*@\HLJLni{3}@*)(*@\HLJLp{],}@*) (*@\HLJLn{label}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}Interest}@*) (*@\HLJLs{Rate}@*) (*@\HLJLs{Analytical"{}}@*)(*@\HLJLp{,}@*) (*@\HLJLn{line}@*) (*@\HLJLoB{=}@*) (*@\HLJLsc{:dash}@*)(*@\HLJLp{,}@*) (*@\HLJLn{w}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{3}@*)(*@\HLJLp{)}@*)
+(*@\HLJLnf{title!}@*)(*@\HLJLp{(}@*)(*@\HLJLs{"{}Nominal}@*) (*@\HLJLs{Interest}@*) (*@\HLJLs{response}@*) (*@\HLJLs{for}@*) (*@\HLJLs{a}@*) (*@\HLJLs{0.25}@*) (*@\HLJLs{shock}@*) (*@\HLJLs{in}@*) (*@\HLJLs{interest}@*) (*@\HLJLs{rate"{}}@*)(*@\HLJLp{)}@*)
+\end{lstlisting}
+
+\includegraphics[width=\linewidth]{figures/gensys_22_1.pdf}
+
+\begin{lstlisting}
+(*@\HLJLnf{plot}@*)(*@\HLJLp{(}@*)(*@\HLJLn{fris}@*)(*@\HLJLp{[}@*)(*@\HLJLoB{:}@*)(*@\HLJLp{,}@*)(*@\HLJLni{3}@*)(*@\HLJLp{],}@*) (*@\HLJLn{label}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}v}@*) (*@\HLJLs{Gensys"{}}@*)(*@\HLJLp{,}@*) (*@\HLJLn{w}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{3}@*)(*@\HLJLp{)}@*)
+(*@\HLJLnf{plot!}@*)(*@\HLJLp{(}@*)(*@\HLJLn{irfs{\_}true}@*)(*@\HLJLp{[}@*)(*@\HLJLni{2}@*)(*@\HLJLoB{:}@*)(*@\HLJLni{15}@*)(*@\HLJLp{,}@*)(*@\HLJLni{4}@*)(*@\HLJLp{],}@*) (*@\HLJLn{label}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}v}@*) (*@\HLJLs{Analytical"{}}@*)(*@\HLJLp{,}@*) (*@\HLJLn{line}@*) (*@\HLJLoB{=}@*) (*@\HLJLsc{:dash}@*)(*@\HLJLp{,}@*) (*@\HLJLn{w}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{3}@*)(*@\HLJLp{)}@*)
+(*@\HLJLnf{title!}@*)(*@\HLJLp{(}@*)(*@\HLJLs{"{}v}@*) (*@\HLJLs{response}@*) (*@\HLJLs{for}@*) (*@\HLJLs{a}@*) (*@\HLJLs{0.25}@*) (*@\HLJLs{shock}@*) (*@\HLJLs{in}@*) (*@\HLJLs{interest}@*) (*@\HLJLs{rate"{}}@*)(*@\HLJLp{)}@*)
+\end{lstlisting}
+
+\includegraphics[width=\linewidth]{figures/gensys_23_1.pdf}
 
 
 \end{document}
