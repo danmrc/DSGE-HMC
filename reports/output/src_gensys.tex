@@ -1,0 +1,198 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[a4paper,text={16.5cm,25.2cm},centering]{geometry}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{microtype}
+\usepackage{hyperref}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1.2ex}
+
+\hypersetup
+       {   pdfauthor = { Gilberto Boaretto \& Daniel Coutinho },
+           pdftitle={ A Julia Implementation of Gensys sourcecode },
+           colorlinks=TRUE,
+           linkcolor=black,
+           citecolor=blue,
+           urlcolor=blue
+       }
+
+\title{ A Julia Implementation of Gensys sourcecode }
+
+\author{ Gilberto Boaretto \& Daniel Coutinho }
+
+\date{ October, 2019 }
+
+\usepackage{upquote}
+\usepackage{listings}
+\usepackage{xcolor}
+\lstset{
+    basicstyle=\ttfamily\footnotesize,
+    upquote=true,
+    breaklines=true,
+    breakindent=0pt,
+    keepspaces=true,
+    showspaces=false,
+    columns=fullflexible,
+    showtabs=false,
+    showstringspaces=false,
+    escapeinside={(*@}{@*)},
+    extendedchars=true,
+}
+\newcommand{\HLJLt}[1]{#1}
+\newcommand{\HLJLw}[1]{#1}
+\newcommand{\HLJLe}[1]{#1}
+\newcommand{\HLJLeB}[1]{#1}
+\newcommand{\HLJLo}[1]{#1}
+\newcommand{\HLJLk}[1]{\textcolor[RGB]{148,91,176}{\textbf{#1}}}
+\newcommand{\HLJLkc}[1]{\textcolor[RGB]{59,151,46}{\textit{#1}}}
+\newcommand{\HLJLkd}[1]{\textcolor[RGB]{214,102,97}{\textit{#1}}}
+\newcommand{\HLJLkn}[1]{\textcolor[RGB]{148,91,176}{\textbf{#1}}}
+\newcommand{\HLJLkp}[1]{\textcolor[RGB]{148,91,176}{\textbf{#1}}}
+\newcommand{\HLJLkr}[1]{\textcolor[RGB]{148,91,176}{\textbf{#1}}}
+\newcommand{\HLJLkt}[1]{\textcolor[RGB]{148,91,176}{\textbf{#1}}}
+\newcommand{\HLJLn}[1]{#1}
+\newcommand{\HLJLna}[1]{#1}
+\newcommand{\HLJLnb}[1]{#1}
+\newcommand{\HLJLnbp}[1]{#1}
+\newcommand{\HLJLnc}[1]{#1}
+\newcommand{\HLJLncB}[1]{#1}
+\newcommand{\HLJLnd}[1]{\textcolor[RGB]{214,102,97}{#1}}
+\newcommand{\HLJLne}[1]{#1}
+\newcommand{\HLJLneB}[1]{#1}
+\newcommand{\HLJLnf}[1]{\textcolor[RGB]{66,102,213}{#1}}
+\newcommand{\HLJLnfm}[1]{\textcolor[RGB]{66,102,213}{#1}}
+\newcommand{\HLJLnp}[1]{#1}
+\newcommand{\HLJLnl}[1]{#1}
+\newcommand{\HLJLnn}[1]{#1}
+\newcommand{\HLJLno}[1]{#1}
+\newcommand{\HLJLnt}[1]{#1}
+\newcommand{\HLJLnv}[1]{#1}
+\newcommand{\HLJLnvc}[1]{#1}
+\newcommand{\HLJLnvg}[1]{#1}
+\newcommand{\HLJLnvi}[1]{#1}
+\newcommand{\HLJLnvm}[1]{#1}
+\newcommand{\HLJLl}[1]{#1}
+\newcommand{\HLJLld}[1]{\textcolor[RGB]{148,91,176}{\textit{#1}}}
+\newcommand{\HLJLs}[1]{\textcolor[RGB]{201,61,57}{#1}}
+\newcommand{\HLJLsa}[1]{\textcolor[RGB]{201,61,57}{#1}}
+\newcommand{\HLJLsb}[1]{\textcolor[RGB]{201,61,57}{#1}}
+\newcommand{\HLJLsc}[1]{\textcolor[RGB]{201,61,57}{#1}}
+\newcommand{\HLJLsd}[1]{\textcolor[RGB]{201,61,57}{#1}}
+\newcommand{\HLJLsdB}[1]{\textcolor[RGB]{201,61,57}{#1}}
+\newcommand{\HLJLsdC}[1]{\textcolor[RGB]{201,61,57}{#1}}
+\newcommand{\HLJLse}[1]{\textcolor[RGB]{59,151,46}{#1}}
+\newcommand{\HLJLsh}[1]{\textcolor[RGB]{201,61,57}{#1}}
+\newcommand{\HLJLsi}[1]{#1}
+\newcommand{\HLJLso}[1]{\textcolor[RGB]{201,61,57}{#1}}
+\newcommand{\HLJLsr}[1]{\textcolor[RGB]{201,61,57}{#1}}
+\newcommand{\HLJLss}[1]{\textcolor[RGB]{201,61,57}{#1}}
+\newcommand{\HLJLssB}[1]{\textcolor[RGB]{201,61,57}{#1}}
+\newcommand{\HLJLnB}[1]{\textcolor[RGB]{59,151,46}{#1}}
+\newcommand{\HLJLnbB}[1]{\textcolor[RGB]{59,151,46}{#1}}
+\newcommand{\HLJLnfB}[1]{\textcolor[RGB]{59,151,46}{#1}}
+\newcommand{\HLJLnh}[1]{\textcolor[RGB]{59,151,46}{#1}}
+\newcommand{\HLJLni}[1]{\textcolor[RGB]{59,151,46}{#1}}
+\newcommand{\HLJLnil}[1]{\textcolor[RGB]{59,151,46}{#1}}
+\newcommand{\HLJLnoB}[1]{\textcolor[RGB]{59,151,46}{#1}}
+\newcommand{\HLJLoB}[1]{\textcolor[RGB]{102,102,102}{\textbf{#1}}}
+\newcommand{\HLJLow}[1]{\textcolor[RGB]{102,102,102}{\textbf{#1}}}
+\newcommand{\HLJLp}[1]{#1}
+\newcommand{\HLJLc}[1]{\textcolor[RGB]{153,153,119}{\textit{#1}}}
+\newcommand{\HLJLch}[1]{\textcolor[RGB]{153,153,119}{\textit{#1}}}
+\newcommand{\HLJLcm}[1]{\textcolor[RGB]{153,153,119}{\textit{#1}}}
+\newcommand{\HLJLcp}[1]{\textcolor[RGB]{153,153,119}{\textit{#1}}}
+\newcommand{\HLJLcpB}[1]{\textcolor[RGB]{153,153,119}{\textit{#1}}}
+\newcommand{\HLJLcs}[1]{\textcolor[RGB]{153,153,119}{\textit{#1}}}
+\newcommand{\HLJLcsB}[1]{\textcolor[RGB]{153,153,119}{\textit{#1}}}
+\newcommand{\HLJLg}[1]{#1}
+\newcommand{\HLJLgd}[1]{#1}
+\newcommand{\HLJLge}[1]{#1}
+\newcommand{\HLJLgeB}[1]{#1}
+\newcommand{\HLJLgh}[1]{#1}
+\newcommand{\HLJLgi}[1]{#1}
+\newcommand{\HLJLgo}[1]{#1}
+\newcommand{\HLJLgp}[1]{#1}
+\newcommand{\HLJLgs}[1]{#1}
+\newcommand{\HLJLgsB}[1]{#1}
+\newcommand{\HLJLgt}[1]{#1}
+
+
+\begin{document}
+
+\maketitle
+
+\section{Code}
+Here is the code
+
+
+\begin{lstlisting}
+(*@\HLJLk{function}@*) (*@\HLJLnf{gensys}@*)(*@\HLJLp{(}@*)(*@\HLJLn{G0}@*)(*@\HLJLp{,}@*)(*@\HLJLn{G1}@*)(*@\HLJLp{,}@*)(*@\HLJLn{Psi}@*)(*@\HLJLp{,}@*)(*@\HLJLn{Pi}@*)(*@\HLJLp{)}@*)
+    (*@\HLJLn{decomp{\_}1}@*) (*@\HLJLoB{=}@*) (*@\HLJLnf{schur}@*)(*@\HLJLp{(}@*)(*@\HLJLn{G0}@*)(*@\HLJLp{,}@*)(*@\HLJLn{G1}@*)(*@\HLJLp{)}@*)
+    (*@\HLJLn{gen{\_}eigen}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{abs}@*)(*@\HLJLoB{.}@*)(*@\HLJLp{(}@*)(*@\HLJLn{decomp{\_}1}@*)(*@\HLJLoB{.}@*)(*@\HLJLn{beta}@*) (*@\HLJLoB{./}@*) (*@\HLJLn{decomp{\_}1}@*)(*@\HLJLoB{.}@*)(*@\HLJLn{alpha}@*)(*@\HLJLp{)}@*)
+    (*@\HLJLnf{ordschur!}@*)(*@\HLJLp{(}@*)(*@\HLJLn{decomp{\_}1}@*)(*@\HLJLp{,}@*) (*@\HLJLn{gen{\_}eigen}@*) (*@\HLJLoB{.<}@*) (*@\HLJLni{1}@*)(*@\HLJLp{)}@*)
+    (*@\HLJLn{n}@*) (*@\HLJLoB{=}@*) (*@\HLJLnf{size}@*)(*@\HLJLp{(}@*)(*@\HLJLn{G0}@*)(*@\HLJLp{,}@*)(*@\HLJLni{1}@*)(*@\HLJLp{)}@*)
+    (*@\HLJLn{ns}@*) (*@\HLJLoB{=}@*) (*@\HLJLnf{findfirst}@*)(*@\HLJLp{(}@*)(*@\HLJLnf{sort}@*)(*@\HLJLp{(}@*)(*@\HLJLn{gen{\_}eigen}@*)(*@\HLJLp{)}@*) (*@\HLJLoB{.>}@*) (*@\HLJLni{1}@*)(*@\HLJLp{)}@*) (*@\HLJLoB{-}@*)(*@\HLJLni{1}@*) (*@\HLJLcs{{\#}finding}@*) (*@\HLJLcs{the}@*) (*@\HLJLcs{number}@*) (*@\HLJLcs{of}@*) (*@\HLJLcs{stable}@*) (*@\HLJLcs{roots:}@*) (*@\HLJLcs{find}@*) (*@\HLJLcs{first}@*) (*@\HLJLcs{unstable}@*) (*@\HLJLcs{root}@*)
+    (*@\HLJLn{nu}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{n}@*) (*@\HLJLoB{-}@*) (*@\HLJLn{ns}@*)
+    (*@\HLJLn{S11}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{decomp{\_}1}@*)(*@\HLJLoB{.}@*)(*@\HLJLn{S}@*)(*@\HLJLp{[}@*)(*@\HLJLni{1}@*)(*@\HLJLoB{:}@*)(*@\HLJLn{ns}@*)(*@\HLJLp{,}@*)(*@\HLJLni{1}@*)(*@\HLJLoB{:}@*)(*@\HLJLn{ns}@*)(*@\HLJLp{]}@*)
+    (*@\HLJLn{S12}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{decomp{\_}1}@*)(*@\HLJLoB{.}@*)(*@\HLJLn{S}@*)(*@\HLJLp{[}@*)(*@\HLJLni{1}@*)(*@\HLJLoB{:}@*)(*@\HLJLn{ns}@*)(*@\HLJLp{,(}@*)(*@\HLJLn{ns}@*)(*@\HLJLoB{+}@*)(*@\HLJLni{1}@*)(*@\HLJLp{)}@*)(*@\HLJLoB{:}@*)(*@\HLJLn{n}@*)(*@\HLJLp{]}@*)
+    (*@\HLJLn{S22}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{decomp{\_}1}@*)(*@\HLJLoB{.}@*)(*@\HLJLn{S}@*)(*@\HLJLp{[(}@*)(*@\HLJLn{ns}@*)(*@\HLJLoB{+}@*)(*@\HLJLni{1}@*)(*@\HLJLp{)}@*)(*@\HLJLoB{:}@*)(*@\HLJLn{n}@*)(*@\HLJLp{,(}@*)(*@\HLJLn{ns}@*)(*@\HLJLoB{+}@*)(*@\HLJLni{1}@*)(*@\HLJLp{)}@*)(*@\HLJLoB{:}@*)(*@\HLJLn{n}@*)(*@\HLJLp{]}@*)
+
+    (*@\HLJLn{T11}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{decomp{\_}1}@*)(*@\HLJLoB{.}@*)(*@\HLJLn{T}@*)(*@\HLJLp{[}@*)(*@\HLJLni{1}@*)(*@\HLJLoB{:}@*)(*@\HLJLn{ns}@*)(*@\HLJLp{,}@*)(*@\HLJLni{1}@*)(*@\HLJLoB{:}@*)(*@\HLJLn{ns}@*)(*@\HLJLp{]}@*)
+    (*@\HLJLn{T12}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{decomp{\_}1}@*)(*@\HLJLoB{.}@*)(*@\HLJLn{T}@*)(*@\HLJLp{[}@*)(*@\HLJLni{1}@*)(*@\HLJLoB{:}@*)(*@\HLJLn{ns}@*)(*@\HLJLp{,(}@*)(*@\HLJLn{ns}@*)(*@\HLJLoB{+}@*)(*@\HLJLni{1}@*)(*@\HLJLp{)}@*)(*@\HLJLoB{:}@*)(*@\HLJLn{n}@*)(*@\HLJLp{]}@*)
+    (*@\HLJLn{T22}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{decomp{\_}1}@*)(*@\HLJLoB{.}@*)(*@\HLJLn{T}@*)(*@\HLJLp{[(}@*)(*@\HLJLn{ns}@*)(*@\HLJLoB{+}@*)(*@\HLJLni{1}@*)(*@\HLJLp{)}@*)(*@\HLJLoB{:}@*)(*@\HLJLn{n}@*)(*@\HLJLp{,(}@*)(*@\HLJLn{ns}@*)(*@\HLJLoB{+}@*)(*@\HLJLni{1}@*)(*@\HLJLp{)}@*)(*@\HLJLoB{:}@*)(*@\HLJLn{n}@*)(*@\HLJLp{]}@*)
+
+    (*@\HLJLn{Qt}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{decomp{\_}1}@*)(*@\HLJLoB{.}@*)(*@\HLJLn{Q}@*)(*@\HLJLoB{{\textquotesingle}}@*)
+
+    (*@\HLJLn{Q1}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{Qt}@*)(*@\HLJLp{[}@*)(*@\HLJLni{1}@*)(*@\HLJLoB{:}@*)(*@\HLJLn{ns}@*)(*@\HLJLp{,}@*)(*@\HLJLoB{:}@*)(*@\HLJLp{]}@*)
+    (*@\HLJLn{Q2}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{Qt}@*)(*@\HLJLp{[(}@*)(*@\HLJLn{ns}@*)(*@\HLJLoB{+}@*)(*@\HLJLni{1}@*)(*@\HLJLp{)}@*)(*@\HLJLoB{:}@*)(*@\HLJLn{n}@*)(*@\HLJLp{,}@*)(*@\HLJLoB{:}@*)(*@\HLJLp{]}@*)
+
+    (*@\HLJLn{Q2Pi}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{Q2}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{Pi}@*) (*@\HLJLcs{{\#}This}@*) (*@\HLJLcs{is}@*) (*@\HLJLcs{equation}@*) (*@\HLJLcs{2.25}@*) (*@\HLJLcs{in}@*) (*@\HLJLcs{p.}@*) (*@\HLJLcs{46}@*) (*@\HLJLcs{Miao}@*) (*@\HLJLcs{(2014)}@*)
+
+    (*@\HLJLn{m}@*) (*@\HLJLoB{=}@*) (*@\HLJLnf{size}@*)(*@\HLJLp{(}@*)(*@\HLJLn{Q2Pi}@*)(*@\HLJLp{,}@*)(*@\HLJLni{2}@*)(*@\HLJLp{)}@*)
+
+    (*@\HLJLn{svd{\_}Q2Pi}@*) (*@\HLJLoB{=}@*) (*@\HLJLnf{svd}@*)(*@\HLJLp{(}@*)(*@\HLJLn{Q2Pi}@*)(*@\HLJLp{)}@*)
+    (*@\HLJLn{r}@*) (*@\HLJLoB{=}@*) (*@\HLJLnf{size}@*)(*@\HLJLp{(}@*)(*@\HLJLn{svd{\_}Q2Pi}@*)(*@\HLJLoB{.}@*)(*@\HLJLn{S}@*)(*@\HLJLp{)[}@*)(*@\HLJLni{1}@*)(*@\HLJLp{]}@*) (*@\HLJLcs{{\#}S}@*) (*@\HLJLcs{is}@*) (*@\HLJLcs{a}@*) (*@\HLJLcs{vector}@*)
+
+    (*@\HLJLcs{{\#}Checking}@*) (*@\HLJLcs{existence}@*) (*@\HLJLcs{and}@*) (*@\HLJLcs{uniqueness}@*) (*@\HLJLcs{see}@*) (*@\HLJLcs{p.}@*) (*@\HLJLcs{46-47,}@*) (*@\HLJLcs{Miao}@*) (*@\HLJLcs{(2014)}@*)
+    (*@\HLJLk{if}@*) (*@\HLJLn{m}@*) (*@\HLJLoB{>}@*) (*@\HLJLn{r}@*)
+        (*@\HLJLn{eu}@*) (*@\HLJLoB{=}@*) (*@\HLJLp{[}@*)(*@\HLJLni{1}@*)(*@\HLJLp{;}@*)(*@\HLJLni{0}@*)(*@\HLJLp{]}@*)
+        (*@\HLJLnd{@warn}@*) (*@\HLJLs{"{}No}@*) (*@\HLJLs{Unique}@*) (*@\HLJLs{Solution"{}}@*)
+    (*@\HLJLk{elseif}@*) (*@\HLJLn{m}@*) (*@\HLJLoB{<}@*) (*@\HLJLn{r}@*)
+        (*@\HLJLn{eu}@*) (*@\HLJLoB{=}@*) (*@\HLJLp{[}@*)(*@\HLJLni{0}@*)(*@\HLJLp{;}@*)(*@\HLJLni{0}@*)(*@\HLJLp{]}@*)
+        (*@\HLJLnd{@warn}@*) (*@\HLJLs{"{}No}@*) (*@\HLJLs{solution"{}}@*)
+    (*@\HLJLk{else}@*)
+        (*@\HLJLn{eu}@*) (*@\HLJLoB{=}@*) (*@\HLJLp{[}@*)(*@\HLJLni{1}@*)(*@\HLJLp{;}@*)(*@\HLJLni{1}@*)(*@\HLJLp{]}@*)
+        (*@\HLJLnd{@info}@*) (*@\HLJLs{"{}Unique}@*) (*@\HLJLs{and}@*) (*@\HLJLs{Stable}@*) (*@\HLJLs{Solution"{}}@*)
+        (*@\HLJLn{U1}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{svd{\_}Q2Pi}@*)(*@\HLJLoB{.}@*)(*@\HLJLn{U}@*)(*@\HLJLp{[}@*)(*@\HLJLoB{:}@*)(*@\HLJLp{,}@*)(*@\HLJLni{1}@*)(*@\HLJLoB{:}@*)(*@\HLJLn{r}@*)(*@\HLJLp{]}@*)
+        (*@\HLJLn{Xi}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{Q1}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{Pi}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{svd{\_}Q2Pi}@*)(*@\HLJLoB{.}@*)(*@\HLJLn{V}@*)(*@\HLJLoB{*}@*)(*@\HLJLnf{inv}@*)(*@\HLJLp{(}@*)(*@\HLJLnf{Diagonal}@*)(*@\HLJLp{(}@*)(*@\HLJLn{svd{\_}Q2Pi}@*)(*@\HLJLoB{.}@*)(*@\HLJLn{S}@*)(*@\HLJLp{))}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{U1}@*)(*@\HLJLoB{{\textquotesingle}}@*) (*@\HLJLcs{{\#}bottom}@*) (*@\HLJLcs{of}@*) (*@\HLJLcs{p}@*) (*@\HLJLcs{46}@*)
+
+        (*@\HLJLn{Aux1}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{S12}@*)(*@\HLJLoB{-}@*)(*@\HLJLn{Xi}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{S22}@*)
+
+        (*@\HLJLn{larg1}@*) (*@\HLJLoB{=}@*) (*@\HLJLnf{size}@*)(*@\HLJLp{(}@*)(*@\HLJLn{Aux1}@*)(*@\HLJLp{,}@*)(*@\HLJLni{2}@*)(*@\HLJLp{)}@*)
+        (*@\HLJLn{Aux2}@*) (*@\HLJLoB{=}@*) (*@\HLJLp{[}@*)(*@\HLJLn{S11}@*) (*@\HLJLn{Aux1}@*)(*@\HLJLp{;}@*)(*@\HLJLnf{zeros}@*)(*@\HLJLp{(}@*)(*@\HLJLn{larg1}@*)(*@\HLJLp{,}@*)(*@\HLJLnf{size}@*)(*@\HLJLp{(}@*)(*@\HLJLn{S11}@*)(*@\HLJLp{,}@*)(*@\HLJLni{2}@*)(*@\HLJLp{))}@*) (*@\HLJLnf{Matrix}@*)(*@\HLJLp{(}@*)(*@\HLJLn{I}@*)(*@\HLJLp{,}@*)(*@\HLJLn{larg1}@*)(*@\HLJLp{,}@*)(*@\HLJLn{larg1}@*)(*@\HLJLp{)]}@*)
+        (*@\HLJLn{larg2}@*) (*@\HLJLoB{=}@*) (*@\HLJLnf{size}@*)(*@\HLJLp{(}@*)(*@\HLJLn{Aux2}@*)(*@\HLJLp{,}@*)(*@\HLJLni{2}@*)(*@\HLJLp{)}@*)
+        (*@\HLJLn{larg2}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{larg2}@*) (*@\HLJLoB{-}@*) (*@\HLJLnf{size}@*)(*@\HLJLp{(}@*)(*@\HLJLn{T11}@*)(*@\HLJLp{,}@*)(*@\HLJLni{1}@*)(*@\HLJLp{)}@*)
+
+        (*@\HLJLcs{{\#}{\#}Matrices}@*) (*@\HLJLcs{on}@*) (*@\HLJLcs{top}@*) (*@\HLJLcs{of}@*) (*@\HLJLcs{p.}@*) (*@\HLJLcs{46}@*)
+
+        (*@\HLJLn{Theta1}@*) (*@\HLJLoB{=}@*) (*@\HLJLp{[}@*)(*@\HLJLn{T11}@*) (*@\HLJLn{T12}@*)(*@\HLJLoB{-}@*)(*@\HLJLn{Xi}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{T22}@*)(*@\HLJLp{;}@*)(*@\HLJLnf{zeros}@*)(*@\HLJLp{(}@*)(*@\HLJLn{larg2}@*)(*@\HLJLp{,}@*)(*@\HLJLn{n}@*)(*@\HLJLp{)]}@*)
+        (*@\HLJLn{Theta1}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{decomp{\_}1}@*)(*@\HLJLoB{.}@*)(*@\HLJLn{Z}@*)(*@\HLJLoB{*}@*)(*@\HLJLnf{inv}@*)(*@\HLJLp{(}@*)(*@\HLJLn{Aux2}@*)(*@\HLJLp{)}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{Theta1}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{decomp{\_}1}@*)(*@\HLJLoB{.}@*)(*@\HLJLn{Z}@*)(*@\HLJLoB{{\textquotesingle}}@*)
+        (*@\HLJLn{Theta2}@*) (*@\HLJLoB{=}@*) (*@\HLJLp{[}@*)(*@\HLJLn{Q1}@*) (*@\HLJLoB{-}@*) (*@\HLJLn{Xi}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{Q2}@*)(*@\HLJLp{;}@*)(*@\HLJLnf{zeros}@*)(*@\HLJLp{(}@*)(*@\HLJLn{larg2}@*)(*@\HLJLp{,}@*)(*@\HLJLn{n}@*)(*@\HLJLp{)]}@*)
+        (*@\HLJLn{Theta2}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{decomp{\_}1}@*)(*@\HLJLoB{.}@*)(*@\HLJLn{Z}@*)(*@\HLJLoB{*}@*)(*@\HLJLnf{inv}@*)(*@\HLJLp{(}@*)(*@\HLJLn{Aux2}@*)(*@\HLJLp{)}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{Theta2}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{Psi}@*)
+        (*@\HLJLn{Theta3}@*) (*@\HLJLoB{=}@*) (*@\HLJLnf{zeros}@*)(*@\HLJLp{(}@*)(*@\HLJLn{n}@*)(*@\HLJLp{,}@*)(*@\HLJLn{n}@*)(*@\HLJLp{)}@*)
+        (*@\HLJLn{ans}@*) (*@\HLJLoB{=}@*) (*@\HLJLnf{Sims}@*)(*@\HLJLp{(}@*)(*@\HLJLn{Theta1}@*)(*@\HLJLp{,}@*)(*@\HLJLn{Theta2}@*)(*@\HLJLp{,}@*)(*@\HLJLn{Theta3}@*)(*@\HLJLp{,}@*)(*@\HLJLn{eu}@*)(*@\HLJLp{)}@*)
+        (*@\HLJLk{return}@*) (*@\HLJLn{ans}@*)(*@\HLJLcs{{\#}Theta1,Theta2,eu}@*)
+    (*@\HLJLk{end}@*)
+(*@\HLJLk{end}@*)
+\end{lstlisting}
+
+\begin{lstlisting}
+gensys (generic function with 1 method)
+\end{lstlisting}
+
+
+
+\end{document}
