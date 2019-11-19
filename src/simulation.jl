@@ -1,11 +1,11 @@
 include(string(pwd(),"/src/gensys.jl"))
 
-function simulate_dsge(G0,G1,Psi,Pi,Sigma = I,n; burn_in = 500)
+function simulate_dsge(G0,G1,Psi,Pi,n,Sigma = I; burn_in=500)
     #G0,G1,Psi,Pi are the usual suspects from gensys
     #Sigma is the variance-covariance matrix of errors
-    #Currently: Choleski Sigma and multiply randn output by it, I have no idea if this is the right thing to do
+    #Currently: Choleski Sigma and multiply randn output by it, I have no idea if this is the right thing to do (but it does look like it's rights)
     #n is the sample size
-    n_shocks = size(Pi,2) #number of columns of Pi = number of inovations in the system
+    n_shocks = size(Psi,2) #number of columns of Pi = number of inovations in the system
     total = n + burn_in
 
     if Sigma == I
@@ -14,7 +14,7 @@ function simulate_dsge(G0,G1,Psi,Pi,Sigma = I,n; burn_in = 500)
 
     sol = gensys(G0,G1,Psi,Pi)
 
-    if sum(sol.eu !=2)
+    if sum(sol.eu) !=2
         @error "Non existent or not unique solution"
     end
 
@@ -26,7 +26,8 @@ function simulate_dsge(G0,G1,Psi,Pi,Sigma = I,n; burn_in = 500)
     resul = zeros(total,size(G0,1))
 
     for j in 2:total
-        resul[j,:] = sol.Theta1*resul[j-1,:] + sol.Theta2*shocks[j,:]
+        temp = sol.Theta1*resul[j-1,:] + sol.Theta2*shocks[j,:]'
+        resul[j,:] = temp'
     end
 
     resul = resul[burn_in+1:total,:]
