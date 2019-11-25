@@ -26,12 +26,42 @@ a2,ll = log_like_dsge(param1,dados[:,2])
 
 bett = 0.70:0.005:1.15
 
-vals = collect(bett)
+vals_bet = collect(bett)
 
 for i in 1:length(bett)
     param1 = [alfa,bett[i],epsilon,theta,sig,1,phi,phi_pi,phi_y,rho_v]
-    ss,filtered,vals[i] = log_like_dsge(param1,dados[:,2])
+    ss,filtered,vals_bet[i] = log_like_dsge(param1,dados[:,2])
     println(i)
 end
 
-plot(bett,vals)
+plot(bett,vals_bet)
+
+alff = 0.10:0.01:0.9
+
+vals_alfa = collect(alff)
+
+for i in 1:length(alff)
+    param1 = [alff[i],bet,epsilon,theta,sig,1,phi,phi_pi,phi_y,rho_v]
+    ss,filtered,vals_alfa[i] = log_like_dsge(param1,dados[:,2])
+end
+
+plot(alff,vals)
+
+
+bett = 0.70:0.005:1.15
+alff = 0.10:0.01:0.9
+
+vals = zeros(length(alff),length(bett))
+
+for i in 1:length(alff), j in 1:length(bett)
+    param1 = [alff[i],bett[j],epsilon,theta,sig,1,phi,phi_pi,phi_y,rho_v]
+    ss,filtered,vals[i,j] = log_like_dsge(param1,dados[:,2])
+end
+
+plotly()
+
+plot(alff,bett,vals, st=:surface, camera = (-45,45))
+
+using JLD2
+
+@save()
