@@ -31,5 +31,5 @@ function simulate_dsge(G0,G1,Psi,Pi,n,Sigma = I; burn_in=500)
     end
 
     resul = resul[burn_in+1:total,:]
-    return resul
+    return resul,shocks
 end
