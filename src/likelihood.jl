@@ -1,4 +1,6 @@
 using QuantEcon
+using Statistics
+using LinearAlgebra
 
 include(string(pwd(),"/src/gensys.jl"))
 
@@ -8,6 +10,7 @@ function log_like_dsge(par,data)
     #beta
     #epsilon
     #theta
+    #sig
     #sigma this is the std dev of the innovation
     #phi_pi
     #phi_y
@@ -33,23 +36,44 @@ function log_like_dsge(par,data)
           1    sig;
           0    0;
           0    0]
+
+    p = size(GAMMA_1,1) #number of endogenous vars
+
     sol = gensys(GAMMA_0,GAMMA_1,PSI,PI)
     if sum(sol.eu) != 2
         return(-9999999999999)
     end
-    A = sol.Theta1[4,4]
-    G = sol.Theta1[1,4]
+
+    Sig = zeros(p,p)
+    Sig[4,4] = param[6]^2
+
+    G = zeros(1,p)
+    G[1,2] = 1
+
+    A = sol.Theta1
     R = 0
-    Q = sigma^2
+    Q = sol.Theta2'*Sig
     kalman_res = Kalman(A,G,Q,R) #create a Kalman filter instance
-    x_hat = 1 #initial mean of the state
-    x_var = 1#variance initial of state
+
+    y_mean = mean(data,dims=1)
+    y_var = var(data,dims=1)
+    y_var = reshape(y_var,size(y_var,2))
+
+    x_hat = repeat(y_mean,p) #initial mean of the state
+    x_var = diagm(repeat(y_var,p))#variance initial of state
     set_state!(kalman_res,x_hat,x_var)
 
     inovs = zeros(nobs)
 
+    llh = zero(nobs)
+
     for j in 1:nobs
-        prior_to_filtered!(kalman_res,) #prior to filtered
-        inovs = kalman_res.cur_x_hat
-        filtered_to_forecast!(kalman_res)
+        media = kalman_res.cur_x_hat
+        varian = kalman_res.cur_sigma
+        eta = data[j,:] - kalman_res.G*media #mean loglike
+        P = kalman_res.G*varian*kalman_res.G' .+kalman_res.R#var loglike #TODO change this 
+        llh[j] = -(p*log(2*pi) + logdet(P) .+ eta'*inv(P)*eta)[1]/2
+        update!(kalman_res,data[j,:]) #updating the kalman estimates
     end
+    return sum(llh)
+end
