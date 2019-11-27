@@ -61,7 +61,9 @@ end
 plotly()
 
 plot(alff,bett,vals, st=:surface, camera = (-45,45))
+xaxis!("alfa")
+yaxis!("beta")
 
 using JLD2
 
-@save()
+@save "surface.jld2" alff bett vals

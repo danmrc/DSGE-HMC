@@ -12,7 +12,7 @@ struct Sims
     eu
 end
 
-function gensys(G0,G1,Psi,Pi)
+function gensys(G0,G1,Psi,Pi;verbose = true)
     decomp_1 = schur(G0,G1)
     gen_eigen = abs.(decomp_1.beta ./ decomp_1.alpha)
     ordschur!(decomp_1, gen_eigen .< 1)
@@ -42,13 +42,19 @@ function gensys(G0,G1,Psi,Pi)
     #Checking existence and uniqueness see p. 46-47, Miao (2014)
     if m > r
         eu = [1;0]
-        @warn "No Unique Solution"
+        if verbose == true
+            @warn "No Unique Solution"
+        end
     elseif m < r
         eu = [0;0]
-        @warn "No solution"
+        if verbose == true
+            @warn "No solution"
+        end
     else
         eu = [1;1]
-        @info "Unique and Stable Solution"
+        if verbose == true
+            @info "Unique and Stable Solution"
+        end
         U1 = svd_Q2Pi.U[:,1:r]
         Xi = Q1*Pi*svd_Q2Pi.V*inv(Diagonal(svd_Q2Pi.S))*U1' #bottom of p 46
 
