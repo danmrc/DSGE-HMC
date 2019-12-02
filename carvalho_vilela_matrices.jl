@@ -9,7 +9,7 @@
 
 ## 1. Pi and Psi matrices
 ## 2. More comments
-## 3. Coefficients as strings for latexify
+## 3. Coefficients as strings for latexify DONE! See symbolic version
 
 #######
 
@@ -55,10 +55,14 @@ Psi = zeros(23,8)
 
 #First equation
 
+#First equation
+
 G0[1,1] = 1
 G0[1,5] = (1-h)/sigma
-G0[1,6] = (1-h)/sigma
+G0[1,6] = -(1-h)/sigma
 G0[1,3] = -(1-h)/sigma
+
+## MISSING Y_t
 
 G1[1,1] = (1+h)
 G1[1,2] = h
@@ -66,11 +70,12 @@ G1[1,6] = (1-h)/sigma
 
 #Second Equation
 
+G0[2,8] = alfa*eta*(2-alfa)
+G0[2,10] = alfa
+
 G1[2,7] = -1
 G1[2,1] = 1-alfa
-G1[2,8] = alfa*eta*(2-alfa)
 G1[2,9] = alfa*eta
-G1[2,10] = alfa
 
 #Third Equation
 
@@ -82,13 +87,15 @@ G1[3,17] = 1
 
 #Fourth Equation
 
-G1[4,11] = -1
+
+G0[4,8] = 1 -alfa
+G0[4,11] = 1
+
 G1[4,9] = 1
-G1[4,8] = 1 -alfa
 
 #Fifth equation
 
-G0[5,11] = -1
+G0[5,11] = 1
 G0[5,14] = -1
 
 G1[5,11] = 1
@@ -99,13 +106,13 @@ G1[5,5] = -1
 #Equation number 6
 
 G0[6,15] = beta
+G0[6,8] = kappa_d*alfa
 
-G1[6,15] = (1+beta*delta_d)
-G1[6,16] = beta*delta_d
-G1[6,8] = -kappa_d*alfa
+G1[6,15] = 1+beta*delta_d
+G1[6,16] = -delta_d
 G1[6,7] = -kappa_d*phi
 G1[6,1] = -kappa_d*sigma/(1-h)
-G1[6,2] = kappa_d*sigma/(1-h)
+G1[6,2] = h*kappa_d*sigma/(1-h)
 G1[6,19] = kappa_d*(1+phi)
 
 #Equation number 7
@@ -115,13 +122,14 @@ G0[7,17] = beta
 G1[7,17] = (1+beta*delta_i)
 G1[7,18] = delta_i
 G1[7,9] = kappa_i
+G1[7,22] = 1
 
 #Equation number 8
 
-G0[8,8] = -alfa
+G0[8,8] = alfa
 
-G1[8,5] = -1
-G1[8,15] = 1
+G1[8,5] = 1
+G1[8,15] = -1
 G1[8,8] = alfa
 
 #Equation number 9
@@ -137,20 +145,22 @@ G1[9,1] = -1
 # Equation number 10
 
 G0[10,12] = 1
-G0[10,21] = 1
-G0[10,3] = -1
-
+G0[10,3] = 1
 G1[10,20] = chi
+
+G1[10,21] = 1
+G1[10,23] = 1
 
 # Equation number 11: Taylor rule
 
 G0[11,3] = 1
+
 G1[11,3] = rho_it1
 G1[11,4] = rho_it2
-G1[11,5] = (1 - rho_it1 - rho_it2)*lambda_pi
-G1[11,7] = (1 - rho_it1 - rho_it2)*lambda_y
-G1[11,12] = (1 - rho_it1 - rho_it2)*lambda_s
-G1[11,13] = -(1 - rho_it1 - rho_it2)*lambda_s #its for the delta tot
+G1[11,5] = (1-rho_it1-rho_it2)*lambda_pi
+G1[11,7] = (1-rho_it1-rho_it2)*lambda_y
+G1[11,12] = (1-rho_it1-rho_it2)*lambda_s
+G1[11,13] = -(1-rho_it1-rho_it2)*lambda_s ## its for the delta tot
 
 ###################
 ## Foreign Block ##
@@ -160,28 +170,28 @@ G1[11,13] = -(1 - rho_it1 - rho_it2)*lambda_s #its for the delta tot
 
 G0[12,10] = 1
 
-G1[12,10] = a1_yy
-G1[12,14] = a1_ypi
-G1[12,21] = a1_yi
+G1[12,10] = a_1yy
+G1[12,14] = a_1y*pi
+G1[12,21] = a_1yi
 
 #Equation 13
 
 G0[13,14] = 1
-G0[13,10] = a0_piy
+G0[13,10] = a_0piy
 
-G1[13,10] = a1_piy
-G1[13,14] = a1_pipi
-G1[13,21] = a1_pii
+G1[13,10] = a_1piy
+G1[13,14] = a_1pipi
+G1[13,21] = a_1pii
 
 #Equation 14
 
 G0[14,21] = 1
-G0[14,14] = a0_ipi
-G0[14,10] = a0_iy
+G0[14,14] = a_0ipi
+G0[14,10] = a_0iy
 
-G1[14,10] = a1_iy
-G1[14,14] = a1_ipi
-G1[14,21] = a1_ii
+G1[14,10] = a_1iy
+G1[14,14] = a_1ipi
+G1[14,21] = a_1ii
 
 #################
 ## Shocks block #
