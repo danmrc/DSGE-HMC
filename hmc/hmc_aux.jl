@@ -32,28 +32,31 @@ function dsge_fit(par,data)
 
     nobs = size(data,1)
 
-    GAMMA_0 = [bet    0     0  0;
+    local GAMMA_0 = [bet    0     0  0;
                1      sig   0  0;
                0      0     0  0;
                0      0     0  1]
 
-    GAMMA_1 = [1      -kappa  0  0;
+    local GAMMA_1 = [1      -kappa  0  0;
                0       sig    1  0;
                -phi_pi  -phi_y  1 -1;
                0       0      0  rho_v]
 
-    PSI = [0; 0; 0; 1]
+    local PSI = [0; 0; 0; 1]
 
-    PI = [bet  0;
+    local PI = [bet  0;
           1    sig;
           0    0;
           0    0]
 
     p = size(GAMMA_1,1) #number of endogenous vars
 
-    sol = gensys(GAMMA_0,GAMMA_1,PSI,PI;verbose = false)
+    sol = gensys(GAMMA_0,GAMMA_1,PSI,PI)
+
+    fit = zeros(nobs,4)
+
     if sum(sol.eu) != 2
-        return(-9999999999999)
+        return fit[:,2]
     end
 
     #Sig = zeros(p,p)
@@ -77,19 +80,14 @@ function dsge_fit(par,data)
     #x_var = x_var*x_var'
     set_state!(kalman_res,x_hat,x_var)
 
-    fit = zeros(nobs,4)
-
-    llh = zeros(nobs)
-
     for j in 1:(nobs-1)
         med = kalman_res.cur_x_hat
         fit[j,:] = med
-        varian = kalman_res.cur_sigma
         eta = data[j+1,:] - kalman_res.G*med #mean loglike
         #updating the kalman estimates
         QuantEcon.update!(kalman_res,data[j+1,:])
         #println(kalman_res.cur_sigma)
     end
-    fit = fit[:,2]
+    fit = fit[1:(nobs-1),2]
     return fit
 end

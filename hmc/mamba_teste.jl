@@ -20,9 +20,9 @@ model = Model(
     () -> Normal(0, sqrt(0.1)),false
   ),
 
-  #beta2 = Stochastic(1,
-  #  () -> Normal(0, sqrt(1000)),false
-  #),
+  beta2 = Stochastic(1,
+   () -> Normal(0, sqrt(1000)),false
+  ),
 
   beta = Logical(1,
     (beta1,beta2) -> [beta1; beta2]
@@ -31,7 +31,6 @@ model = Model(
   s2 = Stochastic(
     () -> InverseGamma(0.001, 0.001)
   )
-
 )
 
 scheme = [NUTS([:beta, :s2])]

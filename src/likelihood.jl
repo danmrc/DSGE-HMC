@@ -57,7 +57,7 @@ function log_like_dsge(par,data)
 
     sol = gensys(GAMMA_0,GAMMA_1,PSI,PI)
     if sum(sol.eu) != 2
-        return(-9999999999999)
+        return -9999999999999
     end
 
     #Sig = zeros(p,p)
@@ -92,8 +92,10 @@ function log_like_dsge(par,data)
         eta = data[j+1,:] - kalman_res.G*med #mean loglike
         P = kalman_res.G*varian*kalman_res.G' + kalman_res.R#var loglike
         llh[j] = -(p*log(2*pi) + logdet(P) .+ eta'*inv(P)*eta)/2
-        update!(kalman_res,data[j+1,:]) #updating the kalman estimates
+        QuantEcon.update!(kalman_res,data[j+1,:]) #updating the kalman estimates
         #println(kalman_res.cur_sigma)
+        #println(det(varian))
+        println(P)
     end
     llh = llh[10:length(llh)]
     return kalman_res.cur_sigma,fit, sum(llh)
