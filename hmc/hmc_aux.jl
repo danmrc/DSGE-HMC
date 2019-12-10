@@ -1,3 +1,5 @@
+using QuantEcon
+
 function dsge_fit(par,data)
     #order to par
     #alfa
@@ -49,7 +51,7 @@ function dsge_fit(par,data)
 
     p = size(GAMMA_1,1) #number of endogenous vars
 
-    sol = gensys(GAMMA_0,GAMMA_1,PSI,PI)
+    sol = gensys(GAMMA_0,GAMMA_1,PSI,PI;verbose = false)
     if sum(sol.eu) != 2
         return(-9999999999999)
     end
@@ -84,9 +86,10 @@ function dsge_fit(par,data)
         fit[j,:] = med
         varian = kalman_res.cur_sigma
         eta = data[j+1,:] - kalman_res.G*med #mean loglike
-        P = kalman_res.G*varian*kalman_res.G' + kalman_res.R#var loglike
         #updating the kalman estimates
+        QuantEcon.update!(kalman_res,data[j+1,:])
         #println(kalman_res.cur_sigma)
     end
+    fit = fit[:,2]
     return fit
 end
