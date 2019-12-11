@@ -7,14 +7,14 @@ sol = gensys(GAMMA_0,GAMMA_1,PSI,PI)
 
 irfs = irf(sol,15,0.25)
 
-plot(4*irfs[:,1], label = "Inflação")
-plot!(4*irfs_true[2:15,1], label = "Inflation True")
+Plots.plot(4*irfs[:,1], label = "Inflação",w=3)
+Plots.plot!(4*irfs_true[2:15,1], label = "Inflation True", line = :dash,w=3)
 
-plot(irfs[:,2], label = "Output Gap")
-plot!(irfs_true[2:15,2], label = "Output Gap True")
+Plots.plot(irfs[:,2], label = "Output Gap",w=3)
+Plots.plot!(irfs_true[2:15,2], label = "Output Gap True",line = :dash,w=3)
 
-plot(4*irfs[:,3], label = "Juros")
-plot!(4*irfs_true[2:15,3], label = "Juros True")
+Plots.plot(4*irfs[:,3], label = "Juros",w=3)
+Plots.plot!(4*irfs_true[2:15,3], label = "Juros True",w=3,line = :dash)
 
-plot(irfs[:,4], label = "v")
-plot!(irfs_true[2:15,4], label = "v True")
+Plots.plot(irfs[:,4], label = "v",w=3)
+Plots.plot!(irfs_true[2:15,4], label = "v True",w=3,line = :dash)

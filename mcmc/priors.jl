@@ -1,4 +1,4 @@
-include("C:\\Users\\daniel.coutinho\\github\\DSGE-HMC\\src\\likelihood.jl")
+include("../src/likelihood.jl")
 
 using Distributions
 

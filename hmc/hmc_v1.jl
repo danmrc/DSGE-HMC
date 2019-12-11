@@ -1,9 +1,9 @@
 using Mamba
 using Distributions
 
-include("src/simulation.jl")
-include("gali_bayesian.jl")
-include("hmc/hmc_aux.jl")
+include("../src/simulation.jl")
+include("../gali_bayesian.jl")
+include("../hmc/hmc_aux.jl")
 
 yy,shocks = simulate_dsge(GAMMA_0,GAMMA_1,PSI,PI,500)
 
@@ -18,10 +18,10 @@ mm = Model(
     false
     ),
 
-    alfa = Stochastic(
-    ()-> Beta(3,3),
-    false
-    ),
+    # alfa = Stochastic(
+    # ()-> Beta(3,3),
+    # false
+    # ),
 
     bet = Stochastic(
     ()-> Beta(4,2),
@@ -44,17 +44,17 @@ mm = Model(
     ),
 
     phi_pi = Stochastic(
-    () -> Normal(1,2),
+    () -> Gamma(2,1),
     false
     ),
 
     phi_y = Stochastic(
-    () -> Normal(1,2),
+    () -> Gamma(2,1),
     false
     ),
 
     rho_v = Stochastic(
-    () -> Normal(0,sqrt(0.1)),
+    () -> Beta(1,1),
     false
     ),
 
@@ -64,33 +64,33 @@ mm = Model(
     ),
 
     s2 = Stochastic(
-    () -> InverseGamma(0.001,0.001),
+    () -> Gamma(2,2),
     false
     ),
 
     par = Logical(1,
-    (alfa,bet,epsilon,theta,sig,s2,phi,phi_pi,phi_y,rho_v) -> [alfa,bet,epsilon,theta,sig,s2,phi,phi_pi,phi_y,rho_v]
-    )#() -> [0.3,0.99,6,2/3,2,1,2,1.5,1.5,0.4]#
+    (bet,epsilon,theta,sig,s2,phi,phi_pi,phi_y,rho_v) -> [2/3,bet,epsilon,theta,sig,s2,phi,phi_pi,phi_y,rho_v]#() -> [0.3,0.99,6,2/3,2,1,2,1.5,1.5,0.4]#
+    )
 )
 
 sampling1 = [NUTS([:par])]
 
-sampling2 = [RWM([:par])]
+sampling2 = [RWM([:par],10)]
 
-dados = Dict{Symbol, Any}(:y => yy[:,2], :x => yy[:,2])
+dados = Dict{Symbol, Any}(:y => yy[1:499,2], :x => yy[:,2])
 
 inits = [
     Dict(:y => dados[:y],
-    :alfa => rand(Beta(3,3),1),
-    :bet => rand(Beta(4,2),1),
-    :epsilon => rand(Gamma(7,1),1),
-    :sig => rand(Gamma(2,1),1),
-    :phi => rand(Gamma(2,1),1),
-    :phi_pi => rand(Normal(1,2),1),
-    :phi_y => rand(Normal(1,2),1),
-    :rho_v => rand(Normal(0,sqrt(0.1)),1),
-    :theta => rand(Beta(3,3),1),
-    :s2 => rand(Gamma(1,1),1))
+    #:alfa => rand(Beta(3,3)),
+    :bet => rand(Beta(4,2)),
+    :epsilon => rand(Gamma(7,1)),
+    :sig => rand(Gamma(2,1)),
+    :phi => rand(Gamma(2,1)),
+    :phi_pi => rand(Gamma(2,1)),
+    :phi_y => rand(Gamma(2,1)),
+    :rho_v => rand(Beta(1,1)),
+    :theta => rand(Beta(3,3)),
+    :s2 => rand(Gamma(2,2)))
     for i in 1:3
 ]
 
@@ -101,3 +101,9 @@ sim1 = mcmc(mm,dados,inits,10000, burnin=250, thin=2, chains=3)
 describe(sim1)
 
 Gadfly.draw(pp, filename = "plots.svg")
+
+pp = [2/3,inits[1][:bet],inits[1][:epsilon],inits[1][:theta],inits[1][:sig],inits[1][:s2],inits[1][:phi],inits[1][:phi_pi],inits[1][:phi_y],inits[1][:rho_v]]
+
+pp[6] = 0.05
+
+dsge_fit(pp,yy[:,2])

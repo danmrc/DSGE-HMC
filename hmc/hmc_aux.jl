@@ -51,7 +51,7 @@ function dsge_fit(par,data)
 
     p = size(GAMMA_1,1) #number of endogenous vars
 
-    sol = gensys(GAMMA_0,GAMMA_1,PSI,PI)
+    sol = gensys(GAMMA_0,GAMMA_1,PSI,PI;verbose=false)
 
     fit = zeros(nobs,4)
 
@@ -66,8 +66,10 @@ function dsge_fit(par,data)
     G[1,2] = 1
 
     A = sol.Theta1
-    R = [0]
+    R = [0.1]
     Q = par[6]^2*sol.Theta2*sol.Theta2'
+
+    #return Q
 
     kalman_res = Kalman(A,G,Q,R) #create a Kalman filter instance
 

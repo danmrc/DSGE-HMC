@@ -1,9 +1,9 @@
-include("C:\\Users\\daniel.coutinho\\github\\DSGE-HMC\\mcmc\\priors.jl")
+include("priors.jl")
 
 unif = Uniform(0,1)
 
-include("C:\\Users\\daniel.coutinho\\github\\DSGE-HMC\\src/simulation.jl")
-include("C:\\Users\\daniel.coutinho\\github\\DSGE-HMC\\gali_bayesian.jl")
+include("../src/simulation.jl")
+include("../gali_bayesian.jl")
 
 yy,shocks = simulate_dsge(GAMMA_0,GAMMA_1,PSI,PI,500)
 

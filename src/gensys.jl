@@ -45,8 +45,18 @@ function gensys(G0,G1,Psi,Pi;verbose = true)
         if verbose == true
             @warn "No Unique Solution"
         end
+        Theta1 = zeros(n,n)
+        Theta2 = zeros(n,n)
+        Theta3 = zeros(n,n)
+        ans = Sims(Theta1,Theta2,Theta3,eu)
+        return ans
     elseif m < r
         eu = [0;0]
+        Theta1 = zeros(n,n)
+        Theta2 = zeros(n,n)
+        Theta3 = zeros(n,n)
+        ans = Sims(Theta1,Theta2,Theta3,eu)
+        return ans
         if verbose == true
             @warn "No solution"
         end
@@ -56,7 +66,7 @@ function gensys(G0,G1,Psi,Pi;verbose = true)
             @info "Unique and Stable Solution"
         end
         U1 = svd_Q2Pi.U[:,1:r]
-        Xi = Q1*Pi*svd_Q2Pi.V*inv(Diagonal(svd_Q2Pi.S))*U1' #bottom of p 46
+        Xi = Q1*Pi*pinv(Q2Pi) #bottom of p 46 #change in 11 dec 2019: pinv instead of manually multiplying the elements 
 
         Aux1 = S12-Xi*S22
 
