@@ -51,12 +51,13 @@ function dsge_fit(par,data)
 
     p = size(GAMMA_1,1) #number of endogenous vars
 
-    sol = gensys(GAMMA_0,GAMMA_1,PSI,PI;verbose=false)
-
     fit = zeros(nobs,4)
 
+    sol = gensys(GAMMA_0,GAMMA_1,PSI,PI;verbose=false)
+
+
     if sum(sol.eu) != 2
-        return fit[:,2]
+        @error "No eu"
     end
 
     #Sig = zeros(p,p)
@@ -66,7 +67,7 @@ function dsge_fit(par,data)
     G[1,2] = 1
 
     A = sol.Theta1
-    R = [0.1]
+    R = [0.0001]
     Q = par[6]^2*sol.Theta2*sol.Theta2'
 
     #return Q

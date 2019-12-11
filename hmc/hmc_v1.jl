@@ -63,13 +63,13 @@ mm = Model(
     false
     ),
 
-    s2 = Stochastic(
-    () -> Gamma(2,2),
-    false
-    ),
+    # s2 = Stochastic(
+    # () -> Gamma(2,2),
+    # false
+    # ),
 
     par = Logical(1,
-    (bet,epsilon,theta,sig,s2,phi,phi_pi,phi_y,rho_v) -> [2/3,bet,epsilon,theta,sig,s2,phi,phi_pi,phi_y,rho_v]#() -> [0.3,0.99,6,2/3,2,1,2,1.5,1.5,0.4]#
+    (bet,epsilon,theta,sig,phi,phi_pi,phi_y,rho_v) -> [2/3,bet,epsilon,theta,sig,1,phi,phi_pi,phi_y,rho_v]#() -> [0.3,0.99,6,2/3,2,1,2,1.5,1.5,0.4]#
     )
 )
 
@@ -90,17 +90,20 @@ inits = [
     :phi_y => rand(Gamma(2,1)),
     :rho_v => rand(Beta(1,1)),
     :theta => rand(Beta(3,3)),
-    :s2 => rand(Gamma(2,2)))
-    for i in 1:3
+    #:s2 => rand(Gamma(2,2))
+    )
+    for i in 1:2
 ]
 
 setsamplers!(mm,sampling1)
 
-sim1 = mcmc(mm,dados,inits,10000, burnin=250, thin=2, chains=3)
+sim1 = mcmc(mm,dados,inits,5000, burnin=1000, thin=2, chains=2)
 
 describe(sim1)
 
-Gadfly.draw(pp, filename = "plots.svg")
+p = Gadfly.plot(sim1)
+
+Gadfly.draw(p, filename = "plots.svg")
 
 pp = [2/3,inits[1][:bet],inits[1][:epsilon],inits[1][:theta],inits[1][:sig],inits[1][:s2],inits[1][:phi],inits[1][:phi_pi],inits[1][:phi_y],inits[1][:rho_v]]
 
