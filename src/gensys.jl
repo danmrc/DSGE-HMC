@@ -12,12 +12,17 @@ struct Sims
     eu
 end
 
-function gensys(G0,G1,Psi,Pi;verbose = true)
+function gensys(G0,G1,Psi,Pi;verbose = true, tol = 1e-12)
     decomp_1 = schur(G0,G1)
     gen_eigen = abs.(decomp_1.beta ./ decomp_1.alpha)
     ordschur!(decomp_1, gen_eigen .< 1)
     n = size(G0,1)
-    ns = findfirst(sort(gen_eigen) .> 1) -1 #finding the number of stable roots: find first unstable root
+    ns = findfirst(sort(gen_eigen) .> 1) #finding the number of stable roots: find first unstable root
+    if isnothing(ns)
+        ns=1
+    else
+        ns = ns -1
+    end
     nu = n - ns
     S11 = decomp_1.S[1:ns,1:ns]
     S12 = decomp_1.S[1:ns,(ns+1):n]
@@ -37,7 +42,8 @@ function gensys(G0,G1,Psi,Pi;verbose = true)
     m = size(Q2Pi,2)
 
     svd_Q2Pi = svd(Q2Pi)
-    r = size(svd_Q2Pi.S)[1] #S is a vector
+    svd_aux = svd_Q2Pi.S #S is a vector
+    r = sum(abs.(svd_aux) .> tol)
 
     #Checking existence and uniqueness see p. 46-47, Miao (2014)
     if m > r
@@ -66,7 +72,7 @@ function gensys(G0,G1,Psi,Pi;verbose = true)
             @info "Unique and Stable Solution"
         end
         U1 = svd_Q2Pi.U[:,1:r]
-        Xi = Q1*Pi*pinv(Q2Pi) #bottom of p 46 #change in 11 dec 2019: pinv instead of manually multiplying the elements 
+        Xi = Q1*Pi*pinv(Q2Pi) #bottom of p 46 #change in 11 dec 2019: pinv instead of manually multiplying the elements
 
         Aux1 = S12-Xi*S22
 

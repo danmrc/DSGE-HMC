@@ -36,15 +36,15 @@ function log_like_dsge(par,data)
 
     nobs = size(data,1)
 
-    GAMMA_0 = [bet    0     0  0;
-               1      sig   0  0;
-               0      0     0  0;
-               0      0     0  1]
+    GAMMA_0 = [bet  0    0  0;
+               1    sig  0  0;
+               0    0    0  0;
+               0    0    0  1]
 
-    GAMMA_1 = [1      -kappa  0  0;
-               0       sig    1  0;
-               -phi_pi  -phi_y  1 -1;
-               0       0      0  rho_v]
+    GAMMA_1 = [ 1       -kappa  0   0;
+                0        sig    1   0;
+               -phi_pi  -phi_y  1  -1;
+                0        0      0   rho_v]
 
     PSI = [0; 0; 0; 1]
 
@@ -57,7 +57,7 @@ function log_like_dsge(par,data)
 
     sol = gensys(GAMMA_0,GAMMA_1,PSI,PI)
     if sum(sol.eu) != 2
-        return -9999999999999
+        return NaN
     end
 
     #Sig = zeros(p,p)
@@ -95,8 +95,8 @@ function log_like_dsge(par,data)
         QuantEcon.update!(kalman_res,data[j+1,:]) #updating the kalman estimates
         #println(kalman_res.cur_sigma)
         #println(det(varian))
-        println(P)
+        #println(P)
     end
     llh = llh[10:length(llh)]
-    return kalman_res.cur_sigma,fit, sum(llh)
+    return sum(llh)
 end
