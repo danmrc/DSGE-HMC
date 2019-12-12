@@ -2,17 +2,17 @@ include("priors.jl")
 
 unif = Uniform(0,1)
 
+num_iter = 50000
+
 include("../src/simulation.jl")
 include("../gali_bayesian.jl")
 
-pars_aceitos = zeros(5000,10)
+pars_aceitos = zeros(num_iter,10)
 pars_aceitos[:,1] .= 2/3
 
 pars_aceitos[1,2:10] = TransformVariables.inverse(t,(bet = 0.99,epsilon = 6,theta = 2/3,sig = 1,s2 = 1, phi = 1,phi_pi = 1.5,phi_y = 0.5/4, rho_v = 0.5))# [rand(prior_bet),rand(prior_epsilon),rand(prior_theta),rand(prior_sig),rand(prior_s2),rand(prior_phi),rand(prior_phi_pi),rand(prior_phi_y),rand(prior_rho_v)]
 
-matriz_escala = 0.5
-
-num_iter = 5000
+matriz_escala = 0.01
 
 j = 2
 
