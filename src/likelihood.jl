@@ -73,11 +73,12 @@ function log_like_dsge(par,data)
     kalman_res = Kalman(A,G,Q,R) #create a Kalman filter instance
 
     y_mean = mean(data,dims=1)
-    y_var = var(data,dims=1)
-    y_var = reshape(y_var,size(y_var,2))
+    #y_var = var(data,dims=1)
+    #y_var = reshape(y_var,size(y_var,2))
+    y_var = repeat([1],p)
 
     x_hat = repeat(y_mean,p) #initial mean of the state
-    x_var = diagm(repeat(y_var,p))#variance initial of state
+    x_var = diagm(y_var)#variance initial of state
     #x_var = x_var*x_var'
     set_state!(kalman_res,x_hat,x_var)
 
@@ -89,8 +90,9 @@ function log_like_dsge(par,data)
         med = kalman_res.cur_x_hat
         fit[j,:] = med
         varian = kalman_res.cur_sigma
+        #println(det(varian))
         eta = data[j+1,:] - kalman_res.G*med #mean loglike
-        P = kalman_res.G*varian*kalman_res.G' + kalman_res.R#var loglike
+        P = kalman_res.G*varian*kalman_res.G' + kalman_res.R
         llh[j] = -(p*log(2*pi) + logdet(P) .+ eta'*inv(P)*eta)/2
         QuantEcon.update!(kalman_res,data[j+1,:]) #updating the kalman estimates
         #println(kalman_res.cur_sigma)

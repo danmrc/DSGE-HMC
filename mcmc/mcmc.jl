@@ -1,8 +1,10 @@
+using Calculus
+
 include("priors.jl")
 
 unif = Uniform(0,1)
 
-num_iter = 50000
+num_iter = 10000
 
 include("../src/simulation.jl")
 include("../gali_bayesian.jl")
@@ -15,18 +17,28 @@ pars_aceitos[1,2:10] = TransformVariables.inverse(t,(bet = 0.99,epsilon = 6,thet
 
 npar = 9
 
-
 coef_escala = 2.4/sqrt(npar)
 
-hes = Calculus.hessian(x->LogDensityProblems.logdensity(P,x),aa)
+hes = Calculus.hessian(x->LogDensityProblems.logdensity(P,x),pars_aceitos[1,2:10])
+
+hes_inv = inv(hes)+5*I(9)
+
+hes_inv = Symmetric(hes_inv,:U)
+
+hes_inv = Array(hes_inv)
+
+det(hes_inv)
+
+hes = round.(hes;digits=3)
 
 j = 2
+rejec = 0
 
 while j <= num_iter
-    kernel_velho = MvNormal(pars_aceitos[j-1,2:10],coef_escala*hes)
+    kernel_velho = MvNormal(pars_aceitos[j-1,2:10],coef_escala*hes_inv)
     novo_par = rand(kernel_velho)
-    pars_aceitos[j,2:10] = novo_par
-    kernel_novo = MvNormal(novo_par,coef_escala*hes)
+    #pars_aceitos[j,2:10] = novo_par
+    kernel_novo = MvNormal(novo_par,coef_escala*hes_inv)
 
     teste = LogDensityProblems.logdensity(P,novo_par)
     if isnan(teste)
@@ -39,10 +51,14 @@ while j <= num_iter
         p = rand(unif)
         if alpha < p
             pars_aceitos[j,2:10] = pars_aceitos[j-1,2:10]
+            global rejec += 1
         else
             pars_aceitos[j,2:10] = novo_par
         end
-        println("Iteração ", j)
+        acc = 1- rejec/j
+        if j % 10
+            println("Iteração ", j, " taxa de aceitação ", acc)
+        end
         global j += 1
     end
 end
