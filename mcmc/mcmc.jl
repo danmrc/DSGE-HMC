@@ -7,20 +7,26 @@ num_iter = 50000
 include("../src/simulation.jl")
 include("../gali_bayesian.jl")
 
+
 pars_aceitos = zeros(num_iter,10)
 pars_aceitos[:,1] .= 2/3
 
 pars_aceitos[1,2:10] = TransformVariables.inverse(t,(bet = 0.99,epsilon = 6,theta = 2/3,sig = 1,s2 = 1, phi = 1,phi_pi = 1.5,phi_y = 0.5/4, rho_v = 0.5))# [rand(prior_bet),rand(prior_epsilon),rand(prior_theta),rand(prior_sig),rand(prior_s2),rand(prior_phi),rand(prior_phi_pi),rand(prior_phi_y),rand(prior_rho_v)]
 
-matriz_escala = 0.01
+npar = 9
+
+
+coef_escala = 2.4/sqrt(npar)
+
+hes = Calculus.hessian(x->LogDensityProblems.logdensity(P,x),aa)
 
 j = 2
 
 while j <= num_iter
-    kernel_velho = MvNormal(pars_aceitos[j-1,2:10],matriz_escala)
+    kernel_velho = MvNormal(pars_aceitos[j-1,2:10],coef_escala*hes)
     novo_par = rand(kernel_velho)
     pars_aceitos[j,2:10] = novo_par
-    kernel_novo = MvNormal(novo_par,matriz_escala)
+    kernel_novo = MvNormal(novo_par,coef_escala*hes)
 
     teste = LogDensityProblems.logdensity(P,novo_par)
     if isnan(teste)

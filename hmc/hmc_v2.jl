@@ -16,6 +16,8 @@ t = problem_transform(prob)
 
 P = TransformedLogDensity(t,prob)
 
+aa = [0.99,6,2/3,1,1,1,1.5,0.5/4,0.5]
+
 LogDensityProblems.logdensity(P,aa)
 
 grad_p = ADgradient(:ReverseDiff,P)
