@@ -9,7 +9,6 @@ num_iter = 10000
 include("../src/simulation.jl")
 include("../gali_bayesian.jl")
 
-
 pars_aceitos = zeros(num_iter,10)
 pars_aceitos[:,1] .= 2/3
 
@@ -21,7 +20,7 @@ coef_escala = 2.4/sqrt(npar)
 
 hes = Calculus.hessian(x->LogDensityProblems.logdensity(P,x),pars_aceitos[1,2:10])
 
-hes_inv = inv(hes)+5*I(9)
+hes_inv = inv(hes)+5I(9)
 
 hes_inv = Symmetric(hes_inv,:U)
 
@@ -56,8 +55,9 @@ while j <= num_iter
             pars_aceitos[j,2:10] = novo_par
         end
         acc = 1- rejec/j
-        if j % 10
+        if j % 10 == 0
             println("Iteração ", j, " taxa de aceitação ", acc)
+            sleep(0.5)
         end
         global j += 1
     end

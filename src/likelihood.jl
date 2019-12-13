@@ -94,7 +94,7 @@ function log_like_dsge(par,data;kalman_tol = 1e-10)
         eta = data[j+1,:] - kalman_res.G*med #mean loglike
         P = kalman_res.G*varian*kalman_res.G' + kalman_res.R
         teste_cond = 1/cond(P)
-        if teste_cond < teste_cond
+        if teste_cond < kalman_tol
             llh[j] = 0
         else
             llh[j] = -(p*log(2*pi) + logdet(P) .+ eta'*inv(P)*eta)/2
