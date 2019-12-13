@@ -78,7 +78,7 @@ function log_like_dsge(par,data;kalman_tol = 1e-10)
     #y_var = repeat([1],p)
 
     x_hat = repeat(y_mean,p) #initial mean of the state
-    x_var = diagm(y_var)#variance initial of state
+    x_var = diagm(repeat(y_var,p))#variance initial of state
     #x_var = x_var*x_var'
     set_state!(kalman_res,x_hat,x_var)
 
@@ -95,7 +95,7 @@ function log_like_dsge(par,data;kalman_tol = 1e-10)
         P = kalman_res.G*varian*kalman_res.G' + kalman_res.R
         teste_cond = 1/cond(P)
         if teste_cond < teste_cond
-            llh[j] = 0    
+            llh[j] = 0
         else
             llh[j] = -(p*log(2*pi) + logdet(P) .+ eta'*inv(P)*eta)/2
             QuantEcon.update!(kalman_res,data[j+1,:]) #updating the kalman estimates
