@@ -30,6 +30,8 @@ det(hes_inv)
 
 hes = round.(hes;digits=3)
 
+isposdef(hes_inv)
+
 j = 2
 rejec = 0
 
@@ -55,9 +57,9 @@ while j <= num_iter
             pars_aceitos[j,2:10] = novo_par
         end
         acc = 1- rejec/j
-        if j % 10 == 0
+        if j % 50 == 0
             println("Iteração ", j, " taxa de aceitação ", acc)
-            sleep(0.5)
+            sleep(0.4)
         end
         global j += 1
     end

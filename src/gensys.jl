@@ -13,16 +13,18 @@ struct Sims
 end
 
 function gensys(G0,G1,Psi,Pi;verbose = true, tol = 1e-12)
-    decomp_1 =  try
-        tt = schur(G0,G1)
-    catch tt
+    decomp_1 =
+    try
+        schur(G0,G1)
+    catch
+        eu = (-1,-1)
         Theta1 = zeros(n,n)
         Theta2 = zeros(n,n)
         Theta3 = zeros(n,n)
         ans = Sims(Theta1,Theta2,Theta3,eu)
         return ans
         if verbose
-            @warn decomp_1
+            @warn "Unknown error. Probably LAPACK Exception 2. Skipping."
         end
     end
     gen_eigen = abs.(decomp_1.beta ./ decomp_1.alpha)
