@@ -55,7 +55,7 @@ function log_like_dsge(par,data;kalman_tol = 1e-10)
 
     p = size(GAMMA_1,1) #number of endogenous vars
 
-    sol = gensys(GAMMA_0,GAMMA_1,PSI,PI)
+    sol = gensys(GAMMA_0,GAMMA_1,PSI,PI; verbose = false)
     if sum(sol.eu) != 2
         return NaN
     end
