@@ -4,7 +4,7 @@ using LinearAlgebra
 
 include(string(pwd(),"/src/gensys.jl"))
 
-function log_like_dsge(par,data)
+function log_like_dsge(par,data;kalman_tol = 1e-10)
     #order to par
     #alfa
     #beta
@@ -73,9 +73,9 @@ function log_like_dsge(par,data)
     kalman_res = Kalman(A,G,Q,R) #create a Kalman filter instance
 
     y_mean = mean(data,dims=1)
-    #y_var = var(data,dims=1)
-    #y_var = reshape(y_var,size(y_var,2))
-    y_var = repeat([1],p)
+    y_var = var(data,dims=1)
+    y_var = reshape(y_var,size(y_var,2))
+    #y_var = repeat([1],p)
 
     x_hat = repeat(y_mean,p) #initial mean of the state
     x_var = diagm(y_var)#variance initial of state
@@ -93,8 +93,13 @@ function log_like_dsge(par,data)
         #println(det(varian))
         eta = data[j+1,:] - kalman_res.G*med #mean loglike
         P = kalman_res.G*varian*kalman_res.G' + kalman_res.R
-        llh[j] = -(p*log(2*pi) + logdet(P) .+ eta'*inv(P)*eta)/2
-        QuantEcon.update!(kalman_res,data[j+1,:]) #updating the kalman estimates
+        teste_cond = 1/cond(P)
+        if teste_cond < teste_cond
+            llh[j] = 0    
+        else
+            llh[j] = -(p*log(2*pi) + logdet(P) .+ eta'*inv(P)*eta)/2
+            QuantEcon.update!(kalman_res,data[j+1,:]) #updating the kalman estimates
+        end
         #println(kalman_res.cur_sigma)
         #println(det(varian))
         #println(P)
