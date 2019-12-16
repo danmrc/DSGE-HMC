@@ -69,14 +69,16 @@ while j <= num_iter
             end
             acc = 1 - rejec/j
             if j % 50 == 0
-                println("Adaptação: iteração ", j, " taxa de aceitação ", acc)
-                sleep(0.4)
                 pars_space = pars_aceitos[(j-49):j,2:10]
                 global hes_inv = cov(pars_space)
                 if acc > 0.3
-                    rejec = rejec*1.2
+                    global coef_escala = coef_escala*1.2
+                    println("Adaptação: iteração ", j, " taxa de aceitação ", acc, " new c=", coef_escala)
+                    sleep(0.4)
                 elseif acc < 0.18
-                    rejec = rejec*0.8
+                    global coef_escala = coef_escala*0.8
+                    println("Adaptação: iteração ", j, " taxa de aceitação ", acc, " new c=", coef_escala)
+                    sleep(0.4)
             end
             global j += 1
         end
