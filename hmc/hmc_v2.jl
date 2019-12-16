@@ -9,7 +9,7 @@ include(string(pwd(),"/mcmc/foos.jl"))
 
 yy,shocks = simulate_dsge(GAMMA_0,GAMMA_1,PSI,PI,500)
 
-prob = DSGE_Model(yy[:,2],2/3)
+prob = DSGE_Model(yy[:,2],1/3)
 
 prob((bet = 0.99,epsilon = 6,theta=2/3,sig=1,s2=1,phi=1,phi_pi=1.5,phi_y=0.5/4,rho_v=0.5))
 
@@ -53,6 +53,7 @@ end
 StatsPlots.density(post_array[:,1], legend = :none)
 title!(latexify("beta()"))
 vline!([true_pars[:bet]])
+vline!([mean(post_array[:,1])])
 
 StatsPlots.density(post_array[:,2], legend = :none)
 title!(latexify("epsilon()"))
@@ -81,6 +82,7 @@ vline!([true_pars[:phi_pi]])
 StatsPlots.density(post_array[:,8], legend = :none)
 title!(latexify("phi()_y",cdot = false))
 vline!([true_pars[:phi_y]])
+vline!([mean(post_array[:,8])])
 
 StatsPlots.density(post_array[:,9], legend = :none)
 title!(latexify("rho()_v",cdot = false))

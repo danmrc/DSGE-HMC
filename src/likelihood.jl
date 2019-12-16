@@ -67,7 +67,7 @@ function log_like_dsge(par,data;kalman_tol = 1e-10)
     G[1,2] = 1
 
     A = sol.Theta1
-    R = [0]
+    R = [0] .+ 1e-8
     Q = par[6]^2*sol.Theta2*sol.Theta2'
 
     kalman_res = Kalman(A,G,Q,R) #create a Kalman filter instance
@@ -95,7 +95,9 @@ function log_like_dsge(par,data;kalman_tol = 1e-10)
         P = kalman_res.G*varian*kalman_res.G' + kalman_res.R
         teste_cond = 1/cond(P)
         if teste_cond < kalman_tol
-            llh[j] = -Inf
+            llh[j] = -500
+        #elseif det(P) <= 0
+        #    llh[j] = -500
         else
             llh[j] = -(p*log(2*pi) + logdet(P) .+ eta'*inv(P)*eta)/2
             QuantEcon.update!(kalman_res,data[j+1,:]) #updating the kalman estimates
