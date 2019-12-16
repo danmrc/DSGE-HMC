@@ -42,7 +42,10 @@ hes = -Calculus.hessian(x->LogDensityProblems.logdensity(P,x),true_vals)
 
 hes_inv = inv(hes)
 
-hes_inv = (hes_inv + hes_inv')/2 
+hes_inv = (hes_inv + hes_inv')/2
+
+
+
 #hes_inv = Symmetric(hes_inv,:U)
 
 #hes_inv = Array(hes_inv)
