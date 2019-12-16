@@ -1,6 +1,21 @@
-using Calculus
+using LogDensityProblems
+using Distributions, Parameters
+using Calculus, StatsPlots
 
-include("priors.jl")
+include(string(pwd(),"/src/simulation.jl"))
+include(string(pwd(),"/gali_bayesian.jl"))
+include(string(pwd(),"/mcmc/priors.jl"))
+include(string(pwd(),"/mcmc/foos.jl"))
+
+yy,shocks = simulate_dsge(GAMMA_0,GAMMA_1,PSI,PI,500)
+
+prob = DSGE_Model(yy[:,2],1/3)
+
+prob((bet = 0.99,epsilon = 6,theta=2/3,sig=1,s2=1,phi=1,phi_pi=1.5,phi_y=0.5/4,rho_v=0.5))
+
+t = problem_transform(prob)
+
+P = TransformedLogDensity(t,prob)
 
 unif = Uniform(0,1)
 
@@ -18,7 +33,7 @@ true_vals = TransformVariables.inverse(t,(bet = 0.99,epsilon = 6,theta = 2/3,sig
 
 npar = 9
 
-coef_escala = 2.4/sqrt(npar)
+coef_escala = 0.0075 #2.4/sqrt(npar)
 
 hes = -Calculus.hessian(x->LogDensityProblems.logdensity(P,x),true_vals)
 
