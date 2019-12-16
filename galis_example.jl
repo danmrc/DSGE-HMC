@@ -14,6 +14,8 @@ phi_pi = 1.5
 phi_y = 0.5/4
 rho_v = 0.5
 
+true_pars = (alfa = alfa, bet = bet, epsilon = epsilon, theta = theta, sig = sig, s2 = 1, phi = phi, phi_pi = phi_pi, phi_y = phi_y, rho_v = rho_v)
+
 THETA = (1-alfa)/(1-alfa+alfa*epsilon)
 lamb = (1-theta)*(1-bet*theta)/theta*THETA
 kappa = lamb*(sig+(phi+alfa)/(1-alfa))

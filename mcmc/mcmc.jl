@@ -5,6 +5,9 @@ include("priors.jl")
 unif = Uniform(0,1)
 
 num_iter = 10000
+thin = 2
+
+num_iter = num_iter
 
 include("../src/simulation.jl")
 include("../gali_bayesian.jl")
@@ -47,9 +50,12 @@ while j <= num_iter
         continue
     else
         num = teste + logpdf(kernel_novo,pars_aceitos[j-1,2:10])
-        dem = LogDensityProblems.logdensity(P,pars_aceitos[j,2:10]) + logpdf(kernel_velho,novo_par)
-        alpha = exp(min(0,num - dem))
-        p = rand(unif)
+        dem = LogDensityProblems.logdensity(P,novo_par) + logpdf(kernel_velho,novo_par)
+        alpha = min(0,num - dem)
+        p = log(rand(unif))
+        if j % thin == 0
+            global j = j - 1
+        end
         if alpha < p
             pars_aceitos[j,2:10] = pars_aceitos[j-1,2:10]
             global rejec += 1

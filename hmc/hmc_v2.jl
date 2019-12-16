@@ -39,7 +39,49 @@ grads = Calculus.gradient(P)
 
 res = mcmc_with_warmup(Random.GLOBAL_RNG, P,5000)
 
-posterior = transform.(t, res.chains)
+posterior = transform.(t, res.chain)
 
-StatsPlots.density(posterior_bet)
-StatsPlots.density(posterior_theta)
+DynamicHMC.Diagnostics.summarize_tree_statistics(res.tree_statistics)
+
+post_array = zeros(5000,9)
+
+for i in 1:5000
+    @unpack bet, epsilon, theta, sig, s2,phi,phi_pi,phi_y,rho_v = posterior[i,:][1]
+    post_array[i,:] = [bet epsilon theta sig s2 phi phi_pi phi_y rho_v]
+end
+
+StatsPlots.density(post_array[:,1], legend = :none)
+title!(latexify("beta()"))
+vline!([true_pars[:bet]])
+
+StatsPlots.density(post_array[:,2], legend = :none)
+title!(latexify("epsilon()"))
+vline!([true_pars[:epsilon]])
+
+StatsPlots.density(post_array[:,3], legend = :none)
+title!(latexify("theta()"))
+vline!([true_pars[:theta]])
+
+StatsPlots.density(post_array[:,4], legend = :none)
+title!(latexify("sigma()"))
+vline!([true_pars[:sig]])
+
+StatsPlots.density(post_array[:,5], legend = :none)
+title!(latexify("sigma()^2"))
+vline!([true_pars[:s2]])
+
+StatsPlots.density(post_array[:,6], legend = :none)
+title!(latexify("phi()"))
+vline!([true_pars[:phi]])
+
+StatsPlots.density(post_array[:,7], legend = :none)
+title!(latexify("phi()_pi",cdot = false))
+vline!([true_pars[:phi_pi]])
+
+StatsPlots.density(post_array[:,8], legend = :none)
+title!(latexify("phi()_y",cdot = false))
+vline!([true_pars[:phi_y]])
+
+StatsPlots.density(post_array[:,9], legend = :none)
+title!(latexify("rho()_v",cdot = false))
+vline!([true_pars[:rho_v]])
