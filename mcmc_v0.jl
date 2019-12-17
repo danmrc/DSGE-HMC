@@ -1,6 +1,6 @@
 using LogDensityProblems
 using Distributions, Parameters
-using Calculus, StatsPlots, PositiveFactorizations
+using Calculus, StatsPlots
 
 include(string(pwd(),"/src/simulation.jl"))
 include(string(pwd(),"/gali_bayesian.jl"))
@@ -21,6 +21,9 @@ unif = Uniform(0,1)
 
 num_iter = 100000
 
+include("../src/simulation.jl")
+include("../gali_bayesian.jl")
+
 pars_aceitos = zeros(num_iter,10)
 pars_aceitos[:,1] .= 1/3
 
@@ -34,13 +37,13 @@ coef_escala = 0.0075 #2.4/sqrt(npar)
 
 hes = -Calculus.hessian(x->LogDensityProblems.logdensity(P,x),true_vals)
 
-hes_inv = inv(hes)
+hes_inv = inv(hes) + I(9)
 
-hes_inv = (hes_inv + hes_inv')/2
+hes_inv = Symmetric(hes_inv,:U)
 
-hes_inv = cholesky(Positive,hes_inv)
+hes_inv = Array(hes_inv)
 
-hes_inv = hes_inv.L*hes_inv.L'
+det(hes_inv)
 
 #hes = round.(hes;digits=3)
 
