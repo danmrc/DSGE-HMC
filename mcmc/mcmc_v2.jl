@@ -219,6 +219,8 @@ rejec = 0
 
 pars_aceitos[1,2:10] = rand(MvNormal(hes_inv),1)
 
+coef_escala = 0.5
+
 while j <= num_iter
     kernel_velho = MvNormal(pars_aceitos[j-1,2:10],coef_escala*hes_inv)
     novo_par = rand(kernel_velho)
