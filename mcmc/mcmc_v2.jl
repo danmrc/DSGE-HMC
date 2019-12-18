@@ -26,9 +26,6 @@ num_iter = 100000
 
 npar = 9
 
-include("../src/simulation.jl")
-include("../gali_bayesian.jl")
-
 pars_aceitos = zeros(num_iter,npar+1)
 pars_aceitos[:,1] .= 1/3
 
@@ -202,7 +199,29 @@ while j <= adapt && test
                 println("Adaptação: iteração ", final_countdown, " taxa de aceitação ", acc*100, "% c = ", coef_escala)
                 global final_countdown += 1
             end
-            global test = false
+            if 0.3 > round(acc;digits=4) > 0.18
+                global test = false
+            else
+                global final_countdown = 0
+                if round(acc;digits=4) > 0.3
+                    rescale = 1.1#acc/0.23
+                    global coef_escala = coef_escala*rescale
+                    println("Adaptação: iteração ", j, " taxa de aceitação ", acc*100, "% new c = ", coef_escala)
+                    sleep(0.4)
+                    #pars_aceitos[j,2:10] = pars_aceitos[1,2:10]
+                    global j += 1
+                    global rejec = 0
+                elseif round(acc;digits=4) < 0.18
+                    rescale = 0.8#acc/0.23
+                    global coef_escala = coef_escala*rescale
+                    println("Adaptação: iteração ", j, " taxa de aceitação ", acc*100, "% new c = ", coef_escala)
+                    sleep(0.4)
+                    #pars_aceitos[j,2:10] = pars_aceitos[1,2:10]
+                end
+
+                global rejec = 0
+                global j += 1
+            end
         end
     else
         global j += 1
@@ -219,7 +238,7 @@ rejec = 0
 
 pars_aceitos[1,2:10] = rand(MvNormal(hes_inv),1)
 
-coef_escala = 0.5
+#coef_escala = 0.5
 
 while j <= num_iter
     kernel_velho = MvNormal(pars_aceitos[j-1,2:10],coef_escala*hes_inv)

@@ -1,0 +1,153 @@
+---
+title: DSGE in Julia
+author: Gilberto Boaretto & Daniel Coutinho
+date: December, 2019
+options:
+  md2tex:
+    out_path: output/dsge_julia.tex
+  md2html:
+      out_path: output/dsge_julia.html
+  out_path: output/dsge_julia.md
+---
+
+# Introduction
+
+We implement a solver and estimation procedure for Dynamic Stochastic General Equilibrium (DSGE) models using Julia, a modern programming language focused on scientific computing. We show all of this working for a toy model, from Gali (2008). This allows us to test throughout every step of the code and show that it is sound. This is a rather large enterprise and the final code relies on a number of packages and files. To help the reader, we give an overview of what we did before dwelling into details:
+
+1. We need to take a log linearized DSGE, which depends on expectations of future values, and write it in a form that allow us to take it into the data. _Gensys_, as described in Sims (200?) allow us to do that and is therefore the first step.
+
+2. We need to write, given a set of parameters and some data, the likelihood. This is not trivial since the model is a VARMA. The Kalman Filter allows us to recover the fundamental shocks from the set of observables.
+
+3. The last step is the estimation itself. Due to the large number of parameters and the many restrictions in the parameter space, DSGE are usually estimated by bayesian methods. We follow this approach and implement the Random Walk Metropolis Hasting algorithm to sample from the posterior. We also estimate using a more modern method for Markov Chain Monte Carlo (MCMC), namely Hamiltonian Monte Carlo (HMC).
+
+Although there is a large literature on solving and estimating DSGEs, tricks that are important from the computational point of view - many regarding floating point arithmetics - are usually not covered. We discuss a number of them and many "work around" that make algorithms work smoothly.
+
+This paper is composed as follows: the first section is this short introfuction; the second one explains the model; the third explains the implementation and its various sub components; the fourth shows the results from a simulation of the toy model and recovering the distribution of the parameters using our algorithm and HMC; the fifth section concludes.
+
+Before we start, let us give a short note on developing something like this: this is a large project, with many pieces that can potentially go wrong for a number of reasons - the first is, of course, human error. We are careful in implementing each step and testing it throughout before adding a new layer. Our approach is always to write one of the parts as a function, test it comparing the results with analytical results or whatever the answer is reasonable. An example of the former is our implementation of gensys, in which we can compare the impulse response functions (IRFs) given by the algorithm with the analytical IRFs; an example of the latter is computing the likelihood over a grid: we would expect that there is a local maximum around the true value of the parameters, fixing all other parameters in their true values.  
+
+# The Model
+
+Gali (2008) gives a standard three equations New Keynesian DSGE model:
+
+$$
+\pi_t = \beta E_t(\pi_{t+1}) + \kappa \tilde{y}_t\\
+\tilde{y}_t = -\frac{1}{\sigma} (i_t - E_t(\pi_{t+1})) + E_t(\tilde{y}_{t+1})\\
+i_t = \phi_{\pi} \pi_t + \phi_{\tilde{y}} \tilde{y}_t + v_t\\
+v_t = \rho_v v_{t-1} + \varepsilon_t^v
+$$
+
+We refer the reader to the book for understanding how to go from the optimization problem to this log linear equations and what each parameter means. The calibrated parameters by Gali are the following:
+
+```julia
+
+bet = 0.99
+sig = 1
+phi = 1
+alfa = 1/3
+epsilon = 6
+theta = 2/3
+phi_pi = 1.5
+phi_y = 0.5/4
+rho_v = 0.5
+
+THETA = (1-alfa)/(1-alfa+alfa*epsilon)
+lamb = (1-theta)*(1-bet*theta)/theta*THETA
+kappa = lamb*(sig+(phi+alfa)/(1-alfa))
+```
+
+
+Gali (2008) gives an analytical solution to the model above. We implement this and it will be useful for checking whatever we implemented Gensys right, and it gives us some idea of the size of the numerical errors in the algorithm, if any.
+
+# The software
+
+We implement all of this in Julia. Julia balances speed with a relatively easy to understand language: it might be slower than Fortran or C++, however it is much easier to learn. Julia is shipped with many facilities for linear algebra that will be useful. Last, but not least, there is a package system for Julia just like R and a rich ecosystem. We will use many of the packages available to skip some boring but important steps, and just focus on the algorithms that are central to solving and estimating a DSGE. One exception is the Kalman Filter, which we use the implementation by Thomas Sargent.
+
+## Gensys
+
+Gensys is a solver of linear rational expectation systems. It requires that we write the model using expectational errors, i.e. $\eta_y = E_{t}(y_{t+1}) - y_{t+1}$. The cannonical form of a DSGE model for Gensys is:
+
+$$\Gamma_0 y_t = \Gamma_1 y_{t-1} + \Psi \varepsilon_t + \Pi \eta_t$$
+
+In which $\varepsilon_t$ are fundamental shocks and $\eta_t$ are expectational shocks. We can rewrite the model from Gali's book using $\eta_t^{\pi} = \pi_t - E_{t-1} \pi_t$ and $\eta_t^{\tilde{y}} = \tilde{y}_t - E_{t-1} \tilde{y}_t$, and we get:
+
+$$
+\pi_{t-1} - \kappa \tilde{y}_{t-1} + \beta \eta_t^{\pi} = \beta \pi_t\\
+\sigma\tilde{y}_{t-1} + i_{t-1} + \eta_t^{\pi} + \sigma \eta_t^{\tilde{y}} = \pi_t + \sigma \tilde{y}_t\\
+i_{t-1} - \phi_{\pi}\pi_{t-1} - \phi_{\tilde{y}} \tilde{y}_{t-1} - v_{t-1} = 0\\
+v_t = \rho v_{t-1} + \varepsilon^v_t
+$$
+
+And it is straight foward to write the matrices $\Gamma_0$, $\Gamma_1$, $\Psi$, $\Pi$, as follows:
+
+```julia
+
+GAMMA_0 = [bet    0     0  0;
+           1      sig   0  0;
+           0      0     0  0;
+           0      0     0  1]
+
+GAMMA_1 = [1      -kappa  0  0;
+           0       sig    1  0;
+           -phi_pi  -phi_y  1 -1;
+           0       0      0  rho_v]
+
+PSI = [0; 0; 0; 1]
+
+PI = [bet  0;
+      1    sig;
+      0    0;
+      0    0]
+```
+
+Here are LaTeX versions of the matrices generated automatically with the package _latexify_, from the inputed matrices for Julia:
+
+```julia; results = "tex"
+
+using Latexify
+
+print(string("\$\$\\Gamma_0 = \$\$",latexify(GAMMA_0)))
+
+```
+
+```julia; results = "tex"
+
+print(string("\$\$\\Gamma_1 = \$\$",latexify(GAMMA_1)))
+
+```
+```julia; results = "tex"
+
+print(string("\$\$\\Psi = \$\$",latexify(PSI)))
+
+```
+
+```julia; results = "tex"
+
+print(string("\$\$\\Pi = \$\$",latexify(PI)))
+
+```
+
+Gensys allows $\Gamma_0$ to be singular. To obtain a system without $\Gamma_0$, it relies on the generalized Schur decomposition for both $\Gamma_0$ and $\Gamma_1$, simultaneously. The **LinearAlgebra** package that comes with Julia. To test whatever the system has a solution and if it is unique, Gensys _does not_ relies on the usual Blanchard Khan condition i.e. whatever the number of explosive eigenvalues is equal to the number of jumping variables - in fact, Gensys does not require that one defines which variables are jumping and which are pre determined.
+
+## Likelihood
+
+The likelihood function is the next step of our code. The inputs are a set of parameter values and data regarding the economy. For a set of parameters, we use gensys to find the VAR representation of the model. We could estimate it as an usual VAR, however:
+
+1. In general, the model assumes that the shock is an autocorrelated process. This means that the true process is a VARMA model and the coefficient of the autocorrelation and the fundamental shocks must be estimated as well.
+
+2. For estimation, one can only include as many data series as there are shocks in the model. In this extremely simple example, this forces us to work with a single series. Since the dynamic of the model depends on the evolution of all the series, we have to estimate this series from the data.
+
+The fact that the model is linear with gaussian shocks allows us to work with the Kalman Filter, that adresses both points above. The Kalman Filter work from the state space representation of the model:
+
+$$
+y_t = Gx_t + v_t\\
+x_t = Ax_{t-1} + w_t
+$$
+
+In which $v_t ~ N(0,R)$ and $w_t ~ N(0,Q)$. The first equation is the _observation equation_ and the second one is the _state equation_. The idea is that we observe $y_t$ and that the behaviour of the system is governed by $x_t$ - an idea closely related to the factor model in economics - and that we know $G$,$A$,$R$ and $Q$. This allows us to recover $x_t$ in a recursive manner.
+
+What we do is to set $A$ equals to $\Theta_1$ and $Q$ equals to $\sigma^2 \Theta_2 \Theta_2'$, in which $\Theta_1$ and $\Theta_2$ are the matrices from gensys and $\sigma^2$ is the variance from the monetary policy shock. So our state space is the whole system. $G$ is just a selection matrix, i.e. which of the series from the state space we observe - this is filled with a value of 1 and everything else is just 0.
+
+The value of $R$ is _not_ set to zero. The usual interpration of the shock $v_t$ is that it is a measurement error, i.e. we do not observe the exatcly true GDP that our model prescribes because it has measurement errors. However, in our setup there are no such things: we simulate the values from the system and observe them exatcly. So, we should set it to zero.
+
+However, it is well known (see, for example, **??????**) that if there are no measurement errors the Kalman filter suffers from serious numerical instability problems. One that we found is that it often the forecast variance matrix will have a determinant close to zero if there are no measurement errors. To avoid this, we add a measurement error with variance $10^-8$. This creates a really small error and avoids the numerical instability problems completely. We could push it even closer to zero, however due to the finite precision of floating point arithmetics we do not do it. There are ways of avoiding this - **??????????** suggests a root Kalman filter that is more stable from the numerical point of view.
