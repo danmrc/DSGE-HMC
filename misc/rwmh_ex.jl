@@ -20,9 +20,9 @@ for i in 2:10000
     novo_par = rand(kernel)
     kernel_novo = Normal(novo_par,0.5)
 
-    num = likelihood(y,x,novo_par) + logpdf(prior,novo_par) + logpdf(kernel_novo,par[i-1])
+    num = likelihood(y,x,novo_par) + logpdf(prior,novo_par) #+ logpdf(kernel_novo,par[i-1])
 
-    dem = likelihood(y,x,par[i-1]) + logpdf(prior,par[i-1]) + logpdf(kernel,novo_par)
+    dem = likelihood(y,x,par[i-1]) + logpdf(prior,par[i-1]) #+ logpdf(kernel,novo_par)
     alpha = exp(min(0,num - dem))
     p = rand(unif)
     if alpha < p

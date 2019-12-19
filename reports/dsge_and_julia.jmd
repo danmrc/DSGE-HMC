@@ -24,7 +24,7 @@ Although there is a large literature on solving and estimating DSGEs, tricks tha
 
 This paper is composed as follows: the first section is this short introduction; the second one explains the model; the third explains the implementation and its various sub components; the fourth shows the results from a simulation of the toy model and recovering the distribution of the parameters using our algorithm and HMC; the fifth section concludes.
 
-Before we start, let us give a short note on developing something like this: this is a large project, with many pieces that can potentially go wrong for a number of reasons - the first is, of course, human error. We are careful in implementing each step and testing it throughout before adding a new layer. Our approach is to always write one of the parts as a function, test it comparing the results with analytical results or whatever the answer is reasonable. An example of the former is our implementation of gensys, in which we can compare the impulse response functions (IRFs) given by the algorithm with the analytical IRFs; an example of the latter is computing the likelihood over a grid: we would expect that there is a local maximum around the true value of the parameters, fixing all other parameters in their true values.  
+Before we start, let us give a short note on developing something like this: this is a large project, with many pieces that can potentially go wrong for a number of reasons - the first is, of course, human error. We are careful in implementing each step and testing it throughout before adding a new layer. Our approach is to always write one of the parts as a function, test it comparing the results with analytical results or whatever the answer is reasonable. An example of the former is our implementation of gensys, in which we can compare the impulse response functions (IRFs) given by the algorithm with the analytical IRFs; an example of the latter is computing the likelihood over a grid: we would expect that there is a local maximum around the true value of the parameters, fixing all other parameters in their true values.
 
 # The Model
 
@@ -277,7 +277,7 @@ end
 
 ```
 
-There are a number of pieces of code that their only function is to catch errors and avoid the MCMC crashing at a given iteration (namely the `catch` and `try`). We also have a check for if a given singular value is bellow a threshold. This is again another attempt to starve floating point arithmetics problems. For example, in the code above, if we change $\phi_{\pi}$ from 1.5 to 0.5 - which should throw a not unique error - the SVD calculates one of the roots equal to a small number that it is not zero. However, due to analytical results, we know that this must be a numerical accuracy issue.   
+There are a number of pieces of code that their only function is to catch errors and avoid the MCMC crashing at a given iteration (namely the `catch` and `try`). We also have a check for if a given singular value is bellow a threshold. This is again another attempt to starve floating point arithmetics problems. For example, in the code above, if we change $\phi_{\pi}$ from 1.5 to 0.5 - which should throw a not unique error - the SVD calculates one of the roots equal to a small number that it is not zero. However, due to analytical results, we know that this must be a numerical accuracy issue.
 
 ### Our example
 
@@ -538,7 +538,7 @@ Notice that the maximum of this function is not exactly in the true value of the
 
 ## Markov Chain Monte Carlo
 
-Bayesian estimation is based around Bayes's Theorem states that:
+Bayesian estimation is based around Bayes's Theorem:
 
 $$P(\Theta|y) = \frac{\ell(y|\Theta)p(\theta)}{P(y)}$$
 
@@ -558,7 +558,7 @@ end
 
 In the end we have $\{\Theta_j\}_{j=1}^{ndraws}$, a set of ndraws of the parameter vector.This algorithm maps the posterior, and is quite smart: every time you draw a parameter vector that makes the likelihood times the prior increase a lot compared to the point you are now, you accept. However, even it does not increase, this does not means that the vector will be excluded. It has some probability of being included. This allows the algorithm to map the distribution and to not get stuck in some points of high probability, like the mode.
 
-The choice of the kernel is important. Usually, the kernel is a Normal distribution that has mean in the last parameter vector accepted (therefore the random walk part of the name that we used in the introduction). The choice of the variance is of central importance: the optimal choice for the variance of the kernel is $c\Sigma_\Theta$, in which $\Sigma_\Theta$ is the variance matrix for the vector $\Theta$ evaluated on the mode. $c$ is a scale constant that plays a fundamental role to ensure that we will map the whole distribution. The idea is simple: if the variance is too low, you will visit only a small part of the distribution in a given number of iterations; set it too high and the algorithm will start to wander in regions far away from the mode, that contribute little to the overall density. Therefore setting $c$ in the right way ensures that our iterations won't be wasted.         
+The choice of the kernel is important. Usually, the kernel is a Normal distribution that has mean in the last parameter vector accepted (therefore the random walk part of the name that we used in the introduction). The choice of the variance is of central importance: the optimal choice for the variance of the kernel is $c\Sigma_\Theta$, in which $\Sigma_\Theta$ is the variance matrix for the vector $\Theta$ evaluated on the mode. $c$ is a scale constant that plays a fundamental role to ensure that we will map the whole distribution. The idea is simple: if the variance is too low, you will visit only a small part of the distribution in a given number of iterations; set it too high and the algorithm will start to wander in regions far away from the mode, that contribute little to the overall density. Therefore setting $c$ in the right way ensures that our iterations won't be wasted.
 
 Notice that our previous discussion about multiplying small numbers also applies when taking the ratio of two (potentially) small numbers. Therefore, although we could get the likelihood from the log likelihood (just apply the exponential), we do not do it. Instead, step 3 becomes:
 
@@ -567,3 +567,373 @@ r = \min\{0,\log(\ell(y|\Theta^{*})) + \log(p(\Theta^{*})) + \log(\mathcal{K}(\T
 $$
 
 And we use $\log(\alpha)$ instead of $\alpha$ in step 4. We tried working with the exponential of the loglikelihood. However, this was not entirely sucessful. On a side note, this trick is not mentioned in any of the books we checked, for example Canova(200?).
+
+Here are the priors. We create the function `gamma_mv` that receives the mean and the standard deviation we want the prior to have, instead of the usual shape and scale parameters:
+
+```julia
+
+using Distributions
+
+gamma_mv(mu,std) = Gamma(mu^2/std^2,std^2/mu)
+gammainv_mv(mu,std) = Gamma(mu^2/std^2,(std^2/mu)^(-1))
+
+prior_bet = Beta(100,1.01010101)
+prior_epsilon = Normal(6,1.5)
+prior_theta = Beta(3,1.5)
+prior_sig = gamma_mv(1,0.5)
+prior_phi = gamma_mv(1,0.5)
+prior_phi_pi = gamma_mv(1.5,0.4)
+prior_phi_y = gamma_mv(0.5/4,0.2)
+prior_rho_v = Beta(0.88,0.88)
+prior_s2 = InverseGamma(3.76,2.76)
+```
+
+Notice that we have a potential problem using a Normal kernel: some parameters are constrained in some interval of the reals. An example would be the $\beta$, the intertemporal discount parameter: this is constrained between 0 and 1. We can use some transformation of the parameters so they are paremetrized in the whole real line - e.g. take log of the parameters that are positive. This requires an adjusment in the likelihood function by the determinant of the jacobian of this transformations. This is bothersome. Fortunately, Julia has a package for handling this transformations, called **TransformVariables**. All we have to do is tell it what interval of the real line the parameters are constrained. This is easier than writing the code for the jacobian, however it requires some steps:
+
+```julia
+
+using Parameters, TransformVariables
+
+struct DSGE_Model{data <: AbstractArray, alfa <: Float64}
+    "Data"
+    data::data
+    "Alpha"
+    alfa::alfa
+end
+
+function (problem::DSGE_Model)(pars) #this is the numerator of the posterior
+    @unpack alfa, data = problem
+    @unpack bet, epsilon, theta, sig, s2, phi, phi_pi, phi_y, rho_v = pars
+    llh = log_like_dsge([alfa,bet,epsilon,theta,sig,s2,phi,phi_pi,phi_y,rho_v],data)
+        return llh+logpdf(prior_bet,bet)+logpdf(prior_epsilon,epsilon)+logpdf(prior_theta,theta)+logpdf(prior_sig,sig)+logpdf(prior_s2,s2)+logpdf(prior_phi,phi)+logpdf(prior_phi_pi,phi_pi)+logpdf(prior_phi_y,phi_y)+logpdf(prior_rho_v,rho_v)
+end
+
+function problem_transform(p::DSGE_Model) #this makes the changes in parameters
+    as((bet = as_unit_interval, epsilon=as_positive_real,theta = as_unit_interval, sig = as_positive_real, s2 = as_positive_real, phi = as_positive_real, phi_pi = as_positive_real, phi_y = as_positive_real, rho_v = as_unit_interval))
+end
+```
+
+The previous code requires a bit more of explanation. The first thing we do is define a _structure_ - a relative of R's list - that receives the data series and the parameter $\alpha$, that we are calibrating. We are defining this type of _structure_ to be of type `DSGE_Model`. The second function takes an object of type `DSGE_Model` to then generate a function that is the numerator of the posterior, the (log)likelihood times (plus, since we are using log) the (log) of the prior of each parameter. This is a function that generates a function, which is a bit unusual. The last function is responsible to carrying out the transformation.
+
+Lets start with the basic MCMC algorithm code, assuming that we know the scale parameter $c$:
+
+```
+
+coef_escala = 0.24
+
+pars_aceitos[1,2:10] = rand(MvNormal(hes_inv),1)
+
+j = 2
+rejec = 0
+
+while j <= num_iter
+    kernel_velho = MvNormal(pars_aceitos[j-1,2:10],coef_escala*hes_inv)
+    novo_par = rand(kernel_velho)
+    #pars_aceitos[j,2:10] = novo_par
+    kernel_novo = MvNormal(novo_par,coef_escala*hes_inv)
+
+    teste = LogDensityProblems.logdensity(P,novo_par)
+    if isnan(teste)
+        #pars_aceitos[j,2:10] = pars_aceitos[j-1,2:10]
+        #global rejec += 1
+        #global j += 1
+        continue
+    else
+        num = teste + logpdf(kernel_novo,pars_aceitos[j-1,2:10])
+        #println(string(teste," ",logpdf(kernel_novo, pars_aceitos[j-1,2:10])))
+        dem = LogDensityProblems.logdensity(P,pars_aceitos[j-1,2:10]) + logpdf(kernel_velho,novo_par)
+        alpha = exp(min(0,num - dem))
+        p = rand(unif)
+        if alpha < p
+            pars_aceitos[j,2:10] = pars_aceitos[j-1,2:10]
+            global rejec += 1
+        else
+            pars_aceitos[j,2:10] = novo_par
+        end
+        acc = 1 - rejec/j
+        if j % 50 == 0
+            println("Iteração ", j, " taxa de aceitação ", acc)
+            sleep(0.4)
+        end
+        global j += 1
+    end
+end
+
+```
+
+We have a trick here as well: every time we draw a set of parameters that generates an equilibrium that is not unique or if there is no equilibrium, then we disregard the whole iteration and repeat it. It does not counts as a value of the parameter that was rejected. It simply never happened. This avoids getting stucked in a region and getting the same set of values of that region in the set of parameters, which could distort the distribution.
+
+If we do not know the scale parameter - as it happens most of times - we need to tune the parameter. Gelman et al (20??) suggests the following procedure: run the MCMC for a while, changing the scale coefficient and updating the covariance matrix to the empirical covariance matrix. Change the scale parameter to achieve around 23% of acceptance rate. When it is lower than this, reduce the scale parameters; if it is larger than this, increase. Then, after we settle for a scale coefficient and covariance matrix, we run the MCMC for real. From this last run we get the parameters that will be used to build the posterior distribution.
+
+In pratice, we implement this in a three step process:
+
+1. Start at some random point of the parameter space. For 5000 times, run the MCMC and update the covariance matrix at each multiple of 1000, using just the last 500 estimate of the parameter vector. This attempts to isolate possible contamination due to the change in the covariance matrix
+
+2. Take the last parameter vector from the previous procedure. Starting from this point, run the MCMC for more 5000 times. This time we will choose the scale parameter following the procedure of Gelman et al (20??). They do not give a rule for how to adjust and we settle with a reduction of 20% in the value and an increase of 10% - this is completely arbitrary.
+
+3. Using the covariance matrix and the scale parameter, run the MCMC for n iterations to obtain the posterior distribution.
+
+Step 2 requires a lot of care. First, we don't want to contaminate the acceptance ratio by the acceptance ratio of the previous scale parameter. This requires that we reset the acceptance ratio every time we change the scale parameter. Moreover, it takes a while before the acceptance ratio settles. This forces us to discard the first 900 iterations for a new scale parameter and just the final 300 to compute the acceptance ratio.
+
+Hitting exactly 23% of the acceptance ratio is impossible. We settle for any acceptance ratio between 18% and 30%, based on the values suggested by Dynare's documentation.
+
+After we have finally a scale value that generates an acceptance in this range, we compute further 500 steps in the MCMC procedure just to check that we have a acceptance ratio in the right range. This sometimes generates acceptance ratio well outside the range establish and we go back to the iterative procedure, reducing or increasing the scale parameter based on the acceptance ratio of this last 500 iterations.
+
+Here is the code for the first step:
+
+```
+rejec = 0
+
+k = 2
+
+while k <= adapt_warm_up
+    kernel_velho = MvNormal(warm_up_pars[k-1,2:10],coef_escala*hes_inv)
+    novo_par = rand(kernel_velho)
+            #pars_aceitos[j,2:10] = novo_par
+    kernel_novo = MvNormal(novo_par,coef_escala*hes_inv)
+
+    teste = LogDensityProblems.logdensity(P,novo_par)
+    if isnan(teste)
+            #pars_aceitos[j,2:10] = pars_aceitos[j-1,2:10]
+            #global rejec += 1
+            #global j += 1
+        continue
+    else
+        num = teste + logpdf(kernel_novo,warm_up_pars[k-1,2:10])
+        #println(string(teste," ",logpdf(kernel_novo, pars_aceitos[j-1,2:10])))
+        dem = LogDensityProblems.logdensity(P,warm_up_pars[k-1,2:10]) + logpdf(kernel_velho,novo_par)
+        alpha = exp(min(0,num - dem))
+        p = rand(unif)
+        if alpha < p
+            warm_up_pars[k,2:10] = warm_up_pars[k-1,2:10]
+            global rejec += 1
+        else
+            warm_up_pars[k,2:10] = novo_par
+        end
+    end
+
+    if k % 500 == 0
+        acc = 1 - rejec/k
+        println("Warm up phase, iteration " ,k, " acceptance ", acc*100,"%")
+    end
+
+    if k % 1000 == 0
+        pars_space = warm_up_pars[(k-499):k,2:10]
+        global hes_inv = cov(pars_space)
+        global hes_inv = (hes_inv + hes_inv' )/2
+        global hes_inv = cholesky(Positive,hes_inv)
+        global hes_inv = hes_inv.L*hes_inv.L'
+        global rejec = 0
+    end
+    global k += 1
+end
+
+```
+
+And for the second step, the algorithm has too many ifs and whiles:
+
+```
+
+hes_inv_backup = hes_inv
+
+j = 2
+rejec = 0
+test = true
+
+coef_escala = 2.4/sqrt(npar)
+
+final_countdown = 0
+
+pars_aceitos[1,2:10] = warm_up_pars[adapt_warm_up,2:10]
+
+while j <= adapt && test
+    kernel_velho = MvNormal(pars_aceitos[j-1,2:10],coef_escala*hes_inv)
+    novo_par = rand(kernel_velho)
+            #pars_aceitos[j,2:10] = novo_par
+    kernel_novo = MvNormal(novo_par,coef_escala*hes_inv)
+
+    teste = LogDensityProblems.logdensity(P,novo_par)
+    if isnan(teste)
+            #pars_aceitos[j,2:10] = pars_aceitos[j-1,2:10]
+            #global rejec += 1
+            #global j += 1
+        continue
+    else
+        num = teste + logpdf(kernel_novo,pars_aceitos[j-1,2:10])
+        #println(string(teste," ",logpdf(kernel_novo, pars_aceitos[j-1,2:10])))
+        dem = LogDensityProblems.logdensity(P,pars_aceitos[j-1,2:10]) + logpdf(kernel_velho,novo_par)
+        alpha = exp(min(0,num - dem))
+        p = rand(unif)
+        if alpha < p
+            pars_aceitos[j,2:10] = pars_aceitos[j-1,2:10]
+            if j % 1200 > 900
+                global rejec += 1
+            end
+        else
+            pars_aceitos[j,2:10] = novo_par
+        end
+    end
+    if j % 1200 == 0
+        acc = 1 - rejec/300
+        #pars_space = pars_aceitos[(j-299):j,2:10]
+        # global hes_inv = cov(pars_space)
+        # global hes_inv = (hes_inv + hes_inv' )/2
+        # global hes_inv = cholesky(Positive,hes_inv)
+        # global hes_inv = hes_inv.L*hes_inv.L'
+        if round(acc;digits=4) > 0.3
+            rescale = 1.1#acc/0.23
+            global coef_escala = coef_escala*rescale
+            println("Adaptação: iteração ", j, " taxa de aceitação ", acc*100, "% new c = ", coef_escala)
+            sleep(0.4)
+            #pars_aceitos[j,2:10] = pars_aceitos[1,2:10]
+            global j += 1
+            global rejec = 0
+        elseif round(acc;digits=4) < 0.18
+            rescale = 0.8#acc/0.23
+            global coef_escala = coef_escala*rescale
+            println("Adaptação: iteração ", j, " taxa de aceitação ", acc*100, "% new c = ", coef_escala)
+            sleep(0.4)
+            #pars_aceitos[j,2:10] = pars_aceitos[1,2:10]
+            global j += 1
+            global rejec = 0
+        else
+            acc = 1 - rejec/300
+            println("Adaptação: iteração ", j, " taxa de aceitação ", acc*100, "% c = ", coef_escala)
+            global rejec = 0
+            while final_countdown <= 500
+                kernel_velho = MvNormal(pars_aceitos[j+final_countdown-1,2:10],coef_escala*hes_inv)
+                novo_par = rand(kernel_velho)
+                        #pars_aceitos[j,2:10] = novo_par
+                kernel_novo = MvNormal(novo_par,coef_escala*hes_inv)
+
+                teste = LogDensityProblems.logdensity(P,novo_par)
+                if isnan(teste)
+                        #pars_aceitos[j,2:10] = pars_aceitos[j-1,2:10]
+                        #global rejec += 1
+                        #global j += 1
+                    continue
+                else
+                    num = teste + logpdf(kernel_novo,pars_aceitos[j+final_countdown-1,2:10])
+                    #println(string(teste," ",logpdf(kernel_novo, pars_aceitos[j-1,2:10])))
+                    dem = LogDensityProblems.logdensity(P,pars_aceitos[j-1,2:10]) + logpdf(kernel_velho,novo_par)
+                    alpha = exp(min(0,num - dem))
+                    p = rand(unif)
+                    if alpha < p
+                        pars_aceitos[j+final_countdown,2:10] = pars_aceitos[j+final_countdown-1,2:10]
+                        global rejec += 1
+                    else
+                        pars_aceitos[j+final_countdown,2:10] = novo_par
+                    end
+                    acc = 1 - rejec/final_countdown
+                end
+                println("Adaptação: iteração ", final_countdown, " taxa de aceitação ", acc*100, "% c = ", coef_escala)
+                global final_countdown += 1
+            end
+            if 0.3 > round(acc;digits=4) > 0.18
+                global test = false
+            else
+                global final_countdown = 0
+                if round(acc;digits=4) > 0.3
+                    rescale = 1.1#acc/0.23
+                    global coef_escala = coef_escala*rescale
+                    println("Adaptação: iteração ", j, " taxa de aceitação ", acc*100, "% new c = ", coef_escala)
+                    sleep(0.4)
+                    #pars_aceitos[j,2:10] = pars_aceitos[1,2:10]
+                    global j += 1
+                    global rejec = 0
+                elseif round(acc;digits=4) < 0.18
+                    rescale = 0.8#acc/0.23
+                    global coef_escala = coef_escala*rescale
+                    println("Adaptação: iteração ", j, " taxa de aceitação ", acc*100, "% new c = ", coef_escala)
+                    sleep(0.4)
+                    #pars_aceitos[j,2:10] = pars_aceitos[1,2:10]
+                end
+
+                global rejec = 0
+                global j += 1
+            end
+        end
+    else
+        global j += 1
+    end
+end
+
+```
+
+Finally, the step that generates the distribution, the third one:
+
+```
+
+j = 2
+rejec = 0
+
+pars_aceitos[1,2:10] = rand(MvNormal(hes_inv),1)
+
+#coef_escala = 0.5
+
+while j <= num_iter
+    kernel_velho = MvNormal(pars_aceitos[j-1,2:10],coef_escala*hes_inv)
+    novo_par = rand(kernel_velho)
+        #pars_aceitos[j,2:10] = novo_par
+    kernel_novo = MvNormal(novo_par,coef_escala*hes_inv)
+
+    teste = LogDensityProblems.logdensity(P,novo_par)
+    if isnan(teste)
+        #pars_aceitos[j,2:10] = pars_aceitos[j-1,2:10]
+        #global rejec += 1
+        #global j += 1
+        continue
+    else
+        num = teste + logpdf(kernel_novo,pars_aceitos[j-1,2:10])
+        #println(string(teste," ",logpdf(kernel_novo, pars_aceitos[j-1,2:10])))
+        dem = LogDensityProblems.logdensity(P,pars_aceitos[j-1,2:10]) + logpdf(kernel_velho,novo_par)
+        alpha = exp(min(0,num - dem))
+        p = rand(unif)
+        if alpha < p
+            pars_aceitos[j,2:10] = pars_aceitos[j-1,2:10]
+            global rejec += 1
+        else
+            pars_aceitos[j,2:10] = novo_par
+        end
+        acc = 1 - rejec/j
+        if j % 50 == 0
+            println("Iteração ", j, " taxa de aceitação ", acc)
+            sleep(0.4)
+        end
+        global j += 1
+    end
+end
+
+```
+
+We don't run this code when compiling this document because it takes a while to run it - around ten minutes. Let's show the results of this estimation by plotting the densitites using the _StatsPlots_ package. Notice that the parameters that we receive at the end of the MCMC are the transformed
+
+```julia
+
+using JLD, StatsPlots, LaTeXStrings
+
+tt = load("data/mcmc2.jld")
+
+yy,shocks = simulate_dsge(GAMMA_0,GAMMA_1,PSI,PI,500)
+
+pars_aceitos = tt["pars"]
+
+prob = DSGE_Model(yy[:,2],1/3)
+t = problem_transform(prob)
+
+pars_convertidos = zeros(100000,9)
+
+for i in 50001:100000
+    @unpack bet,epsilon,theta,sig,s2,phi,phi_pi,phi_y,rho_v = TransformVariables.transform(t,pars_aceitos[i,2:10])
+    pars_convertidos[i,:] = [bet,epsilon,theta,sig,s2,phi,phi_pi,phi_y,rho_v]#(bet = pars_aceitos[i,2], epsilon = pars_aceitos[i,3], theta = pars_aceitos[i,4],sig = pars_aceitos[i,5],s2 = pars_aceitos[i,6],phi = pars_aceitos[i,7],phi_pi = pars_aceitos[i,8],phi_y = pars_aceitos[i,9],rho_v = pars_aceitos[i,10]))
+end
+```
+
+We will use the first half of the sample as warm up and the remaining
+
+```julia
+
+StatsPlots.density(pars_convertidos[50001:100000,1], legend =:none)
+title!(L"\beta")
+
+```
