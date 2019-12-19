@@ -69,7 +69,11 @@ Gensys is a solver of linear rational expectation systems. It requires that we w
 
 $$\Gamma_0 y_t = \Gamma_1 y_{t-1} + \Psi \varepsilon_t + \Pi \eta_t$$
 
-In which $\varepsilon_t$ are fundamental shocks and $\eta_t$ are expectational shocks. We can rewrite the model from Gali's book using $\eta_t^{\pi} = \pi_t - E_{t-1} \pi_t$ and $\eta_t^{\tilde{y}} = \tilde{y}_t - E_{t-1} \tilde{y}_t$, and we get:
+In which $\varepsilon_t$ are fundamental shocks and $\eta_t$ are expectational shocks. Gensys takes a model in thisform and finds matrices $\Theta_1$ and $\Theta_2$ such that the data follows a VAR(1):
+
+$$y_t = \Theta_1 y_{t-1} + \Theta_2 \varepsilon_t$$
+
+We can rewrite the model from Gali's book using $\eta_t^{\pi} = \pi_t - E_{t-1} \pi_t$ and $\eta_t^{\tilde{y}} = \tilde{y}_t - E_{t-1} \tilde{y}_t$, and we get:
 
 $$
 \pi_{t-1} - \kappa \tilde{y}_{t-1} + \beta \eta_t^{\pi} = \beta \pi_t\\
@@ -100,7 +104,7 @@ PI = [bet  0;
       0    0]
 ```
 
-Here are LaTeX versions of the matrices generated automatically with the package _latexify_, from the inputed matrices for Julia:
+Here are LaTeX versions of the matrices generated automatically with the package _Latexify_, from the inputed matrices for Julia:
 
 ```julia; results = "tex"
 
@@ -127,7 +131,232 @@ print(string("\$\$\\Pi = \$\$",latexify(PI)))
 
 ```
 
-Gensys allows $\Gamma_0$ to be singular. To obtain a system without $\Gamma_0$, it relies on the generalized Schur decomposition for both $\Gamma_0$ and $\Gamma_1$, simultaneously. The **LinearAlgebra** package that comes with Julia. To test whatever the system has a solution and if it is unique, Gensys _does not_ relies on the usual Blanchard Khan condition i.e. whatever the number of explosive eigenvalues is equal to the number of jumping variables - in fact, Gensys does not require that one defines which variables are jumping and which are pre determined.
+Gensys allows $\Gamma_0$ to be singular. To obtain a system without $\Gamma_0$, it relies on the generalized Schur decomposition for both $\Gamma_0$ and $\Gamma_1$, simultaneously. The **LinearAlgebra** package that comes with Julia. To test whatever the system has a solution and if it is unique, Gensys _does not_ relies on the usual Blanchard Khan condition i.e. whatever the number of explosive eigenvalues is equal to the number of jumping variables - in fact, Gensys does not require that one defines which variables are jumping and which are pre determined. The existence and unity of the solution is determined by the number of singular values that are different from zero. This comes from the Singular Value Decomposition (SVD), another decomposition from numerical linear algebra. Given the role this decompositions will play, it is necessary to give some explanation about them.
+
+### Numerical Linear Algebra
+
+We will use two decompositions of matrices: the Schur Decomposition and the Singular Value Decomposition (SVD). Both are closely related to the more well known eigenvalue decomposition:
+
+$$A = P^{-1}\Lambda P$$
+
+In which $\Lambda$ is a diagonal matrix. In general, $P$ is not orthonormal. The eigenvectors matrix, $P$, is orthonormal, i.e. $P^{-1} = P'$ in some cases, for example, if A is normal (Symmetric matrices are normal).
+
+The Schur Decomposition tries to find a decomposition	of the same form of the eigenvalue decomposition, but instead of imposing that $\Lambda$ is diagonal, we now want that $P$ be orthonormal. So the Schur Decomposition then finds:
+
+$$A = Q'SQ$$
+
+Remarkably $S$ is always an upper triangular matrix.
+
+We will be actually interested in the Generalized Schur Decomposition. To understand this one, lets first understand what is the generalized eigenvalue. In the usual eigenvalue problem, we want to find a vector $\mathbf{x}$ and a value $\lambda$ such that:
+
+$$Ax = \lambda x$$
+
+Rewritting this in matricial terms, we want:
+
+$$(A - \lambda I)x = 0$$
+
+In which $I$ stands for the identity matrix. Now, what if we want to solve the following problem:
+
+$$Ax = \lambda{}Bx$$
+
+We can find matrices such that $B = P^{-1}P$ and $A = P^{-1}\Lambda{}P$, in which $\Lambda$ is a diagonal matrix.
+
+The idea for the Generalized Schur Decomposition will be the same, but now we want to find matrices $Q,Z,S,T$ such that:
+
+1. $Q$ and $Z$ are orthonormal
+2. $S$ and $T$ are upper triangular
+3. $A = QSZ$
+4. $B = QTZ$
+5. $\forall i$ $S_{ii}, T_{ii}$ are not zero
+6. The pairs $(S_{ii}, T_{ii})$ can be arranged in any order
+
+Item 6 will be particularly useful in what follows
+
+The SVD also follows the idea from the eigenvalue problem. Now the idea is to decompose A as $USV'$, in which S is a diagonal matrix and both $U$ and $V$ are orthonormal.
+
+### The function
+
+We present the function as is:
+
+```julia
+
+function gensys(G0,G1,Psi,Pi;verbose = true, tol = 1e-12)
+    n = size(G0,1)
+    decomp_1 =
+    try
+        schur(G0,G1)
+    catch
+        eu = (-1,-1)
+        Theta1 = zeros(n,n)
+        Theta2 = zeros(n,n)
+        Theta3 = zeros(n,n)
+        ans = Sims(Theta1,Theta2,Theta3,eu)
+        return ans
+        if verbose
+            @warn "Unknown error. Probably LAPACK Exception 2. Skipping."
+        end
+    end
+    gen_eigen = abs.(decomp_1.beta ./ decomp_1.alpha)
+    ordschur!(decomp_1, gen_eigen .< 1)
+
+    ns = findfirst(sort(gen_eigen) .> 1) #finding the number of stable roots: find first unstable root
+    if isnothing(ns)
+        ns=1
+    else
+        ns = ns -1
+    end
+    nu = n - ns
+    S11 = decomp_1.S[1:ns,1:ns]
+    S12 = decomp_1.S[1:ns,(ns+1):n]
+    S22 = decomp_1.S[(ns+1):n,(ns+1):n]
+
+    T11 = decomp_1.T[1:ns,1:ns]
+    T12 = decomp_1.T[1:ns,(ns+1):n]
+    T22 = decomp_1.T[(ns+1):n,(ns+1):n]
+
+    Qt = decomp_1.Q'
+
+    Q1 = Qt[1:ns,:]
+    Q2 = Qt[(ns+1):n,:]
+
+    Q2Pi = Q2*Pi #This is equation 2.25 in p. 46 Miao (2014)
+
+    m = size(Q2Pi,2)
+
+    svd_Q2Pi = svd(Q2Pi)
+    svd_aux = svd_Q2Pi.S #S is a vector
+    r = sum(abs.(svd_aux) .> tol)
+
+    #Checking existence and uniqueness see p. 46-47, Miao (2014)
+    if m > r
+        eu = [1;0]
+        if verbose == true
+            @warn "No Unique Solution"
+        end
+        Theta1 = zeros(n,n)
+        Theta2 = zeros(n,n)
+        Theta3 = zeros(n,n)
+        ans = Sims(Theta1,Theta2,Theta3,eu)
+        return ans
+    elseif m < r
+        eu = [0;0]
+        Theta1 = zeros(n,n)
+        Theta2 = zeros(n,n)
+        Theta3 = zeros(n,n)
+        ans = Sims(Theta1,Theta2,Theta3,eu)
+        return ans
+        if verbose == true
+            @warn "No solution"
+        end
+    else
+        eu = [1;1]
+        if verbose == true
+            @info "Unique and Stable Solution"
+        end
+        U1 = svd_Q2Pi.U[:,1:r]
+        Xi = Q1*Pi*pinv(Q2Pi) #bottom of p 46 #change in 11 dec 2019: pinv instead of manually multiplying the elements
+
+        Aux1 = S12-Xi*S22
+
+        larg1 = size(Aux1,2)
+        Aux2 = [S11 Aux1;zeros(larg1,size(S11,2)) Matrix(I,larg1,larg1)]
+        larg2 = size(Aux2,2)
+        larg2 = larg2 - size(T11,1)
+
+        ##Matrices on top of p. 46
+
+        Theta1 = [T11 T12-Xi*T22;zeros(larg2,n)]
+        Theta1 = decomp_1.Z*inv(Aux2)*Theta1*decomp_1.Z'
+        Theta2 = [Q1 - Xi*Q2;zeros(larg2,n)]
+        Theta2 = decomp_1.Z*inv(Aux2)*Theta2*Psi
+        Theta3 = zeros(n,n)
+        ans = Sims(Theta1,Theta2,Theta3,eu)
+        return ans
+    end
+end
+
+```
+
+There are a number of pieces of code that their only function is to catch errors and avoid the MCMC crashing at a given iteration (namely the `catch` and `try`). We also have a check for if a given singular value is bellow a threshold. This is again another attempt to starve floating point arithmetics problems. For example, in the code above, if we change $\phi_{\pi}$ from 1.5 to 0.5 - which should throw a not unique error - the SVD calculates one of the roots equal to a small number that it is not zero. However, due to analytical results, we know that this must be a numerical accuracy issue.   
+
+### Our example
+
+Gali (2008) gives the analytical expressions for the impulse response functions of this model. We implement those in julia:
+
+```julia
+
+LAMBDA_v = ((1-bet*rho_v)*(sig*(1-rho_v)+phi_y)+kappa*(phi_pi-rho_v))^(-1)
+
+y_irf(v) = -(1-bet*rho_v)*LAMBDA_v*v
+pi_irf(v) = -kappa*LAMBDA_v*v
+r_irf(v) = sig*(1-rho_v)*(1-bet*rho_v)*LAMBDA_v*v
+i_irf(v) = (sig*(1-rho_v)*(1-bet*rho_v) - rho_v*kappa)*LAMBDA_v*v
+v_irf(v,uu) = rho_v*v + uu
+```
+And we compute a sample IRF for a positive 25 basis shock in the interest rate:
+
+
+```julia
+
+irfs_true = zeros(15,5)
+
+irfs_true[1,1] = 0
+
+uu = 0.25
+
+for t in 2:15
+    irfs_true[t,4] = v_irf(irfs_true[t-1,4],uu)
+    irfs_true[t,1] = pi_irf(irfs_true[t,4])
+    irfs_true[t,2] = y_irf(irfs_true[t,4])
+    irfs_true[t,3] = i_irf(irfs_true[t,4])
+    irfs_true[t,5] = r_irf(irfs_true[t,4])
+    global uu = 0
+end
+```
+
+And we just call the function with this matrices:
+
+```julia
+include(string(pwd(), "/src/gensys.jl")) #the original codefile, includes the irf function that generates IRFs from the matrices Theta_1 and Theta_2
+
+sol = gensys(GAMMA_0,GAMMA_1,PSI,PI)
+
+irfs = irf(sol,15,0.25)
+```
+
+Lets compare the IRFs generated analyticaly and by our implementation of Gensys:
+
+```julia
+
+using Plots
+
+plot(4*irfs[:,1], label = "Inflation Gensys", w =3)
+plot!(4*irfs_true[2:15,1], label = "Inflation Analytical", line = :dash, w =3)
+title!("Inflation response for a 0.25 shock in interest rate")
+```
+
+```julia
+
+plot(irfs[:,2], label = "Output Gap Gensys", w = 3)
+plot!(irfs_true[2:15,2], label = "Output Gap Analytical", line = :dash, w = 3)
+title!("Output Gap response for a 0.25 shock in interest rate")
+```
+
+```julia
+
+plot(4*irfs[:,3], label = "Interest Rate Gensys", w = 3)
+plot!(4*irfs_true[2:15,3], label = "Interest Rate Analytical", line = :dash, w = 3)
+title!("Nominal Interest response for a 0.25 shock in interest rate")
+```
+
+```julia
+
+plot(irfs[:,4], label = "v Gensys", w = 3)
+plot!(irfs_true[2:15,4], label = "v Analytical", line = :dash, w = 3)
+title!("v response for a 0.25 shock in interest rate")
+```
+
+The impulse response are identical between the two methods, which is a strong evidence of the reliability and precision of our implementation of Gensys, Gensys itself and Julia capabilities to handle linear algebra routines.
 
 ## Likelihood
 
@@ -135,36 +364,185 @@ The likelihood function is the next step of our code. The inputs are a set of pa
 
 1. In general, the model assumes that the shock is an autocorrelated process. This means that the true process is a VARMA model and the coefficient of the autocorrelation and the fundamental shocks must be estimated as well.
 
-2. For estimation, one can only include as many data series as there are shocks in the model. In this extremely simple example, this forces us to work with a single series. Since the dynamic of the model depends on the evolution of all the series, we have to estimate this series from the data.
+2. For estimation, one can only include as many data series as there are shocks in the model. Otherwise, we inccur in a stochastic singularity, i.e. the whole model is determined for any set of parameters. In this extremely simple example, this forces us to work with a single series. Since the dynamic of the model depends on the evolution of all the series, we have to estimate the remaining series from the data.
 
-The fact that the model is linear with gaussian shocks allows us to work with the Kalman Filter, that adresses both points above. The Kalman Filter work from the state space representation of the model:
+The fact that the model is linear with gaussian shocks allows us to work with the Kalman Filter, that adresses both points above. The Kalman Filter works from the state space representation of the model:
 
 $$
 y_t = Gx_t + v_t\\
 x_t = Ax_{t-1} + w_t
 $$
 
-In which $v_t ~ N(0,R)$ and $w_t ~ N(0,Q)$. The first equation is the _observation equation_ and the second one is the _state equation_. The idea is that we observe $y_t$ and that the behaviour of the system is governed by $x_t$ - an idea closely related to the factor model in economics - and that we know $G$,$A$,$R$ and $Q$. This allows us to recover $x_t$ in a recursive manner.
+In which $v_t ~ N(0,R)$ and $w_t ~ N(0,Q)$. The first equation is the _observation equation_ and the second one is the _state equation_. The idea is that we observe $y_t$ and that the behaviour of the system is governed by $x_t$ - an idea closely related to the factor model in economics. This assumes asd well that we know $G$,$A$,$R$ and $Q$. This allows us to recover $x_t$ in a recursive manner.
 
 What we do is to set $A$ equals to $\Theta_1$ and $Q$ equals to $\sigma^2 \Theta_2 \Theta_2'$, in which $\Theta_1$ and $\Theta_2$ are the matrices from gensys and $\sigma^2$ is the variance from the monetary policy shock. So our state space is the whole system. $G$ is just a selection matrix, i.e. which of the series from the state space we observe - this is filled with a value of 1 and everything else is just 0.
 
 The value of $R$ is _not_ set to zero. The usual interpration of the shock $v_t$ is that it is a measurement error, i.e. we do not observe the exatcly true GDP that our model prescribes because it has measurement errors. However, in our setup there are no such things: we simulate the values from the system and observe them exatcly. So, we should set it to zero.
 
-However, it is well known (see, for example, **??????**) that if there are no measurement errors the Kalman filter suffers from serious numerical instability problems. One that we found is that it often happens that the forecast variance matrix will have a determinant close to zero if there are no measurement errors. To avoid this, we add a measurement error with variance $10^{-8}$. This creates a really small error and avoids the numerical instability problems completely. We could push it even closer to zero, however due to the finite precision of floating point arithmetics we do not do it. There are ways of avoiding this - **??????????** suggests a root Kalman filter that is more stable from the numerical point of view.
+However, it is well known (see, for example, Keesman (2011)) that if there are no measurement errors the Kalman filter suffers from serious numerical instability problems. One that we found is that it often happens that the forecast variance matrix will have a determinant close to zero or even negative if there are no measurement errors. To avoid this, we add a measurement error with variance $10^{-8}$. This creates a really small error and avoids the numerical instability problems completely. We could push it even closer to zero, however due to the finite precision of floating point arithmetics we do not do it. There are ways of avoiding this - Keesman (2011) suggests a root Kalman filter that is more stable from the numerical point of view.
 
-Each step of the Kalman filter uses the current distribution about the state to forecast the state in the future. The error from the difference of the forecasted state to the real value of the state gives the mean of the normal. The forecast error variance is $P = G*\Sigma_s*G' + R$. This gives us all we need to evaluate the likelihood at each observation. With the likelihood at each point, one can then _multiply_ all of the values.
+Although this trick helps preventing errors, it does not solve all the problems. Another problem - that is related to taking the inverse of the forecast error variance - is that the matrix might be _ill-condition_. This is related to the condition number of a matrix, $||A|| ||A^{-1}||$. Large condition numbers means that the inverse is an ill posed problem, from the numerical point of view; condition numbers close to one means that the problem is well behaved. We follow Dynare's code in skipping the cases in which the forecast variance matrix is ill conditioned (they use the inverse of the condition number, so numbers closer to zero means that the problem is ill posed. We use the same threshold they use).
 
-This is problematic because, in many cases, the value of the density at the point is smaller than 1. Since the computer has a finite decimal precision (known as the _eps_), multiplying several numbers bellow one can quickly become messy. Just as an example, taking $0.0001^{100}$ is bellow the eps of most CPUs. To avoid this, is better to work with the log of the likelihood and sum them over. That is the procedue we follow.
+Each step of the Kalman filter uses the current distribution about the state to forecast the state in the future. The error from the difference of the forecasted state to the real value of the state gives the mean of the normal. The forecast error variance is $P = G*\Sigma_s*G' + R$, in which $\Sigma_s$ is the variance matrix of the states. This gives us all we need to evaluate the likelihood at each observation. With the likelihood at each point, one can then _multiply_ all of the values.
 
-We also throw away the first ten likelihoods from the state. One needs to initialize the state distribution at some value - since we are working with the Normal distribution, this means the mean and the variance of the distribution. It takes a while to make this values converge, and in some cases this throws non sense values that destroy the loglikelihood (like $10^{18}$).
+This is problematic because, in many cases, the value of the density at the point is smaller than 1. Since the computer has a finite decimal precision (known as the _eps_), multiplying several numbers bellow one can quickly become messy. Just as an example, taking $0.0001^{100}$ is bellow the eps of most CPUs. To avoid this, is better to work with the log of the likelihood and sum them over. That is the procedure we follow.
+
+We also throw away the first nine likelihoods from the state. One needs to initialize the state distribution at some value - since we are working with the Normal distribution, this means the initialize the mean and the variance of the distribution. It takes a while to make this values converge, and in some cases this throws non sense values that destroy the loglikelihood (like $10^{18}$). For initialization, we use the mean and the variance of the observed equation.
+
+Here is the function for the (log)likelihood:
+
+```julia
+using QuantEcon
+using Statistics
+using LinearAlgebra
+
+include(string(pwd(),"/src/gensys.jl"))
+
+function log_like_dsge(par,data;kalman_tol = 1e-10)
+    #order to par
+    #alfa
+    #beta
+    #epsilon
+    #theta
+    #sig
+    #sigma: this is the std dev of the innovation
+    #phi
+    #phi_pi
+    #phi_y
+    #rho_v
+
+    #data will have t x p dimension: lines are periods p are variables
+
+    alfa = par[1]
+    bet = par[2]
+    epsilon = par[3]
+    theta = par[4]
+    sig = par[5]
+    #par 6 is coded bellow see line 56
+    phi = par[7]
+    phi_pi = par[8]
+    phi_y = par[9]
+    rho_v = par[10]
+
+    THETA = (1-alfa)/(1-alfa+alfa*epsilon)
+    lamb = (1-theta)*(1-bet*theta)/theta*THETA
+    kappa = lamb*(sig+(phi+alfa)/(1-alfa))
+
+    nobs = size(data,1)
+
+    GAMMA_0 = [bet  0    0  0;
+               1    sig  0  0;
+               0    0    0  0;
+               0    0    0  1]
+
+    GAMMA_1 = [ 1       -kappa  0   0;
+                0        sig    1   0;
+               -phi_pi  -phi_y  1  -1;
+                0        0      0   rho_v]
+
+    PSI = [0; 0; 0; 1]
+
+    PI = [bet  0;
+          1    sig;
+          0    0;
+          0    0]
+
+    p = size(GAMMA_1,1) #number of endogenous vars
+
+    sol = gensys(GAMMA_0,GAMMA_1,PSI,PI; verbose = false)
+    if sum(sol.eu) != 2
+        return -NaN
+    end
+
+    #Sig = zeros(p,p)
+    #Sig[4,4] = par[6]
+
+    G = zeros(1,p)
+    G[1,2] = 1
+
+    A = sol.Theta1
+    R = [0] .+ 1e-8
+    Q = par[6]^2*sol.Theta2*sol.Theta2'
+
+    kalman_res = Kalman(A,G,Q,R) #create a Kalman filter instance
+
+    y_mean = mean(data,dims=1)
+    y_var = var(data,dims=1)
+    y_var = reshape(y_var,size(y_var,2))
+    #y_var = repeat([1],p)
+
+    x_hat = repeat(y_mean,p) #initial mean of the state
+    x_var = diagm(repeat(y_var,p))#variance initial of state
+    #x_var = x_var*x_var'
+    set_state!(kalman_res,x_hat,x_var)
+
+    fit = zeros(nobs,4)
+
+    llh = zeros(nobs)
+
+    for j in 1:(nobs-1)
+        med = kalman_res.cur_x_hat
+        fit[j,:] = med
+        varian = kalman_res.cur_sigma
+        #println(det(varian))
+        eta = data[j+1,:] - kalman_res.G*med #mean loglike
+        P = kalman_res.G*varian*kalman_res.G' + kalman_res.R
+        teste_cond = 1/cond(P)
+        if teste_cond < kalman_tol
+            llh[j] = -500
+        #elseif det(P) <= 0
+        #    llh[j] = -500
+        else
+            llh[j] = -(p*log(2*pi) + logdet(P) .+ eta'*inv(P)*eta)/2
+            QuantEcon.update!(kalman_res,data[j+1,:]) #updating the kalman estimates
+        end
+        #println(kalman_res.cur_sigma)
+        #println(det(varian))
+        #println(P)
+    end
+    llh = llh[10:length(llh)]
+    return sum(llh)
+end
+
+```
+
+### Example
+
+Lets simulate an economy using the parameters from Gali
+
+```julia
+
+include(string(pwd(),"/src/simulation.jl"))
+
+dados,choques = simulate_dsge(GAMMA_0,GAMMA_1,PSI,PI,5000)
+```
+
+Now compute the likelihood for beta
+
+```julia
+
+bett = 0.70:0.005:1.15
+
+vals_bet = collect(bett)
+
+for i in 1:length(bett)
+    param1 = [alfa,bett[i],epsilon,theta,sig,1,phi,phi_pi,phi_y,rho_v]
+    vals_bet[i] = log_like_dsge(param1,dados[:,2])
+end
+
+plot(bett,vals_bet, label = "Likelihood")
+vline!([0.99], label = "True Value")
+```
+
+Notice that the maximum of this function is not exactly in the true value of the parameter - even though we have a sample of size 5000, many times the size of the usual macroeconomics database.
 
 ## Markov Chain Monte Carlo
 
-Bayes's Theorem states that:
+Bayesian estimation is based around Bayes's Theorem states that:
 
 $$P(\Theta|y) = \frac{\ell(y|\Theta)p(\theta)}{P(y)}$$
 
-In which $\Theta$ is the vector of parameters, $y$ is the data, $\ell$ is the likelihood function, $p(\Theta)$ is the prior over the parameters and $P(y)$ is the marginal over the data. $P(y)$ actually depends of integrals over all the parameters, and so we suffer the curse of dimensionality. Markov Chain Monte Carlo (MCMC) solve this by avoiding estimating this object and instead relying on the reason $\frac{\ell(y|\Theta)p(\theta)}{\ell(y|\Theta')p(\theta')}$ to build the posterior. The algorithm is rather simple. Besides the prior and the likelihood, we will also need a kernel distribution, that we will call $\mathcal{K}(\Theta|\Theta')$. Here is the algorithm for a special and rather useful algorithm for MCMC, the Metropolis-Hasting:
+In which $\Theta$ is the vector of parameters, $y$ is the data, $\ell$ is the likelihood function, $p(\Theta)$ is the prior over the parameters and $P(y)$ is the marginal over the data. $P(y)$ actually depends of integrals over all the parameters, and so we suffer the curse of dimensionality. Markov Chain Monte Carlo (MCMC) solve this by avoiding estimating $P(y)$ and instead relying on the reason $\frac{\ell(y|\Theta)p(\theta)}{\ell(y|\Theta')p(\theta')}$ to build the posterior. The algorithm is rather simple. Besides the prior and the likelihood, we will also need a kernel distribution, that we will call $\mathcal{K}(\Theta|\Theta')$. Here is the algorithm for a special and rather useful algorithm for MCMC, the Metropolis-Hasting:
 
 For j in 1:ndraws:
 
@@ -180,12 +558,12 @@ end
 
 In the end we have $\{\Theta_j\}_{j=1}^{ndraws}$, a set of ndraws of the parameter vector.This algorithm maps the posterior, and is quite smart: every time you draw a parameter vector that makes the likelihood times the prior increase a lot compared to the point you are now, you accept. However, even it does not increase, this does not means that the vector will be excluded. It has some probability of being included. This allows the algorithm to map the distribution and to not get stuck in some points of high probability, like the mode.
 
-The choice of the kernel is important. Usually, the kernel is a Normal distribution that has mean in the last parameter vector accepted (therefore the random walk part of the name). The choice of the variance is of central importance: the optimal choice for the variance of the kernel is $c\Sigma_\Theta$, in which $\Sigma_\Theta$ is the variance matrix for the vector $\Theta$ evaluated on the mode. $c$ is a scale constant that plays a fundamental role to ensure that we will map the whole distribution. The idea is simple: if the variance is too low, you will visit only a small part of the distribution in a given number of iterations; set it too high and the algorithm will start to wander in regions far away from the mode, that contribute little to the overall density. Therefore setting $c$ in the right way ensures that our iterations won't be wasted.        
+The choice of the kernel is important. Usually, the kernel is a Normal distribution that has mean in the last parameter vector accepted (therefore the random walk part of the name that we used in the introduction). The choice of the variance is of central importance: the optimal choice for the variance of the kernel is $c\Sigma_\Theta$, in which $\Sigma_\Theta$ is the variance matrix for the vector $\Theta$ evaluated on the mode. $c$ is a scale constant that plays a fundamental role to ensure that we will map the whole distribution. The idea is simple: if the variance is too low, you will visit only a small part of the distribution in a given number of iterations; set it too high and the algorithm will start to wander in regions far away from the mode, that contribute little to the overall density. Therefore setting $c$ in the right way ensures that our iterations won't be wasted.         
 
-Notice that our previous discussion about multiplying small numbers also applies when taking the ratio of two (potentially) small numbers. Therefoe, although we could get the likelihood from the log likelihood (just apply the exponential), we do not do it. Instead, step 3 becomes:
+Notice that our previous discussion about multiplying small numbers also applies when taking the ratio of two (potentially) small numbers. Therefore, although we could get the likelihood from the log likelihood (just apply the exponential), we do not do it. Instead, step 3 becomes:
 
 $$
 r = \min\{0,\log(\ell(y|\Theta^{*})) + \log(p(\Theta^{*})) + \log(\mathcal{K}(\Theta_{j-1}|\Theta^*)) - \log(\ell(y|\Theta_{j-1})) + \log(p(\Theta_{j-1})) + \log(\mathcal{K}(\Theta^{*}|\Theta_{j-1}))\}
 $$
 
-And we use $\log(\alpha)$ instead of $\alpha$ in step 4. We tried working with the exponential of the loglikelihood 
+And we use $\log(\alpha)$ instead of $\alpha$ in step 4. We tried working with the exponential of the loglikelihood. However, this was not entirely sucessful. On a side note, this trick is not mentioned in any of the books we checked, for example Canova(200?).
