@@ -57,7 +57,7 @@ function log_like_dsge(par,data;kalman_tol = 1e-10)
 
     sol = gensys(GAMMA_0,GAMMA_1,PSI,PI; verbose = false)
     if sum(sol.eu) != 2
-        return -NaN
+        return -99999999999
     end
 
     #Sig = zeros(p,p)

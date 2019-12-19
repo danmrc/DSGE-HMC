@@ -13,6 +13,7 @@ struct Sims
 end
 
 function gensys(G0,G1,Psi,Pi;verbose = true, tol = 1e-12)
+    n = size(G0,1)
     decomp_1 =
     try
         schur(G0,G1)
@@ -29,7 +30,7 @@ function gensys(G0,G1,Psi,Pi;verbose = true, tol = 1e-12)
     end
     gen_eigen = abs.(decomp_1.beta ./ decomp_1.alpha)
     ordschur!(decomp_1, gen_eigen .< 1)
-    n = size(G0,1)
+
     ns = findfirst(sort(gen_eigen) .> 1) #finding the number of stable roots: find first unstable root
     if isnothing(ns)
         ns=1

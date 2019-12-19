@@ -182,10 +182,10 @@ In the end we have $\{\Theta_j\}_{j=1}^{ndraws}$, a set of ndraws of the paramet
 
 The choice of the kernel is important. Usually, the kernel is a Normal distribution that has mean in the last parameter vector accepted (therefore the random walk part of the name). The choice of the variance is of central importance: the optimal choice for the variance of the kernel is $c\Sigma_\Theta$, in which $\Sigma_\Theta$ is the variance matrix for the vector $\Theta$ evaluated on the mode. $c$ is a scale constant that plays a fundamental role to ensure that we will map the whole distribution. The idea is simple: if the variance is too low, you will visit only a small part of the distribution in a given number of iterations; set it too high and the algorithm will start to wander in regions far away from the mode, that contribute little to the overall density. Therefore setting $c$ in the right way ensures that our iterations won't be wasted.        
 
-Notice that our previous discussion about multiplying small numbers also applys when taking the ratio of two (potentialy) small numbers. So, since we could get the likelihood from the log likelihood (just apply the exponential), we do not do it. Instead, step 3 becomes:
+Notice that our previous discussion about multiplying small numbers also applies when taking the ratio of two (potentially) small numbers. Therefoe, although we could get the likelihood from the log likelihood (just apply the exponential), we do not do it. Instead, step 3 becomes:
 
 $$
 r = \min\{0,\log(\ell(y|\Theta^{*})) + \log(p(\Theta^{*})) + \log(\mathcal{K}(\Theta_{j-1}|\Theta^*)) - \log(\ell(y|\Theta_{j-1})) + \log(p(\Theta_{j-1})) + \log(\mathcal{K}(\Theta^{*}|\Theta_{j-1}))\}
 $$
 
-And we use $\log(\alpha)$ instead of $\alpha$ in step 4.
+And we use $\log(\alpha)$ instead of $\alpha$ in step 4. We tried working with the exponential of the loglikelihood 
