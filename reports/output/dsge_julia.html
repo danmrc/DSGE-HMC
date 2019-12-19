@@ -871,11 +871,11 @@ P(\Theta|y) = \frac{\ell(y|\Theta)p(\theta)}{P(y)}
 <p>end</p>
 <p>In the end we have <span class="math">$\{\Theta_j\}_{j=1}^{ndraws}$</span>, a set of ndraws of the parameter vector.This algorithm maps the posterior, and is quite smart: every time you draw a parameter vector that makes the likelihood times the prior increase a lot compared to the point you are now, you accept. However, even it does not increase, this does not means that the vector will be excluded. It has some probability of being included. This allows the algorithm to map the distribution and to not get stuck in some points of high probability, like the mode.</p>
 <p>The choice of the kernel is important. Usually, the kernel is a Normal distribution that has mean in the last parameter vector accepted &#40;therefore the random walk part of the name&#41;. The choice of the variance is of central importance: the optimal choice for the variance of the kernel is <span class="math">$c\Sigma_\Theta$</span>, in which <span class="math">$\Sigma_\Theta$</span> is the variance matrix for the vector <span class="math">$\Theta$</span> evaluated on the mode. <span class="math">$c$</span> is a scale constant that plays a fundamental role to ensure that we will map the whole distribution. The idea is simple: if the variance is too low, you will visit only a small part of the distribution in a given number of iterations; set it too high and the algorithm will start to wander in regions far away from the mode, that contribute little to the overall density. Therefore setting <span class="math">$c$</span> in the right way ensures that our iterations won&#39;t be wasted.        </p>
-<p>Notice that our previous discussion about multiplying small numbers also applys when taking the ratio of two &#40;potentialy&#41; small numbers. So, since we could get the likelihood from the log likelihood &#40;just apply the exponential&#41;, we do not do it. Instead, step 3 becomes:</p>
+<p>Notice that our previous discussion about multiplying small numbers also applies when taking the ratio of two &#40;potentially&#41; small numbers. Therefoe, although we could get the likelihood from the log likelihood &#40;just apply the exponential&#41;, we do not do it. Instead, step 3 becomes:</p>
 <p class="math">\[
 r = \min\{0,\log(\ell(y|\Theta^{*})) + \log(p(\Theta^{*})) + \log(\mathcal{K}(\Theta_{j-1}|\Theta^*)) - \log(\ell(y|\Theta_{j-1})) + \log(p(\Theta_{j-1})) + \log(\mathcal{K}(\Theta^{*}|\Theta_{j-1}))\}
 \]</p>
-<p>And we use <span class="math">$\log(\alpha)$</span> instead of <span class="math">$\alpha$</span> in step 4.</p>
+<p>And we use <span class="math">$\log(\alpha)$</span> instead of <span class="math">$\alpha$</span> in step 4. We tried working with the exponential of the loglikelihood </p>
 
 
 
@@ -883,7 +883,7 @@ r = \min\{0,\log(\ell(y|\Theta^{*})) + \log(p(\Theta^{*})) + \log(\mathcal{K}(\T
           <div class="footer"><p>
           Published from <a href="dsge_and_julia.jmd">dsge_and_julia.jmd</a> using
           <a href="http://github.com/mpastell/Weave.jl">Weave.jl</a>
-           on 2019-12-18.
+           on 2019-12-19.
           <p></div>
 
 
