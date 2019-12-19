@@ -14,7 +14,7 @@ options:
 
 We implement a solver and estimation procedure for Dynamic Stochastic General Equilibrium (DSGE) models using Julia, a modern programming language focused on scientific computing. We show all of this working for a toy model, from Gali (2008). This allows us to test throughout every step of the code and show that it is sound. This is a rather large enterprise and the final code relies on a number of packages and files. To help the reader, we give an overview of what we did before dwelling into details:
 
-1. We need to take a log linearized DSGE, which depends on expectations of future values, and write it in a form that allow us to take it into the data. _Gensys_, as described in Sims (200?) allow us to do that and is therefore the first step.
+1. We need to take a log linearized DSGE, which depends on expectations of future values, and write it in a form that allow us to take it into the data. _Gensys_, as described in Sims (2002) allow us to do that and is therefore the first step.
 
 2. We need to write, given a set of parameters and some data, the likelihood. This is not trivial since the model is a VARMA. The Kalman Filter allows us to recover the fundamental shocks from the set of observables.
 
@@ -150,4 +150,42 @@ What we do is to set $A$ equals to $\Theta_1$ and $Q$ equals to $\sigma^2 \Theta
 
 The value of $R$ is _not_ set to zero. The usual interpration of the shock $v_t$ is that it is a measurement error, i.e. we do not observe the exatcly true GDP that our model prescribes because it has measurement errors. However, in our setup there are no such things: we simulate the values from the system and observe them exatcly. So, we should set it to zero.
 
-However, it is well known (see, for example, **??????**) that if there are no measurement errors the Kalman filter suffers from serious numerical instability problems. One that we found is that it often the forecast variance matrix will have a determinant close to zero if there are no measurement errors. To avoid this, we add a measurement error with variance $10^-8$. This creates a really small error and avoids the numerical instability problems completely. We could push it even closer to zero, however due to the finite precision of floating point arithmetics we do not do it. There are ways of avoiding this - **??????????** suggests a root Kalman filter that is more stable from the numerical point of view.
+However, it is well known (see, for example, **??????**) that if there are no measurement errors the Kalman filter suffers from serious numerical instability problems. One that we found is that it often happens that the forecast variance matrix will have a determinant close to zero if there are no measurement errors. To avoid this, we add a measurement error with variance $10^{-8}$. This creates a really small error and avoids the numerical instability problems completely. We could push it even closer to zero, however due to the finite precision of floating point arithmetics we do not do it. There are ways of avoiding this - **??????????** suggests a root Kalman filter that is more stable from the numerical point of view.
+
+Each step of the Kalman filter uses the current distribution about the state to forecast the state in the future. The error from the difference of the forecasted state to the real value of the state gives the mean of the normal. The forecast error variance is $P = G*\Sigma_s*G' + R$. This gives us all we need to evaluate the likelihood at each observation. With the likelihood at each point, one can then _multiply_ all of the values.
+
+This is problematic because, in many cases, the value of the density at the point is smaller than 1. Since the computer has a finite decimal precision (known as the _eps_), multiplying several numbers bellow one can quickly become messy. Just as an example, taking $0.0001^{100}$ is bellow the eps of most CPUs. To avoid this, is better to work with the log of the likelihood and sum them over. That is the procedue we follow.
+
+We also throw away the first ten likelihoods from the state. One needs to initialize the state distribution at some value - since we are working with the Normal distribution, this means the mean and the variance of the distribution. It takes a while to make this values converge, and in some cases this throws non sense values that destroy the loglikelihood (like $10^{18}$).
+
+## Markov Chain Monte Carlo
+
+Bayes's Theorem states that:
+
+$$P(\Theta|y) = \frac{\ell(y|\Theta)p(\theta)}{P(y)}$$
+
+In which $\Theta$ is the vector of parameters, $y$ is the data, $\ell$ is the likelihood function, $p(\Theta)$ is the prior over the parameters and $P(y)$ is the marginal over the data. $P(y)$ actually depends of integrals over all the parameters, and so we suffer the curse of dimensionality. Markov Chain Monte Carlo (MCMC) solve this by avoiding estimating this object and instead relying on the reason $\frac{\ell(y|\Theta)p(\theta)}{\ell(y|\Theta')p(\theta')}$ to build the posterior. The algorithm is rather simple. Besides the prior and the likelihood, we will also need a kernel distribution, that we will call $\mathcal{K}(\Theta|\Theta')$. Here is the algorithm for a special and rather useful algorithm for MCMC, the Metropolis-Hasting:
+
+For j in 1:ndraws:
+
+1. Draw a vector of parameters $\Theta^{*}$, from the distribution $\mathcal{K}(\Theta|\Theta_j)$.
+
+2. Compute $r = \min\left\{\frac{\ell(y|\Theta^*)p(\Theta^*)\mathcal{K}(\Theta_{j-1}|\Theta^*)}{\ell(y|\Theta_{j-1})p(\Theta_{j-1})\mathcal{K}(\Theta^*|\Theta_{j-1})},1\right\}$
+
+3. Draw a random number from a $\alpha = U(0,1)$
+
+4. If $r < \alpha$, set $\Theta_j = \Theta_{j-1}$; otherwise, set $\Theta_j = \Theta^{*}$
+
+end
+
+In the end we have $\{\Theta_j\}_{j=1}^{ndraws}$, a set of ndraws of the parameter vector.This algorithm maps the posterior, and is quite smart: every time you draw a parameter vector that makes the likelihood times the prior increase a lot compared to the point you are now, you accept. However, even it does not increase, this does not means that the vector will be excluded. It has some probability of being included. This allows the algorithm to map the distribution and to not get stuck in some points of high probability, like the mode.
+
+The choice of the kernel is important. Usually, the kernel is a Normal distribution that has mean in the last parameter vector accepted (therefore the random walk part of the name). The choice of the variance is of central importance: the optimal choice for the variance of the kernel is $c\Sigma_\Theta$, in which $\Sigma_\Theta$ is the variance matrix for the vector $\Theta$ evaluated on the mode. $c$ is a scale constant that plays a fundamental role to ensure that we will map the whole distribution. The idea is simple: if the variance is too low, you will visit only a small part of the distribution in a given number of iterations; set it too high and the algorithm will start to wander in regions far away from the mode, that contribute little to the overall density. Therefore setting $c$ in the right way ensures that our iterations won't be wasted.        
+
+Notice that our previous discussion about multiplying small numbers also applys when taking the ratio of two (potentialy) small numbers. So, since we could get the likelihood from the log likelihood (just apply the exponential), we do not do it. Instead, step 3 becomes:
+
+$$
+r = \min\{0,\log(\ell(y|\Theta^{*})) + \log(p(\Theta^{*})) + \log(\mathcal{K}(\Theta_{j-1}|\Theta^*)) - \log(\ell(y|\Theta_{j-1})) + \log(p(\Theta_{j-1})) + \log(\mathcal{K}(\Theta^{*}|\Theta_{j-1}))\}
+$$
+
+And we use $\log(\alpha)$ instead of $\alpha$ in step 4.
