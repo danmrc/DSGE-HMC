@@ -1013,3 +1013,23 @@ vline!([true_pars[:rho_v]])
 vline!([mean(pars_convertidos[50001:100000,9])], line = :dash)
 
 ```
+
+## Hamiltonian Monte Carlo
+
+Although Random Walk Metropolis Hasting (RWMH) is the main method used when estimating DSGEs by Bayesian methods, it is not the only MCMC algorithm. RWMH is a reliable and relatively simple algorithm to implement, and only requires evaluating the likelihood twice per iteration - which in our case is costly - and does not require knowing the marginal distribution like Gibb's Sampler. However, RWMH relies on a random walk to explore the parametric space: it may wander through regions with low density. This is even worse in high dimensional cases. Bethancourt (201?) gives an intuitive example of what goes wrong, based on Figure **????** bellow:
+
+![](/Users/danielcoutinho/Documents/GitHub/DSGE-HMC/reports/3regions.png)
+
+Bethancourt(200?) explains the figure as follows: in one dimension (figure (a)), a division in three parts of the line makes the total mass in the center partition equals 1/3; in $\mathbb{R}^2$ (figure (b)) we have in the center a mass of 1/9; in $\mathbb{R}^3$ (figure (c)), the mass on the center is just 1/27. The volume around the mode is negligible for high dimensional spaces. However, the density function is small outside the region outside mode. this generate a trade off: stay too near to the mode and you will never explore most of the volume; go too far and you will be exploring regions with low density.
+
+The region that we want to explore is called the _typical set_. This is loosely the set that achieves a balance betwwen the two points above, and it has a formal definition in terms of information theory. The problem is that RWMH wanders around the space of parameters and this does not guarantee that it will reach or stay in the typical set in finite time - the time we usually have for simulations.
+
+Fortunately enough, we have a vector that always points toward the mode: the gradient. The Hamiltonian Monte Carlo (HMC) combines this information with the usual Metropolis Hasting algorithm to make sure that the algorithm explores the typical set. Bethancourt (20??) uses as a methaphore putting a sattelite in orbit: the sattelite is attracted to the point with larger mass (the earth). We want our sattelite to orbit earth, so we have to give enough impulse that it does not comes crash down on earth; hoewever we don't want to give it _too_ much impulse and start wandering around the solary system.
+
+The heart of the Hamiltonian Monte Carlo is to add an additional variable, that is deterministic, that measures the impulse that is given for each parameter. This has to be choosen - as the scale parameter of the RWMH - to guarantee that we will stay in the typical set. This variable follows the dynamics of a Hamiltonian system of physics, which explains the name.
+
+The implementation is not as easy as the RWMH, since we have to keep track of the impulse and update it accordingly the hamiltonian of the system. Fortunately, there are plenty of implementations of HMC in Julia. We will use the package **DynamicHMC**, that follows the implementation suggested in Bethancourt's paper. We have to give to it the (numerator of) the posterior and it's gradient, and the package does everything else.
+
+Getting the gradient is trick. Gelman et al (20??) explicity acknowledge that "In pratice the gradient must be computed analytically; numerical differentiation requires too many function evaluations to be computed analytically". It is hard to imagine _how_ to compute the analytical derivate of each parameter, given the amount of computations that go into building the likelihood. Therefore, we have to rely on numerical differentiation. The usual method for differentiating, finite difference, requires a lot of function evaluation (at least two for each parameter) and is prone to numerical errors - whicah can be only reduced by evaluating the function even more times. A first attempt using finite differences led to a running time of at least 12 hours.
+
+However, there are better methods than finite differences. One of them is automatic differentiation. Although it builds from dual numbers and other concepts of algebra, that is not a subject usually dealt by economists, the idea is just to use the chain rule: to differentiate  a given function, differentiate each component that forms the function. This is both faster and more precise than finite differences and is implemented by a variety of packages in Julia. We use **Tracker**: some other packages do not differentiate over the Schur decomposition. 
