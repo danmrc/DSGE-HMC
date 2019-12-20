@@ -83,7 +83,7 @@ G0[7,24] = 1
 G0[7,10] = "-alpha()"
 G0[7,9]  = "-phi()"
 G0[7,7]  = "-sigma()/(1-h)"
-G0[7,20] = "1+varphi()"
+G0[7,20] = "1+phi()"
 
 G1[7,7] = "-(sigma()*h)/(1-h)"
 
@@ -265,7 +265,7 @@ print(string("\$\$\\Pi = \$\$",latexify(Pi,cdot = false)))
 
 The order of the variables is:
 
-$$Y_t' =
+$$Y_t =
 \begin{bmatrix}
         c_{t+1} &
         \pi_{t+1} &
@@ -291,12 +291,12 @@ $$Y_t' =
         \varepsilon_{cp,t} &
         \phi_t &
         mc_t
-\end{bmatrix}$$
+\end{bmatrix}'$$
 
 The order of the shocks is:
 
 $$
-z_t' =
+z_t =
 \begin{bmatrix}
         \epsilon_{a,t} &
         \epsilon_{\gamma,t} &
@@ -306,13 +306,13 @@ z_t' =
         \epsilon_{y^*,t} &
         \epsilon_{\pi^*,t} &
         \epsilon_{i^*,t} &
-\end{bmatrix}
+\end{bmatrix}'
 $$
 
 The order of the expectation errors is:
 
 $$
-\eta_t' =
+\eta_t =
 \begin{bmatrix}
         \eta_{t}^c &
         \eta_{t}^{\pi} &
@@ -320,5 +320,5 @@ $$
         \eta_{t}^{\pi_D} &
         \eta_{t}^{\pi_I} &
         \eta_{t}^{s}
-\end{bmatrix}
+\end{bmatrix}'
 $$
