@@ -5,9 +5,12 @@ for i in 50001:100000
     pars_convertidos[i,:] = [bet,epsilon,theta,sig,s2,phi,phi_pi,phi_y,rho_v]#(bet = pars_aceitos[i,2], epsilon = pars_aceitos[i,3], theta = pars_aceitos[i,4],sig = pars_aceitos[i,5],s2 = pars_aceitos[i,6],phi = pars_aceitos[i,7],phi_pi = pars_aceitos[i,8],phi_y = pars_aceitos[i,9],rho_v = pars_aceitos[i,10]))
 end
 
-using StatsPlots, Latexify
+using StatsPlots, LaTeXStrings
 
-StatsPlots.density(pars_convertidos[50001:100000,1], label= latexify("beta()")) #)"β")
+StatsPlots.density(pars_convertidos[50001:100000,1], label= L"\beta") #)"β")
+vline!([true_pars[:bet]])
+vline!([mean(pars_convertidos[50001:100000,1])])
+
 StatsPlots.density(pars_convertidos[50001:100000,2], label="epsilon") #)"ε")
 StatsPlots.density(pars_convertidos[50001:100000,3], label="theta") #)"θ")
 StatsPlots.density(pars_convertidos[50001:100000,4], label="sigma") #)"σ")

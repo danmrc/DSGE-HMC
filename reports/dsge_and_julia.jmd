@@ -51,6 +51,8 @@ phi_pi = 1.5
 phi_y = 0.5/4
 rho_v = 0.5
 
+true_pars = (alfa = alfa, bet = bet, epsilon = epsilon, theta = theta, sig = sig, s2 = 1, phi = phi, phi_pi = phi_pi, phi_y = phi_y, rho_v = rho_v)
+
 THETA = (1-alfa)/(1-alfa+alfa*epsilon)
 lamb = (1-theta)*(1-bet*theta)/theta*THETA
 kappa = lamb*(sig+(phi+alfa)/(1-alfa))
@@ -178,7 +180,7 @@ The SVD also follows the idea from the eigenvalue problem. Now the idea is to de
 
 We present the function as is:
 
-```julia
+```julia;results="hidden"
 
 function gensys(G0,G1,Psi,Pi;verbose = true, tol = 1e-12)
     n = size(G0,1)
@@ -296,7 +298,7 @@ v_irf(v,uu) = rho_v*v + uu
 And we compute a sample IRF for a positive 25 basis shock in the interest rate:
 
 
-```julia
+```julia;results="hidden"
 
 irfs_true = zeros(15,5)
 
@@ -316,7 +318,7 @@ end
 
 And we just call the function with this matrices:
 
-```julia
+```julia;results="hidden"
 include(string(pwd(), "/src/gensys.jl")) #the original codefile, includes the irf function that generates IRFs from the matrices Theta_1 and Theta_2
 
 sol = gensys(GAMMA_0,GAMMA_1,PSI,PI)
@@ -510,7 +512,7 @@ end
 
 Lets simulate an economy using the parameters from Gali
 
-```julia
+```julia;results="hidden"
 
 include(string(pwd(),"/src/simulation.jl"))
 
@@ -929,11 +931,85 @@ for i in 50001:100000
 end
 ```
 
-We will use the first half of the sample as warm up and the remaining
+We will use the first half of the sample as warm up and the remaining. We do not do any thinning - excluding some observations to generate a sample that is less autocorrelated, like excluding every even observation or just using 1 observation out of three (use, don't don't, use don't, don't...). The red vertical line represents the true line and the green dashed line the mean of the parameter in the distribution:
 
 ```julia
 
 StatsPlots.density(pars_convertidos[50001:100000,1], legend =:none)
 title!(L"\beta")
+vline!([true_pars[:bet]])
+vline!([mean(pars_convertidos[50001:100000,1])], line = :dash)
+
+```
+
+```julia
+
+StatsPlots.density(pars_convertidos[50001:100000,2], legend =:none)
+title!(L"\epsilon")
+vline!([true_pars[:epsilon]])
+vline!([mean(pars_convertidos[50001:100000,2])], line = :dash)
+
+```
+
+```julia
+
+StatsPlots.density(pars_convertidos[50001:100000,3], legend = :none)
+title!(L"\theta")
+vline!([true_pars[:theta]])
+vline!([mean(pars_convertidos[50001:100000,3])], line = :dash)
+
+```
+
+```julia
+
+StatsPlots.density(pars_convertidos[50001:100000,4], legend = :none)
+title!(L"\sigma")
+vline!([true_pars[:sig]])
+vline!([mean(pars_convertidos[50001:100000,4])], line = :dash)
+
+```
+
+```julia
+
+StatsPlots.density(pars_convertidos[50001:100000,5], legend = :none)
+title!(L"\sigma^2")
+vline!([true_pars[:s2]])
+vline!([mean(pars_convertidos[50001:100000,5])], line = :dash)
+
+```
+
+```julia
+
+StatsPlots.density(pars_convertidos[50001:100000,6], legend = :none)
+title!(L"\phi")
+vline!([true_pars[:phi]])
+vline!([mean(pars_convertidos[50001:100000,6])], line = :dash)
+
+```
+
+```julia
+
+StatsPlots.density(pars_convertidos[50001:100000,7], legend = :none)
+title!(L"\phi_{\pi}")
+vline!([true_pars[:phi_pi]])
+vline!([mean(pars_convertidos[50001:100000,7])], line = :dash)
+
+```
+
+```julia
+
+StatsPlots.density(pars_convertidos[50001:100000,8], legend = :none)
+title!(L"\phi_y")
+vline!([true_pars[:phi_y]])
+vline!([mean(pars_convertidos[50001:100000,8])], line = :dash)
+
+```
+
+```julia
+
+StatsPlots.density(pars_convertidos[50001:100000,9], legend = :none)
+title!(L"\rho_v")
+vline!([true_pars[:rho_v]])
+vline!([mean(pars_convertidos[50001:100000,9])], line = :dash)
 
 ```
