@@ -14,7 +14,7 @@ end
 
 function gensys(G0,G1,Psi,Pi;verbose = true, tol = 1e-12)
     n = size(G0,1)
-    decomp_1 =
+    decomp_1 = #schur(G0,G1)
     try
         schur(G0,G1)
     catch
@@ -103,7 +103,7 @@ function gensys(G0,G1,Psi,Pi;verbose = true, tol = 1e-12)
         Theta2 = decomp_1.Z*inv(Aux2)*Theta2*Psi
         Theta3 = zeros(n,n)
         ans = Sims(Theta1,Theta2,Theta3,eu)
-        return ans#Theta1,Theta2,eu
+        return ans #Theta1,Theta2,eu
     end
 end
 

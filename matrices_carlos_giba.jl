@@ -1,53 +1,8 @@
-# calibrated parameters
-alfa    =
-bet     =
-eta     =
-phi     =
-a_0piy  =
-a_0iy   =
-a_0ipi  =
-a_1yy   =
-a_1ypi  =
-a_1yi   =
-a_1piy  =
-a_1pipi =
-a_1pii  =
-a_1iy   =
-a_1ipi  =
-a_1ii   =
-sigma_y_star  =
-sigma_pi_star =
-sigma_i_star  =
-
-# estimated parameters
-h           =
-sig         =
-eta         =
-delta_D     =
-theta_D     =
-delta_I     =
-theta_I     =
-chi         =
-rho_a       =
-rho_gamma   =
-rho_cp      =
-rho_phi     =
-sigma_a     =
-sigma_gamma =
-sigma_cp    =
-sigma_phi   =
-rho_1       =
-rho_2       =
-lambda_pi   =
-lambda_y    =
-lambda_s    =
-sigma_i     =
-
 # matrices of Gensys
-G0 = Array{Any}(nothing,24,24)
-G1 = Array{Any}(nothing,24,24)
-Psi = Array{Any}(nothing,24,8)
-Pi = Array{Any}(nothing,24,6)
+G0 = zeros(24,24)
+G1 = zeros(24,24)
+Psi = zeros(24,8)
+Pi = zeros(24,6)
 
 # Equation 1 (Euler)
 
@@ -100,7 +55,7 @@ G1[5,15] = -1
 
 G0[6,5]  = -bet
 G0[6,12] = 1-bet*delta_D
-G0[6,24] = bet*(1-theta_D)*(1-theta_D*beta)/theta_D
+G0[6,24] = bet*(1-theta_D)*(1-theta_D*bet)/theta_D
 
 G1[6,12] = delta_D
 
@@ -262,7 +217,7 @@ G1[23,6]  = 1
 G0[24,16] = 1
 G1[24,8]  = 1
 
-G0[findall(G0 .== nothing)] .= 0
-G1[findall(G1 .== nothing)] .= 0
-Psi[findall(Psi .== nothing)] .= 0
-Pi[findall(Pi .== nothing)] .= 0
+# G0[findall(G0 .== nothing)] .= 0
+# G1[findall(G1 .== nothing)] .= 0
+# Psi[findall(Psi .== nothing)] .= 0
+# Pi[findall(Pi .== nothing)] .= 0
