@@ -39,7 +39,7 @@ $$
 
 We refer the reader to the book for understanding how to go from the optimization problem to this log linear equations and what each parameter means. The calibrated parameters by Gali are the following:
 
-```julia
+```julia;results="hidden"
 
 bet = 0.99
 sig = 1
@@ -86,7 +86,7 @@ $$
 
 And it is straight foward to write the matrices $\Gamma_0$, $\Gamma_1$, $\Psi$, $\Pi$, as follows:
 
-```julia
+```julia;results="hidden"
 
 GAMMA_0 = [bet    0     0  0;
            1      sig   0  0;
@@ -285,7 +285,7 @@ There are a number of pieces of code that their only function is to catch errors
 
 Gali (2008) gives the analytical expressions for the impulse response functions of this model. We implement those in julia:
 
-```julia
+```julia;results="hidden"
 
 LAMBDA_v = ((1-bet*rho_v)*(sig*(1-rho_v)+phi_y)+kappa*(phi_pi-rho_v))^(-1)
 
@@ -393,7 +393,8 @@ We also throw away the first nine likelihoods from the state. One needs to initi
 
 Here is the function for the (log)likelihood:
 
-```julia
+```julia;results="hidden"
+
 using QuantEcon
 using Statistics
 using LinearAlgebra
@@ -1018,7 +1019,7 @@ vline!([mean(pars_convertidos[50001:100000,9])], line = :dash)
 
 Although Random Walk Metropolis Hasting (RWMH) is the main method used when estimating DSGEs by Bayesian methods, it is not the only MCMC algorithm. RWMH is a reliable and relatively simple algorithm to implement, and only requires evaluating the likelihood twice per iteration - which in our case is costly - and does not require knowing the marginal distribution like Gibb's Sampler. However, RWMH relies on a random walk to explore the parametric space: it may wander through regions with low density. This is even worse in high dimensional cases. Bethancourt (201?) gives an intuitive example of what goes wrong, based on Figure **????** bellow:
 
-![](/Users/danielcoutinho/Documents/GitHub/DSGE-HMC/reports/3regions.png)
+![](/reports/3regions.png)
 
 Bethancourt(200?) explains the figure as follows: in one dimension (figure (a)), a division in three parts of the line makes the total mass in the center partition equals 1/3; in $\mathbb{R}^2$ (figure (b)) we have in the center a mass of 1/9; in $\mathbb{R}^3$ (figure (c)), the mass on the center is just 1/27. The volume around the mode is negligible for high dimensional spaces. However, the density function is small outside the region outside mode. this generate a trade off: stay too near to the mode and you will never explore most of the volume; go too far and you will be exploring regions with low density.
 
@@ -1030,6 +1031,296 @@ The heart of the Hamiltonian Monte Carlo is to add an additional variable, that 
 
 The implementation is not as easy as the RWMH, since we have to keep track of the impulse and update it accordingly the hamiltonian of the system. Fortunately, there are plenty of implementations of HMC in Julia. We will use the package **DynamicHMC**, that follows the implementation suggested in Bethancourt's paper. We have to give to it the (numerator of) the posterior and it's gradient, and the package does everything else.
 
-Getting the gradient is trick. Gelman et al (20??) explicity acknowledge that "In pratice the gradient must be computed analytically; numerical differentiation requires too many function evaluations to be computed analytically". It is hard to imagine _how_ to compute the analytical derivate of each parameter, given the amount of computations that go into building the likelihood. Therefore, we have to rely on numerical differentiation. The usual method for differentiating, finite difference, requires a lot of function evaluation (at least two for each parameter) and is prone to numerical errors - whicah can be only reduced by evaluating the function even more times. A first attempt using finite differences led to a running time of at least 12 hours.
+Getting the gradient is trick. Gelman et al (20??) explicity acknowledge that "In pratice the gradient must be computed analytically; numerical differentiation requires too many function evaluations to be computed analytically". It is hard to imagine _how_ to compute the analytical derivate of each parameter, given the amount of computations that go into building the likelihood. Therefore, we have to rely on numerical differentiation. The usual method for differentiating, finite difference, requires a lot of function evaluation (at least two for each parameter) and is prone to numerical errors - which can be only reduced by evaluating the function even more times. A first attempt using finite differences led to a running time of at least 12 hours.
 
-However, there are better methods than finite differences. One of them is automatic differentiation. Although it builds from dual numbers and other concepts of algebra, that is not a subject usually dealt by economists, the idea is just to use the chain rule: to differentiate  a given function, differentiate each component that forms the function. This is both faster and more precise than finite differences and is implemented by a variety of packages in Julia. We use **Tracker**: some other packages do not differentiate over the Schur decomposition. 
+However, there are better methods than finite differences. One of them is automatic differentiation. Although it builds from dual numbers and other concepts of algebra, that is not a subject usually dealt by economists, the idea is just to use the chain rule: to differentiate a given function, differentiate each component that forms the function. This is both faster and more precise than finite differences and is implemented by a variety of packages in Julia. We use **Tracker**: some other packages for automatic differentiation do not differentiate over the Schur decomposition.
+
+The code that estimates the DSGE using the likelihood we built above is:
+
+```
+
+using Tracker, DynamicHMC
+
+grad_p = ADgradient(:Tracker,P)
+
+res = mcmc_with_warmup(Random.GLOBAL_RNG, grad_p,100000)
+
+```
+
+And let's show the densities:
+
+```julia
+
+pars_hmc = load("data/hmc2.jld")["pars"]
+
+StatsPlots.density(pars_hmc[:,1], legend =:none)
+title!(L"\beta")
+vline!([true_pars[:bet]])
+vline!([mean(pars_hmc[:,1])], line = :dash)
+
+```
+
+```julia
+
+StatsPlots.density(pars_hmc[:,2], legend =:none)
+title!(L"\epsilon")
+vline!([true_pars[:epsilon]])
+vline!([mean(pars_hmc[:,2])], line = :dash)
+
+```
+
+```julia
+
+StatsPlots.density(pars_hmc[:,3], legend =:none)
+title!(L"\theta")
+vline!([true_pars[:theta]])
+vline!([mean(pars_hmc[:,3])], line = :dash)
+
+```
+
+```julia
+
+StatsPlots.density(pars_hmc[:,4], legend =:none)
+title!(L"\sigma")
+vline!([true_pars[:sig]])
+vline!([mean(pars_hmc[:,4])], line = :dash)
+
+```
+
+```julia
+
+StatsPlots.density(pars_hmc[:,5], legend =:none)
+title!(L"\sigma^2")
+vline!([true_pars[:s2]])
+vline!([mean(pars_hmc[:,5])], line = :dash)
+
+```
+
+```julia
+
+StatsPlots.density(pars_hmc[:,6], legend =:none)
+title!(L"\phi")
+vline!([true_pars[:phi]])
+vline!([mean(pars_hmc[:,6])], line = :dash)
+
+```
+
+```julia
+
+StatsPlots.density(pars_hmc[:,7], legend =:none)
+title!(L"\phi_{\pi}")
+vline!([true_pars[:phi_pi]])
+vline!([mean(pars_hmc[:,7])], line = :dash)
+
+```
+
+```julia
+
+StatsPlots.density(pars_hmc[:,8], legend =:none)
+title!(L"\phi_y")
+vline!([true_pars[:phi_y]])
+vline!([mean(pars_hmc[:,8])], line = :dash)
+
+```
+
+```julia
+
+StatsPlots.density(pars_hmc[:,9], legend =:none)
+title!(L"\rho_v")
+vline!([true_pars[:rho_v]])
+vline!([mean(pars_hmc[:,9])], line = :dash)
+
+```
+Two things are important: precision and speed. We plot the distribution of the parameters from both the MCMC and the HMC to get an idea of their accuracy:
+
+
+
+### Comparing HMC and RWMH
+
+
+```julia
+
+pars_hmc = load("data/hmc2.jld")["pars"]
+
+StatsPlots.density(pars_hmc[:,1], label = "HMC")
+StatsPlots.density!(pars_convertidos[50001:100000,1], label = "RWMH")
+title!(L"\beta")
+vline!([true_pars[:bet]], label = "True value")
+
+```
+
+```julia
+
+StatsPlots.density(pars_hmc[:,2], label = "HMC")
+StatsPlots.density!(pars_convertidos[50001:100000,2], label = "RWMH")
+title!(L"\epsilon")
+vline!([true_pars[:epsilon]], label = "True value")
+
+```
+
+```julia
+
+StatsPlots.density(pars_hmc[:,3], label = "HMC")
+StatsPlots.density!(pars_convertidos[50001:100000,3], label = "RWMH")
+title!(L"\theta")
+vline!([true_pars[:theta]], label = "True value")
+
+```
+
+```julia
+
+StatsPlots.density(pars_hmc[:,4], label = "HMC")
+StatsPlots.density!(pars_convertidos[50001:100000,4], label = "RWMH")
+title!(L"\sigma")
+vline!([true_pars[:sig]], label = "True value")
+```
+
+```julia
+
+StatsPlots.density(pars_hmc[:,5], label = "HMC")
+StatsPlots.density!(pars_convertidos[50001:100000,5], label = "RWMH")
+title!(L"\sigma^2")
+vline!([true_pars[:s2]], label = "True value")
+
+```
+
+```julia
+
+StatsPlots.density(pars_hmc[:,6], label = "HMC")
+StatsPlots.density!(pars_convertidos[50001:100000,6], label = "RWMH")
+title!(L"\phi")
+vline!([true_pars[:phi]], label = "True value")
+
+```
+
+```julia
+
+StatsPlots.density(pars_hmc[:,7], label = "HMC")
+StatsPlots.density!(pars_convertidos[50001:100000,7], label = "RWMH")
+title!(L"\phi_{\pi}")
+vline!([true_pars[:phi_pi]], label = "True value")
+
+```
+
+```julia
+
+StatsPlots.density(pars_hmc[:,8], label = "HMC")
+StatsPlots.density!(pars_convertidos[50001:100000,8], label = "RWMH")
+title!(L"\phi_y")
+vline!([true_pars[:phi_y]], label = "True value")
+
+```
+
+```julia
+
+StatsPlots.density(pars_hmc[:,9], label = "HMC")
+StatsPlots.density!(pars_convertidos[50001:100000,9], label = "RWMH")
+title!(L"\rho_v")
+vline!([true_pars[:rho_v]], label = "True value")
+
+```
+
+
+On the time front, we will do two sets of simulations: one with 10 thousand replications and another with 100 thousand. We would expect that the time difference would be around 10 times, and it is in the ballpark. While we let the HMC procedure choose the optimal parameter, and therefore the time before the actually iteration begins enters in our time figure, we fed the optimal parameter to the MCMC without taking this time into account in the table bellow. We simulate both cases in a Dell Vostro with an Intel dual core i5-3210 at 2.5 Ghz, and with 6 GB of ram. The OS is a Linux flavour. Since we are more interested in the relative performance, this facts are by themselves of little importance. The times are, in seconds:
+
+Replications| RWMH | HMC
+------------|------|-----
+10,000      | 252  | 46
+100,000     | 2632 | 400
+
+Hamiltonian Monte carlo is not just faster: it is _a lot faster_. This hides fundamental differences between the two methods: the number of iterations necessary to obtain convergence. To ilustrate this point, we show the results of only ten thousand iterations of each algorithm:
+
+
+```julia
+
+pars_aceitos = load("data/mcmc10k.jld")["pars"]
+
+yy,shocks = simulate_dsge(GAMMA_0,GAMMA_1,PSI,PI,500)
+
+pars_convertidos10k = zeros(10000,9)
+
+for i in 1:10000
+    @unpack bet,epsilon,theta,sig,s2,phi,phi_pi,phi_y,rho_v = TransformVariables.transform(t,pars_aceitos[i,2:10])
+    pars_convertidos10k[i,:] = [bet,epsilon,theta,sig,s2,phi,phi_pi,phi_y,rho_v]#(bet = pars_aceitos[i,2], epsilon = pars_aceitos[i,3], theta = pars_aceitos[i,4],sig = pars_aceitos[i,5],s2 = pars_aceitos[i,6],phi = pars_aceitos[i,7],phi_pi = pars_aceitos[i,8],phi_y = pars_aceitos[i,9],rho_v = pars_aceitos[i,10]))
+end
+
+pars_hmc10k = load("data/hmc10k.jld")["pars"]
+
+StatsPlots.density(pars_hmc10k[:,1], label = "HMC", legend = :topleft)
+StatsPlots.density!(pars_convertidos10k[1:10000,1], label = "RWMH")
+title!(L"\beta")
+vline!([true_pars[:bet]], label = "True value")
+
+```
+
+```julia
+
+StatsPlots.density(pars_hmc10k[:,2], label = "HMC")
+StatsPlots.density!(pars_convertidos10k[1:10000,2], label = "RWMH")
+title!(L"\epsilon")
+vline!([true_pars[:epsilon]], label = "True value")
+
+```
+
+```julia
+
+StatsPlots.density(pars_hmc10k[:,3], label = "HMC")
+StatsPlots.density!(pars_convertidos10k[1:10000,3], label = "RWMH")
+title!(L"\theta")
+vline!([true_pars[:theta]], label = "True value")
+
+```
+
+```julia
+
+StatsPlots.density(pars_hmc10k[:,4], label = "HMC")
+StatsPlots.density!(pars_convertidos10k[1:10000,4], label = "RWMH")
+title!(L"\sigma")
+vline!([true_pars[:sig]], label = "True value")
+```
+
+```julia
+
+StatsPlots.density(pars_hmc10k[:,5], label = "HMC")
+StatsPlots.density!(pars_convertidos10k[1:10000,5], label = "RWMH")
+title!(L"\sigma^2")
+vline!([true_pars[:s2]], label = "True value")
+
+```
+
+```julia
+
+StatsPlots.density(pars_hmc10k[:,6], label = "HMC")
+StatsPlots.density!(pars_convertidos10k[1:10000,6], label = "RWMH")
+title!(L"\phi")
+vline!([true_pars[:phi]], label = "True value")
+
+```
+
+```julia
+
+StatsPlots.density(pars_hmc10k[:,7], label = "HMC")
+StatsPlots.density!(pars_convertidos10k[1:10000,7], label = "RWMH")
+title!(L"\phi_{\pi}")
+vline!([true_pars[:phi_pi]], label = "True value")
+
+```
+
+```julia
+
+StatsPlots.density(pars_hmc10k[:,8], label = "HMC")
+StatsPlots.density!(pars_convertidos10k[1:10000,8], label = "RWMH")
+title!(L"\phi_y")
+vline!([true_pars[:phi_y]], label = "True value")
+
+```
+
+```julia
+
+StatsPlots.density(pars_hmc10k[:,9], label = "HMC")
+StatsPlots.density!(pars_convertidos10k[1:10000,9], label = "RWMH")
+title!(L"\rho_v")
+vline!([true_pars[:rho_v]], label = "True value")
+
+```
+Random Walk Metropolis Hasting distributions are never better behaved than the ones obtained from HMC - with the notable exception of the distribution of $\rho_v$However, the $\rho_v$ is not well behaved even with a hundred thousand iterations, so this is not due to the number of iterations.  
