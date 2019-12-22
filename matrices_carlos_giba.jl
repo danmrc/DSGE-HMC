@@ -16,7 +16,7 @@ G1[1,3] = (1+h)/sig
 G1[1,7] = h
 
 Pi[1,1] = -1
-Pi[1,2] = (1-h)/sig
+Pi[1,2] = -(1-h)/sig
 Pi[1,3] = (1-h)/sig
 
 # Equation 2 (goods market equilibrium)
@@ -54,8 +54,8 @@ G1[5,15] = -1
 # Equation 6 (phillips curve - domestic)
 
 G0[6,5]  = -bet
-G0[6,12] = 1-bet*delta_D
-G0[6,24] = bet*(1-theta_D)*(1-theta_D*bet)/theta_D
+G0[6,12] = 1+bet*delta_D
+G0[6,24] = -bet*(1-theta_D)*(1-theta_D*bet)/theta_D
 
 G1[6,12] = delta_D
 
@@ -87,7 +87,7 @@ Pi[8,5]  = -bet
 G0[9,12] = -1
 G0[9,10] = -alfa
 
-G1[9,10] = alfa
+G1[9,10] = -alfa
 G1[9,2]  = -1
 
 # Equation 10 (bugdet constraint)
