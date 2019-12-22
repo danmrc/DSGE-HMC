@@ -24,9 +24,7 @@ function gensys(G0,G1,Psi,Pi;verbose = true, tol = 1e-12)
     #     Theta3 = zeros(n,n)
     #     ans = Sims(Theta1,Theta2,Theta3,eu)
     #     return ans
-    #     if verbose
-    #         @warn "Unknown error. Probably LAPACK Exception 2. Skipping."
-    #     end
+    #     @warn "Unknown error. Probably LAPACK Exception. Skipping."
     # end
     gen_eigen = abs.(decomp_1.beta ./ decomp_1.alpha)
     ordschur!(decomp_1, gen_eigen .< 1)

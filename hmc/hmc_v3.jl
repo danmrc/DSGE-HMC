@@ -1,6 +1,6 @@
 using DynamicHMC, LogDensityProblems
 using Distributions, Parameters, Random
-using Tracker, StatsPlots
+using ForwardDiff, StatsPlots
 
 include(string(pwd(),"/src/simulation.jl"))
 include(string(pwd(),"/gali_bayesian.jl"))
@@ -23,7 +23,7 @@ bb = TransformVariables.inverse(t,(bet = 0.99,epsilon = 6,theta=2/3,sig=1,s2=1,p
 
 LogDensityProblems.logdensity(P,bb)
 
-grad_p = ADgradient(:Tracker,P)
+grad_p = ADgradient(:Zygote,P)
 
 #grads = Calculus.gradient(P)
 
@@ -66,7 +66,7 @@ vline!([mean(post_array[:,5])])
 StatsPlots.density(post_array[:,6], legend = :none)
 title!(latexify("phi()"))
 vline!([true_pars[:phi]])
-vline!([mean(post_array[:,6])])
+vline!([mean(post_array[:,6])Tra])
 
 StatsPlots.density(post_array[:,7], legend = :none)
 title!(latexify("phi()_pi",cdot = false))
