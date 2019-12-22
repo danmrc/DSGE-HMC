@@ -14,20 +14,20 @@ end
 
 function gensys(G0,G1,Psi,Pi;verbose = true, tol = 1e-12)
     n = size(G0,1)
-    decomp_1 = #schur(G0,G1)
-    try
-        schur(G0,G1)
-    catch
-        eu = (-1,-1)
-        Theta1 = zeros(n,n)
-        Theta2 = zeros(n,n)
-        Theta3 = zeros(n,n)
-        ans = Sims(Theta1,Theta2,Theta3,eu)
-        return ans
-        if verbose
-            @warn "Unknown error. Probably LAPACK Exception 2. Skipping."
-        end
-    end
+    decomp_1 = schur(G0,G1)
+    # try
+    #     schur(G0,G1)
+    # catch
+    #     eu = (-1,-1)
+    #     Theta1 = zeros(n,n)
+    #     Theta2 = zeros(n,n)
+    #     Theta3 = zeros(n,n)
+    #     ans = Sims(Theta1,Theta2,Theta3,eu)
+    #     return ans
+    #     if verbose
+    #         @warn "Unknown error. Probably LAPACK Exception 2. Skipping."
+    #     end
+    # end
     gen_eigen = abs.(decomp_1.beta ./ decomp_1.alpha)
     ordschur!(decomp_1, gen_eigen .< 1)
 
@@ -65,8 +65,22 @@ function gensys(G0,G1,Psi,Pi;verbose = true, tol = 1e-12)
         if verbose == true
             @warn "No Unique Solution"
         end
-        Theta1 = zeros(n,n)
-        Theta2 = zeros(n,n)
+        U1 = svd_Q2Pi.U[:,1:r]
+        Xi = Q1*Pi*pinv(Q2Pi) #bottom of p 46 #change in 11 dec 2019: pinv instead of manually multiplying the elements
+
+        Aux1 = S12-Xi*S22
+
+        larg1 = size(Aux1,2)
+        Aux2 = [S11 Aux1;zeros(larg1,size(S11,2)) Matrix(I,larg1,larg1)]
+        larg2 = size(Aux2,2)
+        larg2 = larg2 - size(T11,1)
+
+        ##Matrices on top of p. 46
+
+        Theta1 = [T11 T12-Xi*T22;zeros(larg2,n)]
+        Theta1 = decomp_1.Z*inv(Aux2)*Theta1*decomp_1.Z'
+        Theta2 = [Q1 - Xi*Q2;zeros(larg2,n)]
+        Theta2 = decomp_1.Z*inv(Aux2)*Theta2*Psi
         Theta3 = zeros(n,n)
         ans = Sims(Theta1,Theta2,Theta3,eu)
         return ans

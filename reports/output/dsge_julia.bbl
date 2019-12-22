@@ -1,0 +1,37 @@
+\begin{thebibliography}{}
+
+\bibitem[\protect\citename{Betancourt, }2017]{Betancourt2017}
+Betancourt, Michael. 2017.
+\newblock A conceptual introduction to Hamiltonian Monte Carlo.
+\newblock {\em arXiv preprint arXiv:1701.02434}.
+
+\bibitem[\protect\citename{Canova, }2011]{Canova2011}
+Canova, Fabio. 2011.
+\newblock {\em {Methods for applied macroeconomic research}}.
+
+\bibitem[\protect\citename{Gal{\'{i}}, }2009]{Gali2009}
+Gal{\'{i}}, Jordi. 2009.
+\newblock {\em {Monetary policy, inflation, and the business cycle: An
+  introduction to the new Keynesian framework}}.
+
+\bibitem[\protect\citename{Gelman {\em et~al.}, }2014]{Gelman2014}
+Gelman, Andrew, Carlin, John B~B, Stern, Hal S~S, \& Rubin, Donald B~B. 2014.
+\newblock {\em {Bayesian Data Analysis, Third Edition (Texts in Statistical
+  Science)}}.
+
+\bibitem[\protect\citename{Keesman, }2011]{Keesman2011}
+Keesman, Karel~J. 2011.
+\newblock {System identification: An introduction}.
+\newblock {\em In:} {\em Advanced Textbooks in Control and Signal Processing}.
+
+\bibitem[\protect\citename{Miao, }2014]{Miao2014}
+Miao, Jianjun. 2014.
+\newblock {\em Economic dynamics in discrete time}.
+\newblock MIT press.
+
+\bibitem[\protect\citename{Sims, }2002]{Sims2002}
+Sims, Christopher~A. 2002.
+\newblock {Solving Linear Rational Expectations Models}.
+\newblock {\em Computational Economics}.
+
+\end{thebibliography}
