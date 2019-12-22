@@ -213,7 +213,7 @@ As a proof of concept, lets compare our code with the model of Gali (2008), chap
 
 
 \begin{lstlisting}
-(*@\HLJLk{using}@*) (*@\HLJLn{Plots}@*)
+(*@\HLJLk{using}@*) (*@\HLJLn{Plots}@*)(*@\HLJLp{,}@*) (*@\HLJLn{LaTeXStrings}@*)
 
 (*@\HLJLnf{include}@*)(*@\HLJLp{(}@*)(*@\HLJLnf{string}@*)(*@\HLJLp{(}@*)(*@\HLJLnf{pwd}@*)(*@\HLJLp{(),}@*) (*@\HLJLs{"{}/src/gensys.jl"{}}@*)(*@\HLJLp{))}@*)
 \end{lstlisting}
@@ -448,7 +448,7 @@ Lets compare the IRFs generated analyticaly and by our implementation of Gensys:
 \begin{lstlisting}
 (*@\HLJLnf{plot}@*)(*@\HLJLp{(}@*)(*@\HLJLn{irfs}@*)(*@\HLJLp{[}@*)(*@\HLJLoB{:}@*)(*@\HLJLp{,}@*)(*@\HLJLni{2}@*)(*@\HLJLp{],}@*) (*@\HLJLn{label}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}Output}@*) (*@\HLJLs{Gap}@*) (*@\HLJLs{Gensys"{}}@*)(*@\HLJLp{,}@*) (*@\HLJLn{w}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{3}@*)(*@\HLJLp{)}@*)
 (*@\HLJLnf{plot!}@*)(*@\HLJLp{(}@*)(*@\HLJLn{irfs{\_}true}@*)(*@\HLJLp{[}@*)(*@\HLJLni{2}@*)(*@\HLJLoB{:}@*)(*@\HLJLni{15}@*)(*@\HLJLp{,}@*)(*@\HLJLni{2}@*)(*@\HLJLp{],}@*) (*@\HLJLn{label}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}Output}@*) (*@\HLJLs{Gap}@*) (*@\HLJLs{Analytical"{}}@*)(*@\HLJLp{,}@*) (*@\HLJLn{line}@*) (*@\HLJLoB{=}@*) (*@\HLJLsc{:dash}@*)(*@\HLJLp{,}@*) (*@\HLJLn{w}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{3}@*)(*@\HLJLp{)}@*)
-(*@\HLJLnf{title!}@*)(*@\HLJLp{(}@*)(*@\HLJLs{"{}Output}@*) (*@\HLJLs{Gap}@*) (*@\HLJLs{response}@*) (*@\HLJLs{for}@*) (*@\HLJLs{a}@*) (*@\HLJLs{0.25}@*) (*@\HLJLs{shock}@*) (*@\HLJLs{in}@*) (*@\HLJLs{interest}@*) (*@\HLJLs{rate"{}}@*)(*@\HLJLp{)}@*)
+(*@\HLJLnf{title!}@*)(*@\HLJLp{(}@*)(*@\HLJLso{L"{}{\textbackslash}beta"{}}@*)(*@\HLJLp{)}@*)(*@\HLJLcs{{\#}title!("{}Output}@*) (*@\HLJLcs{Gap}@*) (*@\HLJLcs{response}@*) (*@\HLJLcs{for}@*) (*@\HLJLcs{a}@*) (*@\HLJLcs{0.25}@*) (*@\HLJLcs{shock}@*) (*@\HLJLcs{in}@*) (*@\HLJLcs{interest}@*) (*@\HLJLcs{rate"{})}@*)
 \end{lstlisting}
 
 \includegraphics[width=\linewidth]{figures/gensys_12_1.pdf}
@@ -513,12 +513,26 @@ The model needs to be written into a Dictionary, and unlike Dynare, all the vari
 
 \begin{lstlisting}
 (*@\HLJLnf{include}@*)(*@\HLJLp{(}@*)(*@\HLJLnf{string}@*)(*@\HLJLp{(}@*)(*@\HLJLnf{pwd}@*)(*@\HLJLp{(),}@*) (*@\HLJLs{"{}/src/interpreter.jl"{}}@*)(*@\HLJLp{))}@*)
-
- (*@\HLJLnd{@polyvar}@*) (*@\HLJLn{pi}@*) (*@\HLJLn{pi{\_}e}@*) (*@\HLJLn{y}@*) (*@\HLJLn{y{\_}e}@*) (*@\HLJLn{i}@*) (*@\HLJLn{v}@*) (*@\HLJLn{v{\_}l}@*) (*@\HLJLn{ep}@*)
 \end{lstlisting}
 
 \begin{lstlisting}
-(pi, pi_e, y, y_e, i, v, v_l, ep)
+Error: LoadError: ArgumentError: Package DynamicPolynomials not found in cu
+rrent path:
+- Run `import Pkg; Pkg.add("DynamicPolynomials")` to install the DynamicPol
+ynomials package.
+
+in expression starting at /home/danielc/Documentos/GitHub/DSGE-HMC/src/inte
+rpreter.jl:1
+\end{lstlisting}
+
+
+\begin{lstlisting}
+(*@\HLJLnd{@polyvar}@*) (*@\HLJLn{pi}@*) (*@\HLJLn{pi{\_}e}@*) (*@\HLJLn{y}@*) (*@\HLJLn{y{\_}e}@*) (*@\HLJLn{i}@*) (*@\HLJLn{v}@*) (*@\HLJLn{v{\_}l}@*) (*@\HLJLn{ep}@*)
+\end{lstlisting}
+
+\begin{lstlisting}
+Error: LoadError: UndefVarError: @polyvar not defined
+in expression starting at none:2
 \end{lstlisting}
 
 
@@ -527,13 +541,39 @@ Lets write the four equations:
 
 \begin{lstlisting}
 (*@\HLJLn{eq1}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{pi}@*) (*@\HLJLoB{-}@*) (*@\HLJLn{bet}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{pi{\_}e}@*) (*@\HLJLoB{-}@*) (*@\HLJLn{kappa}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{y}@*)
- (*@\HLJLn{eq2}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{y}@*) (*@\HLJLoB{+}@*) (*@\HLJLni{1}@*)(*@\HLJLoB{/}@*)(*@\HLJLn{sig}@*)(*@\HLJLoB{*}@*)(*@\HLJLp{(}@*)(*@\HLJLn{i}@*) (*@\HLJLoB{-}@*) (*@\HLJLn{pi{\_}e}@*)(*@\HLJLp{)}@*) (*@\HLJLoB{-}@*) (*@\HLJLn{y{\_}e}@*)
- (*@\HLJLn{eq3}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{i}@*) (*@\HLJLoB{-}@*) (*@\HLJLn{phi{\_}pi}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{pi}@*) (*@\HLJLoB{-}@*) (*@\HLJLn{phi{\_}y}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{y}@*) (*@\HLJLoB{-}@*) (*@\HLJLn{v{\_}l}@*)
- (*@\HLJLn{eq4}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{v}@*) (*@\HLJLoB{-}@*) (*@\HLJLn{rho{\_}v}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{v{\_}l}@*) (*@\HLJLoB{-}@*) (*@\HLJLn{ep}@*)
+\end{lstlisting}
+
+\begin{lstlisting}
+Error: UndefVarError: pi_e not defined
 \end{lstlisting}
 
 
-$$ v - 0.5v_l - ep $$
+\begin{lstlisting}
+(*@\HLJLn{eq2}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{y}@*) (*@\HLJLoB{+}@*) (*@\HLJLni{1}@*)(*@\HLJLoB{/}@*)(*@\HLJLn{sig}@*)(*@\HLJLoB{*}@*)(*@\HLJLp{(}@*)(*@\HLJLn{i}@*) (*@\HLJLoB{-}@*) (*@\HLJLn{pi{\_}e}@*)(*@\HLJLp{)}@*) (*@\HLJLoB{-}@*) (*@\HLJLn{y{\_}e}@*)
+\end{lstlisting}
+
+\begin{lstlisting}
+Error: UndefVarError: i not defined
+\end{lstlisting}
+
+
+\begin{lstlisting}
+(*@\HLJLn{eq3}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{i}@*) (*@\HLJLoB{-}@*) (*@\HLJLn{phi{\_}pi}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{pi}@*) (*@\HLJLoB{-}@*) (*@\HLJLn{phi{\_}y}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{y}@*) (*@\HLJLoB{-}@*) (*@\HLJLn{v{\_}l}@*)
+\end{lstlisting}
+
+\begin{lstlisting}
+Error: UndefVarError: i not defined
+\end{lstlisting}
+
+
+\begin{lstlisting}
+(*@\HLJLn{eq4}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{v}@*) (*@\HLJLoB{-}@*) (*@\HLJLn{rho{\_}v}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{v{\_}l}@*) (*@\HLJLoB{-}@*) (*@\HLJLn{ep}@*)
+\end{lstlisting}
+
+\begin{lstlisting}
+Error: UndefVarError: v_l not defined
+\end{lstlisting}
+
 
 And now the Dictionary with all the equations. We can choose any key we like for the dictionary and to make it easy to anyone to understand what each equation is, we will give them their usual names:
 
@@ -543,11 +583,7 @@ And now the Dictionary with all the equations. We can choose any key we like for
 \end{lstlisting}
 
 \begin{lstlisting}
-Dict{String,DynamicPolynomials.Polynomial{true,Float64}} with 4 entries:
-  "Taylor"   => -1.5pi - 0.125y + i - v_l
-  "Ar Shock" => v - 0.5v_l - ep
-  "Phillips" => pi - 0.99pi_e - 0.1275y
-  "IS"       => -pi_e + y - y_e + i
+Error: UndefVarError: eq2 not defined
 \end{lstlisting}
 
 
@@ -559,39 +595,11 @@ The interpreter itself takes the model and which variables represent shocks. Eve
 \end{lstlisting}
 
 \begin{lstlisting}
-Found 2 expectations variables
-Found 1 lags variables
-Found 5 current variables
-Main.WeaveSandBox0.gensys_sys(4(*@\ensuremath{\times}@*)4 Named Array{Float64,2}
-A (*@\ensuremath{\diagdown}@*) B │    1     2     3     4
-──────┼───────────────────────
-pi    │ -0.0  -0.0  -0.0   0.0
-y     │ -0.0  -0.0  -1.0   0.0
-v_l   │ 0.99  -0.0  -0.0   0.0
-i     │  1.0   1.0  -0.0   0.0, 4(*@\ensuremath{\times}@*)4 Named Array{Float64,2}
-A (*@\ensuremath{\diagdown}@*) B │      pi        y      v_l        i
-──────┼───────────────────────────────────
-pi    │    -1.5   -0.125     -1.0      1.0
-y     │     0.0      0.0     -0.5      0.0
-v_l   │     1.0  -0.1275      0.0      0.0
-i     │     0.0      1.0      0.0      1.0, 4(*@\ensuremath{\times}@*)1 Named Array{Float64,2}
-A (*@\ensuremath{\diagdown}@*) B │   ep
-──────┼─────
-pi    │  0.0
-y     │ -1.0
-v_l   │  0.0
-i     │  0.0, 4(*@\ensuremath{\times}@*)2 Named Array{Float64,2}
-A (*@\ensuremath{\diagdown}@*) B │ nu_pi   nu_y
-──────┼─────────────
-pi    │   0.0    0.0
-y     │   0.0    0.0
-v_l   │ -0.99    0.0
-i     │  -1.0   -1.0, DynamicPolynomials.PolyVar{true}[pi, y, v_l, i], Dyna
-micPolynomials.PolyVar{true}[pi_f, y_f, v])
+Error: UndefVarError: ep not defined
 \end{lstlisting}
 
 
-The object \texttt{modelgensys} contains $\Gamma_0$,$\Gamma_1$,$\Psi$ and $\Pi$. We wrote a \texttt{gensys} function that takes the whole model and automatically computes the solutions - this is only possible because Julia allows for multiple dispatch (the same function can do different things, deppending on which type of object is passed to them):
+The object \texttt{modelgensys} contains $\Gamma_0$,$\Gamma_1$,$\Psi$ and $\Pi$. We wrote a \texttt{gensys} function that takes the whole model and automatically computes the solutions - this is only possible because Julia allows for multiple dispatch (the same function can do different things, depending on which type of object is passed to them):
 
 
 \begin{lstlisting}
@@ -599,26 +607,7 @@ The object \texttt{modelgensys} contains $\Gamma_0$,$\Gamma_1$,$\Psi$ and $\Pi$.
 \end{lstlisting}
 
 \begin{lstlisting}
-Main.WeaveSandBox0.Sims(4(*@\ensuremath{\times}@*)4 Named Array{Float64,2}
-A (*@\ensuremath{\diagdown}@*) B │            1             2             3             4
-──────┼───────────────────────────────────────────────────────
-pi    │  9.02056e-17  -8.32667e-17     -0.143865  -7.92572e-17
-y     │  3.33067e-16  -3.33067e-16     -0.569817  -3.17322e-16
-v_l   │ -2.77556e-16   2.22045e-16           0.5   2.79318e-16
-i     │   -1.249e-16   8.32667e-17      0.212976   1.13828e-16, 4(*@\ensuremath{\times}@*)1 Named A
-rray{Float64,2}
-A (*@\ensuremath{\diagdown}@*) B │         1
-──────┼──────────
-pi    │ -0.287729
-y     │  -1.13963
-v_l   │       1.0
-i     │  0.425952, 4(*@\ensuremath{\times}@*)4 Named Array{Float64,2}
-A (*@\ensuremath{\diagdown}@*) B │   1    2    3    4
-──────┼───────────────────
-pi    │ 0.0  0.0  0.0  0.0
-y     │ 0.0  0.0  0.0  0.0
-v_l   │ 0.0  0.0  0.0  0.0
-i     │ 0.0  0.0  0.0  0.0, [1, 1])
+Error: UndefVarError: modelgensys not defined
 \end{lstlisting}
 
 

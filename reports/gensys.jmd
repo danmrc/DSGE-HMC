@@ -74,7 +74,7 @@ As a proof of concept, lets compare our code with the model of Gali (2008), chap
 
 ```julia
 
-using Plots
+using Plots, LaTeXStrings
 
 include(string(pwd(), "/src/gensys.jl"))
 ```

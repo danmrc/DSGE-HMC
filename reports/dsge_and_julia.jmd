@@ -18,11 +18,11 @@ We implement a solver and estimation procedure for Dynamic Stochastic General Eq
 
 2. We need to write, given a set of parameters and some data, the likelihood. This is not trivial since the model is a VARMA. The Kalman Filter allows us to recover the fundamental shocks from the set of observables.
 
-3. The last step is the estimation itself. Due to the large number of parameters and the many restrictions in the parameter space, DSGE are usually estimated by bayesian methods. We follow this approach and implement the Random Walk Metropolis Hasting algorithm to sample from the posterior. We also estimate using a more modern method for Markov Chain Monte Carlo (MCMC), namely Hamiltonian Monte Carlo (HMC).
+3. The last step is the estimation itself. Due to the large number of parameters and the many restrictions in the parameter space, DSGE are usually estimated by bayesian methods. We follow this approach and implement the Random Walk Metropolis Hasting (RWMH) algorithm to sample from the posterior. We also estimate using a more modern method for Markov Chain Monte Carlo (MCMC), namely Hamiltonian Monte Carlo (HMC).
 
 Although there is a large literature on solving and estimating DSGEs, tricks that are important from the computational point of view - many regarding floating point arithmetics - are usually not covered. We discuss a number of them and many "work around" that make algorithms work smoothly.
 
-This paper is composed as follows: the first section is this short introduction; the second one explains the model; the third explains the implementation and its various sub components; the fourth shows the results from a simulation of the toy model and recovering the distribution of the parameters using our algorithm and HMC; the fifth section concludes.
+This paper is composed as follows: the first section is this short introduction; the second one explains the model; the third explains the implementation and its various sub components. This section also show each of the components at work with the toy model and provides a quick explanation of HMC and some simulation results comparing RWMH and HMC. The last section concludes.
 
 Before we start, let us give a short note on developing something like this: this is a large project, with many pieces that can potentially go wrong for a number of reasons - the first is, of course, human error. We are careful in implementing each step and testing it throughout before adding a new layer. Our approach is to always write one of the parts as a function, test it comparing the results with analytical results or whatever the answer is reasonable. An example of the former is our implementation of gensys, in which we can compare the impulse response functions (IRFs) given by the algorithm with the analytical IRFs; an example of the latter is computing the likelihood over a grid: we would expect that there is a local maximum around the true value of the parameters, fixing all other parameters in their true values.
 
@@ -71,7 +71,7 @@ Gensys is a solver of linear rational expectation systems. It requires that we w
 
 $$\Gamma_0 y_t = \Gamma_1 y_{t-1} + \Psi \varepsilon_t + \Pi \eta_t$$
 
-In which $\varepsilon_t$ are fundamental shocks and $\eta_t$ are expectational shocks. Gensys takes a model in thisform and finds matrices $\Theta_1$ and $\Theta_2$ such that the data follows a VAR(1):
+In which $\varepsilon_t$ are fundamental shocks and $\eta_t$ are expectational shocks. Gensys takes a model in this form and finds matrices $\Theta_1$ and $\Theta_2$ such that the data follows a VAR(1):
 
 $$y_t = \Theta_1 y_{t-1} + \Theta_2 \varepsilon_t$$
 
@@ -110,7 +110,7 @@ Here are LaTeX versions of the matrices generated automatically with the package
 
 ```julia; results = "tex"
 
-using Latexify
+using Latexify, Random
 
 print(string("\$\$\\Gamma_0 = \$\$",latexify(GAMMA_0)))
 
@@ -133,7 +133,7 @@ print(string("\$\$\\Pi = \$\$",latexify(PI)))
 
 ```
 
-Gensys allows $\Gamma_0$ to be singular. To obtain a system without $\Gamma_0$, it relies on the generalized Schur decomposition for both $\Gamma_0$ and $\Gamma_1$, simultaneously. The **LinearAlgebra** package that comes with Julia. To test whatever the system has a solution and if it is unique, Gensys _does not_ relies on the usual Blanchard Khan condition i.e. whatever the number of explosive eigenvalues is equal to the number of jumping variables - in fact, Gensys does not require that one defines which variables are jumping and which are pre determined. The existence and unity of the solution is determined by the number of singular values that are different from zero. This comes from the Singular Value Decomposition (SVD), another decomposition from numerical linear algebra. Given the role this decompositions will play, it is necessary to give some explanation about them.
+Gensys allows $\Gamma_0$ to be singular. To obtain a system without $\Gamma_0$, it relies on the generalized Schur decomposition for both $\Gamma_0$ and $\Gamma_1$, simultaneously. The **LinearAlgebra** package that comes with Julia has a function called `schur` that computes the (egneralized) Schur decomposition. To test whatever the system has a solution and if it is unique, Gensys _does not_ relies on the usual Blanchard Khan condition i.e. whatever the number of explosive eigenvalues is equal to the number of jumping variables - in fact, Gensys does not require that one defines which variables are jumping and which are pre determined. The existence and unity of the solution is determined by the number of singular values that are different from zero. This comes from the Singular Value Decomposition (SVD), another decomposition from numerical linear algebra. Given the role these decompositions will play, it is necessary to give some explanation about them.
 
 ### Numerical Linear Algebra
 
@@ -147,7 +147,7 @@ The Schur Decomposition tries to find a decomposition	of the same form of the ei
 
 $$A = Q'SQ$$
 
-Remarkably $S$ is always an upper triangular matrix.
+Such that $Q$ is orthonormal. Remarkably $S$ is always an upper triangular matrix.
 
 We will be actually interested in the Generalized Schur Decomposition. To understand this one, lets first understand what is the generalized eigenvalue. In the usual eigenvalue problem, we want to find a vector $\mathbf{x}$ and a value $\lambda$ such that:
 
@@ -174,7 +174,7 @@ The idea for the Generalized Schur Decomposition will be the same, but now we wa
 
 Item 6 will be particularly useful in what follows
 
-The SVD also follows the idea from the eigenvalue problem. Now the idea is to decompose A as $USV'$, in which S is a diagonal matrix and both $U$ and $V$ are orthonormal.
+The SVD also follows the idea from the eigenvalue problem. Now the idea is to decompose $A$ as $USV'$, in which S is a diagonal matrix and both $U$ and $V$ are orthonormal. The diagonal values in $S$ are known as singular values.
 
 ### The function
 
@@ -326,7 +326,7 @@ sol = gensys(GAMMA_0,GAMMA_1,PSI,PI)
 irfs = irf(sol,15,0.25)
 ```
 
-Lets compare the IRFs generated analyticaly and by our implementation of Gensys:
+The sol object is a structure of type "Sims" (that we created) and we write the `IRF` function such that it knows which fields to query from this object to compute the impulse response. Lets compare the IRFs generated analyticaly and by our implementation of Gensys:
 
 ```julia
 
@@ -385,9 +385,9 @@ However, it is well known (see, for example, Keesman (2011)) that if there are n
 
 Although this trick helps preventing errors, it does not solve all the problems. Another problem - that is related to taking the inverse of the forecast error variance - is that the matrix might be _ill-condition_. This is related to the condition number of a matrix, $||A|| ||A^{-1}||$. Large condition numbers means that the inverse is an ill posed problem, from the numerical point of view; condition numbers close to one means that the problem is well behaved. We follow Dynare's code in skipping the cases in which the forecast variance matrix is ill conditioned (they use the inverse of the condition number, so numbers closer to zero means that the problem is ill posed. We use the same threshold they use).
 
-Each step of the Kalman filter uses the current distribution about the state to forecast the state in the future. The error from the difference of the forecasted state to the real value of the state gives the mean of the normal. The forecast error variance is $P = G*\Sigma_s*G' + R$, in which $\Sigma_s$ is the variance matrix of the states. This gives us all we need to evaluate the likelihood at each observation. With the likelihood at each point, one can then _multiply_ all of the values.
+Each step of the Kalman filter uses the current distribution about the state to forecast the state in the future. The error from the difference of the forecasted state to the real value of the state gives the mean of the normal. The forecast error variance is $P = G\Sigma_sG' + R$, in which $\Sigma_s$ is the variance matrix of the states. This gives us all we need to evaluate the likelihood at each observation. With the likelihood at each point, one can then _multiply_ all of the values.
 
-This is problematic because, in many cases, the value of the density at the point is smaller than 1. Since the computer has a finite decimal precision (known as the _eps_), multiplying several numbers bellow one can quickly become messy. Just as an example, taking $0.0001^{100}$ is bellow the eps of most CPUs. To avoid this, is better to work with the log of the likelihood and sum them over. That is the procedure we follow.
+This is problematic because, in many cases, the value of the density at the point is smaller than 1. Since the computer has a finite decimal precision (known as the _eps_), multiplying several numbers bellow one can quickly become messy. Just as an example, taking $0.0001^{100}$ (this would be just a hundred observations with density 0.0001) is bellow the eps of most CPUs. To avoid this, is better to work with the log of the likelihood and sum them over. That is the procedure we follow.
 
 We also throw away the first nine likelihoods from the state. One needs to initialize the state distribution at some value - since we are working with the Normal distribution, this means the initialize the mean and the variance of the distribution. It takes a while to make this values converge, and in some cases this throws non sense values that destroy the loglikelihood (like $10^{18}$). For initialization, we use the mean and the variance of the observed equation.
 
@@ -515,6 +515,8 @@ Lets simulate an economy using the parameters from Gali
 
 ```julia;results="hidden"
 
+Random.seed!(324128)
+
 include(string(pwd(),"/src/simulation.jl"))
 
 dados,choques = simulate_dsge(GAMMA_0,GAMMA_1,PSI,PI,5000)
@@ -537,7 +539,7 @@ plot(bett,vals_bet, label = "Likelihood")
 vline!([0.99], label = "True Value")
 ```
 
-Notice that the maximum of this function is not exactly in the true value of the parameter - even though we have a sample of size 5000, many times the size of the usual macroeconomics database.
+The shape is what we expected: increasing or decreasing the parameter from some point near the true value should decrease the likelihood. Notice that the maximum of this function is not exactly in the true value of the parameter - even though we have a sample of size 5000, many times the size of the usual macroeconomics database.
 
 ## Markov Chain Monte Carlo
 
@@ -559,7 +561,7 @@ For j in 1:ndraws:
 
 end
 
-In the end we have $\{\Theta_j\}_{j=1}^{ndraws}$, a set of ndraws of the parameter vector.This algorithm maps the posterior, and is quite smart: every time you draw a parameter vector that makes the likelihood times the prior increase a lot compared to the point you are now, you accept. However, even it does not increase, this does not means that the vector will be excluded. It has some probability of being included. This allows the algorithm to map the distribution and to not get stuck in some points of high probability, like the mode.
+In the end we have $\{\Theta_j\}_{j=1}^{ndraws}$, a set of ndraws of the parameter vector.This algorithm maps the posterior, and is quite smart: every time you draw a parameter vector that makes the likelihood times the prior increase a lot compared to the point you are now, you accept. However, even when it does not increase the likelihood, this does not means that the vector will be excluded: it has some probability of being included. This allows the algorithm to map the distribution and to not get stuck in some points of high probability, like the mode.
 
 The choice of the kernel is important. Usually, the kernel is a Normal distribution that has mean in the last parameter vector accepted (therefore the random walk part of the name that we used in the introduction). The choice of the variance is of central importance: the optimal choice for the variance of the kernel is $c\Sigma_\Theta$, in which $\Sigma_\Theta$ is the variance matrix for the vector $\Theta$ evaluated on the mode. $c$ is a scale constant that plays a fundamental role to ensure that we will map the whole distribution. The idea is simple: if the variance is too low, you will visit only a small part of the distribution in a given number of iterations; set it too high and the algorithm will start to wander in regions far away from the mode, that contribute little to the overall density. Therefore setting $c$ in the right way ensures that our iterations won't be wasted.
 
@@ -573,7 +575,7 @@ And we use $\log(\alpha)$ instead of $\alpha$ in step 4. We tried working with t
 
 Here are the priors. We create the function `gamma_mv` that receives the mean and the standard deviation we want the prior to have, instead of the usual shape and scale parameters:
 
-```julia
+```julia;results="hidden"
 
 using Distributions
 
@@ -593,7 +595,7 @@ prior_s2 = InverseGamma(3.76,2.76)
 
 Notice that we have a potential problem using a Normal kernel: some parameters are constrained in some interval of the reals. An example would be the $\beta$, the intertemporal discount parameter: this is constrained between 0 and 1. We can use some transformation of the parameters so they are paremetrized in the whole real line - e.g. take log of the parameters that are positive. This requires an adjusment in the likelihood function by the determinant of the jacobian of this transformations. This is bothersome. Fortunately, Julia has a package for handling this transformations, called **TransformVariables**. All we have to do is tell it what interval of the real line the parameters are constrained. This is easier than writing the code for the jacobian, however it requires some steps:
 
-```julia
+```julia;results="hidden"
 
 using Parameters, TransformVariables
 
@@ -620,7 +622,7 @@ The previous code requires a bit more of explanation. The first thing we do is d
 
 Lets start with the basic MCMC algorithm code, assuming that we know the scale parameter $c$:
 
-```
+```julia;eval = false
 
 coef_escala = 0.24
 
@@ -670,9 +672,9 @@ If we do not know the scale parameter - as it happens most of times - we need to
 
 In pratice, we implement this in a three step process:
 
-1. Start at some random point of the parameter space. For 5000 times, run the MCMC and update the covariance matrix at each multiple of 1000, using just the last 500 estimate of the parameter vector. This attempts to isolate possible contamination due to the change in the covariance matrix
+1. Start at some random point of the parameter space. For 5000 times, run the MCMC and update the covariance matrix at each multiple of 1000, using just the last 500 estimate of the parameter vector. This attempts to isolate possible "transition dynamics" due to the change in the distribution when we changed the covariance matrix
 
-2. Take the last parameter vector from the previous procedure. Starting from this point, run the MCMC for more 5000 times. This time we will choose the scale parameter following the procedure of Gelman et al (20??). They do not give a rule for how to adjust and we settle with a reduction of 20% in the value and an increase of 10% - this is completely arbitrary.
+2. Take the last parameter vector from the previous procedure. Starting from this point, run the MCMC for more 5000 times. This time we will choose the scale parameter following the procedure of Gelman et al (20??). They do not give a rule by how much the scale coefficient should change and we settle with a reduction of 20% in the value and an increase of 10% - this is completely arbitrary.
 
 3. Using the covariance matrix and the scale parameter, run the MCMC for n iterations to obtain the posterior distribution.
 
@@ -684,7 +686,7 @@ After we have finally a scale value that generates an acceptance in this range, 
 
 Here is the code for the first step:
 
-```
+```julia;eval = false
 rejec = 0
 
 k = 2
@@ -735,7 +737,7 @@ end
 
 And for the second step, the algorithm has too many ifs and whiles:
 
-```
+```julia;eval = false
 
 hes_inv_backup = hes_inv
 
@@ -865,7 +867,7 @@ end
 
 Finally, the step that generates the distribution, the third one:
 
-```
+```julia;eval = false
 
 j = 2
 rejec = 0
@@ -909,7 +911,7 @@ end
 
 ```
 
-We don't run this code when compiling this document because it takes a while to run it - around ten minutes. Let's show the results of this estimation by plotting the densitites using the _StatsPlots_ package. Notice that the parameters that we receive at the end of the MCMC are the transformed
+We don't run this code when compiling this document because it takes a while to run it. Let's show the results of this estimation by plotting the densitites using the _StatsPlots_ package. Notice that the parameters that we receive at the end of the MCMC are the transformed ones, not the parameters that interest us. We need to tranform them back to their domain:
 
 ```julia
 
@@ -932,7 +934,7 @@ for i in 50001:100000
 end
 ```
 
-We will use the first half of the sample as warm up and the remaining. We do not do any thinning - excluding some observations to generate a sample that is less autocorrelated, like excluding every even observation or just using 1 observation out of three (use, don't don't, use don't, don't...). The red vertical line represents the true line and the green dashed line the mean of the parameter in the distribution:
+We will use the first half of the sample as warm up and the remaining will be used to build the distributions. We do not do any thinning - excluding some observations to generate a sample that is less autocorrelated, like excluding every even observation or just using 1 observation out of three (use, don't don't, use don't, don't...). The red vertical line represents the true line and the green dashed line the mean of the parameter in the distribution:
 
 ```julia
 
@@ -1015,29 +1017,31 @@ vline!([mean(pars_convertidos[50001:100000,9])], line = :dash)
 
 ```
 
+The algorithm is pretty sucessful. All means are close to the true value and so are the modes. The algorithm has a hard time recovering $\phi_y$; however, it is surprisingly sucessful recovering $\epsilon$, which is inside the expression for $\kappa$.  
+
 ## Hamiltonian Monte Carlo
 
-Although Random Walk Metropolis Hasting (RWMH) is the main method used when estimating DSGEs by Bayesian methods, it is not the only MCMC algorithm. RWMH is a reliable and relatively simple algorithm to implement, and only requires evaluating the likelihood twice per iteration - which in our case is costly - and does not require knowing the marginal distribution like Gibb's Sampler. However, RWMH relies on a random walk to explore the parametric space: it may wander through regions with low density. This is even worse in high dimensional cases. Bethancourt (201?) gives an intuitive example of what goes wrong, based on Figure **????** bellow:
+Although Random Walk Metropolis Hasting (RWMH) is the main method used when estimating DSGEs by Bayesian methods, it is not the only MCMC algorithm. RWMH is a reliable and relatively simple algorithm to implement, and only requires evaluating the likelihood twice per iteration - which in our case is costly - and does not require knowing the marginal distribution like Gibb's Sampler. However, RWMH relies on a random walk to explore the parametric space: it may wander through regions with low density. This is even worse in high dimensional cases. Bethancourt (201?) gives an intuitive example of what goes wrong, using Figure **????**:
 
-![](/reports/3regions.png)
+![](../3regions.png)
 
 Bethancourt(200?) explains the figure as follows: in one dimension (figure (a)), a division in three parts of the line makes the total mass in the center partition equals 1/3; in $\mathbb{R}^2$ (figure (b)) we have in the center a mass of 1/9; in $\mathbb{R}^3$ (figure (c)), the mass on the center is just 1/27. The volume around the mode is negligible for high dimensional spaces. However, the density function is small outside the region outside mode. this generate a trade off: stay too near to the mode and you will never explore most of the volume; go too far and you will be exploring regions with low density.
 
-The region that we want to explore is called the _typical set_. This is loosely the set that achieves a balance betwwen the two points above, and it has a formal definition in terms of information theory. The problem is that RWMH wanders around the space of parameters and this does not guarantee that it will reach or stay in the typical set in finite time - the time we usually have for simulations.
+The region that we want to explore is called the _typical set_. This is loosely the set that achieves a balance between the two points above, and it has a formal definition in terms of information theory. The problem is that RWMH wanders around the space of parameters and this does not guarantee that it will reach or stay in the typical set in finite time - the time we usually have for simulations.
 
-Fortunately enough, we have a vector that always points toward the mode: the gradient. The Hamiltonian Monte Carlo (HMC) combines this information with the usual Metropolis Hasting algorithm to make sure that the algorithm explores the typical set. Bethancourt (20??) uses as a methaphore putting a sattelite in orbit: the sattelite is attracted to the point with larger mass (the earth). We want our sattelite to orbit earth, so we have to give enough impulse that it does not comes crash down on earth; hoewever we don't want to give it _too_ much impulse and start wandering around the solary system.
+Fortunately enough, we have a vector that always points toward the mode: the gradient. The Hamiltonian Monte Carlo (HMC) combines this information with the usual Metropolis Hasting algorithm to make sure that the algorithm explores the typical set. Bethancourt (20??) uses as a methaphore putting a sattelite in orbit: the sattelite is attracted to the point with larger mass (the earth). We want our sattelite to orbit earth, so we have to give enough impulse that it does not comes crash down on earth; however we don't want to give it _too_ much impulse and start wandering around the solar system.
 
 The heart of the Hamiltonian Monte Carlo is to add an additional variable, that is deterministic, that measures the impulse that is given for each parameter. This has to be choosen - as the scale parameter of the RWMH - to guarantee that we will stay in the typical set. This variable follows the dynamics of a Hamiltonian system of physics, which explains the name.
 
 The implementation is not as easy as the RWMH, since we have to keep track of the impulse and update it accordingly the hamiltonian of the system. Fortunately, there are plenty of implementations of HMC in Julia. We will use the package **DynamicHMC**, that follows the implementation suggested in Bethancourt's paper. We have to give to it the (numerator of) the posterior and it's gradient, and the package does everything else.
 
-Getting the gradient is trick. Gelman et al (20??) explicity acknowledge that "In pratice the gradient must be computed analytically; numerical differentiation requires too many function evaluations to be computed analytically". It is hard to imagine _how_ to compute the analytical derivate of each parameter, given the amount of computations that go into building the likelihood. Therefore, we have to rely on numerical differentiation. The usual method for differentiating, finite difference, requires a lot of function evaluation (at least two for each parameter) and is prone to numerical errors - which can be only reduced by evaluating the function even more times. A first attempt using finite differences led to a running time of at least 12 hours.
+Getting the gradient is tricky. Gelman et al (20??) explicity acknowledge that "In pratice the gradient must be computed analytically; numerical differentiation requires too many function evaluations to be computed analytically". It is hard to imagine _how_ to compute the analytical derivate of each parameter, given the amount of computations that go into building the likelihood. Therefore, we have to rely on numerical differentiation. The usual method for differentiating, finite difference, requires a lot of function evaluation (at least two for each variable) and is prone to numerical errors - which can only be reduced by evaluating the function even more times. A first attempt using finite differences led to a running time of at least 12 hours.
 
 However, there are better methods than finite differences. One of them is automatic differentiation. Although it builds from dual numbers and other concepts of algebra, that is not a subject usually dealt by economists, the idea is just to use the chain rule: to differentiate a given function, differentiate each component that forms the function. This is both faster and more precise than finite differences and is implemented by a variety of packages in Julia. We use **Tracker**: some other packages for automatic differentiation do not differentiate over the Schur decomposition.
 
 The code that estimates the DSGE using the likelihood we built above is:
 
-```
+```julia;eval = false
 
 using Tracker, DynamicHMC
 
@@ -1131,12 +1135,12 @@ vline!([true_pars[:rho_v]])
 vline!([mean(pars_hmc[:,9])], line = :dash)
 
 ```
-Two things are important: precision and speed. We plot the distribution of the parameters from both the MCMC and the HMC to get an idea of their accuracy:
 
-
+The results are mostly positive, with means always close to the true value of the parameters. The distribution of $\rho_v$ is problematic, being a lot more disperse then their RWMH counterpart. We conduct more comparasions in what follows.
 
 ### Comparing HMC and RWMH
 
+Two things are important: precision and speed. We plot the distribution of the parameters from both the MCMC and the HMC to get an idea of their accuracy:
 
 ```julia
 
@@ -1220,8 +1224,7 @@ vline!([true_pars[:rho_v]], label = "True value")
 
 ```
 
-
-On the time front, we will do two sets of simulations: one with 10 thousand replications and another with 100 thousand. We would expect that the time difference would be around 10 times, and it is in the ballpark. While we let the HMC procedure choose the optimal parameter, and therefore the time before the actually iteration begins enters in our time figure, we fed the optimal parameter to the MCMC without taking this time into account in the table bellow. We simulate both cases in a Dell Vostro with an Intel dual core i5-3210 at 2.5 Ghz, and with 6 GB of ram. The OS is a Linux flavour. Since we are more interested in the relative performance, this facts are by themselves of little importance. The times are, in seconds:
+On the time front, we will do two sets of simulations: one with 10 thousand replications and another with 100 thousand. We would expect that the time difference would be around 10 times, and it is in the ballpark. While we let the HMC procedure choose the optimal parameter, and therefore the time before the actually iteration begins enters in our time figure, we feed the optimal parameter to the MCMC without taking this time into account in the table bellow. The time takes into account the warm up in both case. We conduct this simulations in a Dell Vostro with an Intel dual core i5-3210 at 2.5 Ghz, and with 6 GB of ram. The OS is a Linux flavour. Since we are more interested in the relative performance, this facts are by themselves of little importance. The times are, in seconds:
 
 Replications| RWMH | HMC
 ------------|------|-----
