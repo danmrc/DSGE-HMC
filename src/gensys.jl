@@ -61,7 +61,7 @@ function gensys(G0,G1,Psi,Pi;verbose = true, tol = 1e-12)
     if m > r
         eu = [1;0]
         if verbose == true
-            @warn "No Unique Solution"
+            @warn string("No Unique Solution: ", ns, " stable roots ", nu, " unstable roots")
         end
         U1 = svd_Q2Pi.U[:,1:r]
         Xi = Q1*Pi*pinv(Q2Pi) #bottom of p 46 #change in 11 dec 2019: pinv instead of manually multiplying the elements
@@ -90,7 +90,7 @@ function gensys(G0,G1,Psi,Pi;verbose = true, tol = 1e-12)
         ans = Sims(Theta1,Theta2,Theta3,eu)
         return ans
         if verbose == true
-            @warn "No solution"
+            @warn string("No Solution: ", ns, " stable roots ", nu, " unstable roots")
         end
     else
         eu = [1;1]
