@@ -58,6 +58,18 @@ Psi[7] = 1
 
 sol1 = gensys(G0,G1,Psi,Pi)
 
+irf1 = irf(sol1,100,0.01)
+
+using Plots
+
+plot(irf1[:,1], w = 2, label = "C")
+plot!(irf1[:,2], w = 2, label = "r")
+plot!(irf1[:,3], w = 2, label = "h")
+plot!(irf1[:,4], w = 2, label = "y")
+plot!(irf1[:,5], w = 2, label = "k")
+plot!(irf1[:,6], w = 2, label = "w", line = :dash, color = "red")
+hline!([0], color = "black", w = 2)
+
 ####################
 
 G0 = zeros(7,7)
