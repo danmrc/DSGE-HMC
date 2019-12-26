@@ -12,8 +12,6 @@ struct Sims
     eu
 end
 
-#Update on dec 26 2019: schur(G0,G1) is not the same as schur(G1,G0). The former generated is far more unstable then the later. This fixes it.
-
 function gensys(G0,G1,Psi,Pi;verbose = true, tol = 1e-20)
     n = size(G0,1)
     decomp_1 = schur(G1,G0)

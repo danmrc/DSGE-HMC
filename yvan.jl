@@ -112,8 +112,8 @@ Psi[7] = 1
 
 sol2 = gensys(G0,G1,Psi,Pi)
 
-irf1 = irf(sol1,100,0.5)
-irf2 = irf(sol2,100,0.5)
+irf1 = irf(sol1,100,0.01)
+irf2 = irf(sol2,100,0.01)
 
 plot(irf1[:,1])
 plot!(irf2[:,1])

@@ -1,6 +1,7 @@
 using DynamicHMC, LogDensityProblems
 using Distributions, Parameters, Random
-using StatsPlots, Flux, PositiveFactorizations, Calculus
+using StatsPlots, PositiveFactorizations, Calculus
+using Flux
 
 include(string(pwd(),"/src/simulation.jl"))
 include(string(pwd(),"/gali_bayesian.jl"))
@@ -23,10 +24,6 @@ true_vals = TransformVariables.inverse(t,(bet = 0.99,epsilon = 6,theta=2/3,sig=1
 
 LogDensityProblems.logdensity(P,true_vals)
 
-N = 1000000
-
-dados = zeros(N,10)
-
 hes = -Calculus.hessian(x->LogDensityProblems.logdensity(P,x),true_vals)
 
 hes_inv = inv(hes)
@@ -39,14 +36,62 @@ isposdef(hes_inv)
 
 dist = MvNormal(hes_inv)
 
+N = 10000
+
+dados_x = zeros(9,N)
+dados_y = zeros(N)
+
 for i in 1:N
-    x = rand(dist,1)
+    x = rand(dist)
     y = LogDensityProblems.logdensity(P,x)
-    dados[i,:] = [(x,y)]
+    dados_x[:,i] = x
+    dados_y[i] = y
+    println(i)
 end
 
+model_flux = Chain(
+    Dense(9,50,relu),
+    Dense(50,1)
+)
+
+function make_minibatch(X, Y, siz)
+    indexes = sample(1:size(Y,1),siz)
+    X_batch = X[:,indexes]
+    Y_batch = Y[indexes]
+    return (X_batch, Y_batch), indexes
+end
+
+mini_batch_test = [make_minibatch(dados_x,dados_y,100) for i in 1:100]
+
+loss_flux(x,y) = Flux.mse(model_flux(x),y)
+
+optim_flux = Flux.RMSProp()
+
+epochs_max = 100
+batch_size = 500
+
+acc(x,y) = mean([loss_flux(x[:,i],y[i]) for i in 1:length(y)])
+
+for epoch in 1:epochs_max
+    batch,id = make_minibatch(dados_x,dados_y,batch_size)
+    batch = [batch for i in 1:batch_size]
+    Flux.train!(loss_flux,Flux.params(model_flux),batch,optim_flux)
+    println("Epoch ", epoch, " Loss ", acc(dados_x[:,id],dados_y[id]))
+end
 
 #grads = Calculus.gradient(P)
+
+function LogDensityProblems.capabilities(::TransformedLogDensity{TransformVariables.TransformTuple{NamedTuple{(:bet, :epsilon, :theta, :sig, :s2, :phi, :phi_pi, :phi_y, :rho_v),Tuple{TransformVariables.ScaledShiftedLogistic{Float64},TransformVariables.ShiftedExp{true,Float64},TransformVariables.ScaledShiftedLogistic{Float64},TransformVariables.ShiftedExp{true,Float64},TransformVariables.ShiftedExp{true,Float64},TransformVariables.ShiftedExp{true,Float64},TransformVariables.ShiftedExp{true,Float64},TransformVariables.ShiftedExp{true,Float64},TransformVariables.ScaledShiftedLogistic{Float64}}}},DSGE_Model{Array{Float64,1},Float64}})
+    LogDensityProblems.LogDensityOrder{1}() # can do gradient
+end
+
+#LogDensityProblems.dimension(::NormalPosterior) = 2 # for this problem
+
+function LogDensityProblems.logdensity_and_gradient(problem::TransformedLogDensity{TransformVariables.TransformTuple{NamedTuple{(:bet, :epsilon, :theta, :sig, :s2, :phi, :phi_pi, :phi_y, :rho_v),Tuple{TransformVariables.ScaledShiftedLogistic{Float64},TransformVariables.ShiftedExp{true,Float64},TransformVariables.ScaledShiftedLogistic{Float64},TransformVariables.ShiftedExp{true,Float64},TransformVariables.ShiftedExp{true,Float64},TransformVariables.ShiftedExp{true,Float64},TransformVariables.ShiftedExp{true,Float64},TransformVariables.ShiftedExp{true,Float64},TransformVariables.ScaledShiftedLogistic{Float64}}}},DSGE_Model{Array{Float64,1},Float64}}, x)
+    logdens = LogDensityProblems.logdensity(P,x)
+    grad =
+    logdens, grad
+end
 
 res = @time mcmc_with_warmup(Random.GLOBAL_RNG, grad_p,10000)
 

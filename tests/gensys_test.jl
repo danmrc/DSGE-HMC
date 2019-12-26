@@ -1,6 +1,6 @@
 using Plots
 
-include(string(pwd(), "/src/gensys.jl"))
+include(string(pwd(), "/src/gensys_v2.jl"))
 include(string(pwd(), "/gali_bayesian.jl"))
 
 sol = gensys(GAMMA_0,GAMMA_1,PSI,PI)
