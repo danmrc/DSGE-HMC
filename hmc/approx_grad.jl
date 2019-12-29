@@ -5,7 +5,7 @@ using Flux
 
 include(string(pwd(),"/src/simulation.jl"))
 include(string(pwd(),"/gali_bayesian.jl"))
-include(string(pwd(),"/mcmc/priors.jl"))
+include(string(pwd(),"/mcmc/priors_v2.jl"))
 include(string(pwd(),"/mcmc/foos.jl"))
 
 yy,shocks = simulate_dsge(GAMMA_0,GAMMA_1,PSI,PI,500)
@@ -38,14 +38,14 @@ dist = MvNormal(hes_inv)
 
 N = 10000
 
-dados = zeros(10,N)
+dados = zeros(Float32,10,N)
 
 i = 1
 
 while i <= N
     x = rand(dist)
     y = LogDensityProblems.logdensity(P,x)
-    if isnan(y)
+    if y < -90000
         continue
     else
         dados[1:9,i] = x
@@ -81,7 +81,6 @@ optim_flux = Flux.ADAM()
 epochs_max = 100
 batch_size = 350
 patience = 5
-
 
 acc(x,y) = mean([(model_flux(x)[1,i]-y[i])^2 for i in 1:batch_size])
 

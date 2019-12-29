@@ -68,7 +68,7 @@ plot!(irf1[:,3], w = 2, label = "h")
 plot!(irf1[:,4], w = 2, label = "y")
 plot!(irf1[:,5], w = 2, label = "k")
 plot!(irf1[:,6], w = 2, label = "w", line = :dash, color = "red")
-hline!([0], color = "black", w = 2)
+hline!([0], color = "black", w = 2, label = "0")
 
 ####################
 

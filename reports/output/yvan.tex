@@ -11,7 +11,7 @@
 \setlength{\parskip}{1.2ex}
 
 \hypersetup
-       {   pdfauthor = { Gilberto Boaretto & Daniel Coutinho },
+       {   pdfauthor = { Gilberto Boaretto \& Daniel Coutinho },
            pdftitle={ Hansen's model },
            colorlinks=TRUE,
            linkcolor=black,
@@ -21,7 +21,7 @@
 
 \title{ Hansen's model }
 
-\author{ Gilberto Boaretto & Daniel Coutinho }
+\author{ Gilberto Boaretto \& Daniel Coutinho }
 
 \date{ December, 2019 }
 
@@ -198,6 +198,7 @@ We give a shock of the same size McCandless gives to his system:
 
 \begin{lstlisting}
 (*@\HLJLk{using}@*) (*@\HLJLn{Plots}@*)
+(*@\HLJLk{using}@*) (*@\HLJLn{LaTeXStrings}@*)
 
 (*@\HLJLnf{plot}@*)(*@\HLJLp{(}@*)(*@\HLJLn{irf1}@*)(*@\HLJLp{[}@*)(*@\HLJLoB{:}@*)(*@\HLJLp{,}@*)(*@\HLJLni{1}@*)(*@\HLJLp{],}@*) (*@\HLJLn{w}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{2}@*)(*@\HLJLp{,}@*) (*@\HLJLn{label}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}C"{}}@*)(*@\HLJLp{)}@*)
 (*@\HLJLnf{plot!}@*)(*@\HLJLp{(}@*)(*@\HLJLn{irf1}@*)(*@\HLJLp{[}@*)(*@\HLJLoB{:}@*)(*@\HLJLp{,}@*)(*@\HLJLni{2}@*)(*@\HLJLp{],}@*) (*@\HLJLn{w}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{2}@*)(*@\HLJLp{,}@*) (*@\HLJLn{label}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}r"{}}@*)(*@\HLJLp{)}@*)
@@ -205,10 +206,336 @@ We give a shock of the same size McCandless gives to his system:
 (*@\HLJLnf{plot!}@*)(*@\HLJLp{(}@*)(*@\HLJLn{irf1}@*)(*@\HLJLp{[}@*)(*@\HLJLoB{:}@*)(*@\HLJLp{,}@*)(*@\HLJLni{4}@*)(*@\HLJLp{],}@*) (*@\HLJLn{w}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{2}@*)(*@\HLJLp{,}@*) (*@\HLJLn{label}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}y"{}}@*)(*@\HLJLp{)}@*)
 (*@\HLJLnf{plot!}@*)(*@\HLJLp{(}@*)(*@\HLJLn{irf1}@*)(*@\HLJLp{[}@*)(*@\HLJLoB{:}@*)(*@\HLJLp{,}@*)(*@\HLJLni{5}@*)(*@\HLJLp{],}@*) (*@\HLJLn{w}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{2}@*)(*@\HLJLp{,}@*) (*@\HLJLn{label}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}k"{}}@*)(*@\HLJLp{)}@*)
 (*@\HLJLnf{plot!}@*)(*@\HLJLp{(}@*)(*@\HLJLn{irf1}@*)(*@\HLJLp{[}@*)(*@\HLJLoB{:}@*)(*@\HLJLp{,}@*)(*@\HLJLni{6}@*)(*@\HLJLp{],}@*) (*@\HLJLn{w}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{2}@*)(*@\HLJLp{,}@*) (*@\HLJLn{label}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}w"{}}@*)(*@\HLJLp{,}@*) (*@\HLJLn{line}@*) (*@\HLJLoB{=}@*) (*@\HLJLsc{:dash}@*)(*@\HLJLp{,}@*) (*@\HLJLn{color}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}red"{}}@*)(*@\HLJLp{)}@*)
-(*@\HLJLnf{hline!}@*)(*@\HLJLp{([}@*)(*@\HLJLni{0}@*)(*@\HLJLp{],}@*) (*@\HLJLn{color}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}black"{}}@*)(*@\HLJLp{,}@*) (*@\HLJLn{w}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{2}@*)(*@\HLJLp{)}@*)
+(*@\HLJLnf{hline!}@*)(*@\HLJLp{([}@*)(*@\HLJLni{0}@*)(*@\HLJLp{],}@*) (*@\HLJLn{color}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}black"{}}@*)(*@\HLJLp{,}@*) (*@\HLJLn{w}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{2}@*)(*@\HLJLp{,}@*) (*@\HLJLn{label}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}0"{}}@*)(*@\HLJLp{)}@*)
 \end{lstlisting}
 
 \includegraphics[width=\linewidth]{figures/yvan_3_1.pdf}
+
+\subsection{Modified Model}
+
+\begin{lstlisting}
+(*@\HLJLn{theta}@*) (*@\HLJLoB{=}@*) (*@\HLJLnfB{0.36}@*)
+(*@\HLJLn{delta}@*) (*@\HLJLoB{=}@*) (*@\HLJLnfB{0.025}@*)
+(*@\HLJLn{beta}@*) (*@\HLJLoB{=}@*) (*@\HLJLnfB{0.99}@*)
+(*@\HLJLn{A}@*) (*@\HLJLoB{=}@*) (*@\HLJLnfB{1.72}@*)
+(*@\HLJLn{h0}@*) (*@\HLJLoB{=}@*) (*@\HLJLnfB{0.58}@*)
+(*@\HLJLn{gamma}@*) (*@\HLJLoB{=}@*) (*@\HLJLnfB{0.95}@*)
+(*@\HLJLn{sig}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{1}@*)(*@\HLJLcs{{\#}3.18}@*) (*@\HLJLcs{{\#}CRRA}@*) (*@\HLJLcs{coeficient}@*)
+(*@\HLJLn{xi}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{0}@*) (*@\HLJLcs{{\#}{\#}habit}@*) (*@\HLJLcs{formation}@*)
+
+(*@\HLJLn{r{\_}bar}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{1}@*)(*@\HLJLoB{/}@*)(*@\HLJLn{beta}@*)(*@\HLJLoB{-}@*)(*@\HLJLp{(}@*)(*@\HLJLni{1}@*)(*@\HLJLoB{-}@*)(*@\HLJLn{delta}@*)(*@\HLJLp{)}@*)
+(*@\HLJLn{B}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{A}@*)(*@\HLJLoB{*}@*)(*@\HLJLnf{log}@*)(*@\HLJLp{(}@*)(*@\HLJLni{1}@*)(*@\HLJLoB{-}@*)(*@\HLJLn{h0}@*)(*@\HLJLp{)}@*)(*@\HLJLoB{/}@*)(*@\HLJLn{h0}@*)
+
+(*@\HLJLn{rho}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{sig}@*)(*@\HLJLoB{/}@*)(*@\HLJLp{((}@*)(*@\HLJLni{1}@*)(*@\HLJLoB{-}@*)(*@\HLJLn{xi}@*)(*@\HLJLp{)}@*)(*@\HLJLoB{*}@*)(*@\HLJLp{(}@*)(*@\HLJLni{1}@*)(*@\HLJLoB{-}@*)(*@\HLJLn{beta}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{xi}@*)(*@\HLJLp{))}@*)
+(*@\HLJLn{kappa}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{beta}@*)(*@\HLJLoB{*}@*)(*@\HLJLp{(}@*)(*@\HLJLni{1}@*)(*@\HLJLoB{-}@*)(*@\HLJLn{beta}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{xi}@*)(*@\HLJLp{)}@*)(*@\HLJLoB{*}@*)(*@\HLJLp{(}@*)(*@\HLJLni{1}@*)(*@\HLJLoB{-}@*)(*@\HLJLn{xi}@*)(*@\HLJLp{)}@*)(*@\HLJLoB{/}@*)(*@\HLJLp{(}@*)(*@\HLJLn{sig}@*)(*@\HLJLoB{*}@*)(*@\HLJLp{(}@*)(*@\HLJLni{1}@*)(*@\HLJLoB{+}@*)(*@\HLJLn{beta}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{xi}@*)(*@\HLJLoB{{\textasciicircum}}@*)(*@\HLJLni{2}@*)(*@\HLJLp{))}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{r{\_}bar}@*)
+
+(*@\HLJLn{G0}@*) (*@\HLJLoB{=}@*) (*@\HLJLnf{zeros}@*)(*@\HLJLp{(}@*)(*@\HLJLni{9}@*)(*@\HLJLp{,}@*)(*@\HLJLni{9}@*)(*@\HLJLp{)}@*)
+(*@\HLJLn{G1}@*) (*@\HLJLoB{=}@*) (*@\HLJLnf{zeros}@*)(*@\HLJLp{(}@*)(*@\HLJLni{9}@*)(*@\HLJLp{,}@*)(*@\HLJLni{9}@*)(*@\HLJLp{)}@*)
+(*@\HLJLn{Pi}@*) (*@\HLJLoB{=}@*) (*@\HLJLnf{zeros}@*)(*@\HLJLp{(}@*)(*@\HLJLni{9}@*)(*@\HLJLp{,}@*)(*@\HLJLni{3}@*)(*@\HLJLp{)}@*)
+(*@\HLJLn{Psi}@*) (*@\HLJLoB{=}@*) (*@\HLJLnf{zeros}@*)(*@\HLJLp{(}@*)(*@\HLJLni{9}@*)(*@\HLJLp{)}@*)
+
+(*@\HLJLcs{{\#}{\#}{\#}{\#}{\#}{\#}}@*) (*@\HLJLcs{Filling}@*) (*@\HLJLcs{the}@*) (*@\HLJLcs{matrices}@*) (*@\HLJLcs{{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}}@*)
+
+(*@\HLJLcs{{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}}@*) (*@\HLJLcs{Eq}@*) (*@\HLJLcs{1:}@*) (*@\HLJLcs{Euler}@*) (*@\HLJLcs{{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}}@*)
+
+(*@\HLJLn{G0}@*)(*@\HLJLp{[}@*)(*@\HLJLni{1}@*)(*@\HLJLp{,}@*)(*@\HLJLni{1}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{beta}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{xi}@*)(*@\HLJLoB{/}@*)(*@\HLJLp{(}@*)(*@\HLJLni{1}@*)(*@\HLJLoB{+}@*)(*@\HLJLn{beta}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{xi}@*)(*@\HLJLoB{{\textasciicircum}}@*)(*@\HLJLni{2}@*)(*@\HLJLp{)}@*)
+(*@\HLJLn{G0}@*)(*@\HLJLp{[}@*)(*@\HLJLni{1}@*)(*@\HLJLp{,}@*)(*@\HLJLni{2}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLoB{-}@*)(*@\HLJLni{1}@*)(*@\HLJLoB{-}@*)(*@\HLJLn{beta}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{xi}@*)(*@\HLJLoB{/}@*)(*@\HLJLp{(}@*)(*@\HLJLni{1}@*)(*@\HLJLoB{+}@*)(*@\HLJLn{beta}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{xi}@*)(*@\HLJLoB{{\textasciicircum}}@*)(*@\HLJLni{2}@*)(*@\HLJLp{)}@*)
+(*@\HLJLn{G0}@*)(*@\HLJLp{[}@*)(*@\HLJLni{1}@*)(*@\HLJLp{,}@*)(*@\HLJLni{4}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{kappa}@*)
+
+(*@\HLJLn{G1}@*)(*@\HLJLp{[}@*)(*@\HLJLni{1}@*)(*@\HLJLp{,}@*)(*@\HLJLni{3}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{xi}@*)(*@\HLJLoB{/}@*)(*@\HLJLp{(}@*)(*@\HLJLni{1}@*)(*@\HLJLoB{+}@*)(*@\HLJLn{beta}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{xi}@*)(*@\HLJLoB{{\textasciicircum}}@*)(*@\HLJLni{2}@*)(*@\HLJLp{)}@*)
+(*@\HLJLn{G1}@*)(*@\HLJLp{[}@*)(*@\HLJLni{1}@*)(*@\HLJLp{,}@*)(*@\HLJLni{2}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLoB{-}@*)(*@\HLJLni{1}@*)(*@\HLJLoB{-}@*)(*@\HLJLn{xi}@*)(*@\HLJLoB{/}@*)(*@\HLJLp{(}@*)(*@\HLJLni{1}@*)(*@\HLJLoB{+}@*)(*@\HLJLn{beta}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{xi}@*)(*@\HLJLoB{{\textasciicircum}}@*)(*@\HLJLni{2}@*)(*@\HLJLp{)}@*)
+
+(*@\HLJLn{Pi}@*)(*@\HLJLp{[}@*)(*@\HLJLni{1}@*)(*@\HLJLp{,}@*)(*@\HLJLni{1}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{beta}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{xi}@*)(*@\HLJLoB{/}@*)(*@\HLJLp{(}@*)(*@\HLJLni{1}@*)(*@\HLJLoB{+}@*)(*@\HLJLn{beta}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{xi}@*)(*@\HLJLoB{{\textasciicircum}}@*)(*@\HLJLni{2}@*)(*@\HLJLp{)}@*)
+(*@\HLJLn{Pi}@*)(*@\HLJLp{[}@*)(*@\HLJLni{1}@*)(*@\HLJLp{,}@*)(*@\HLJLni{2}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLoB{-}@*)(*@\HLJLni{1}@*)(*@\HLJLoB{-}@*)(*@\HLJLn{beta}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{xi}@*)(*@\HLJLoB{/}@*)(*@\HLJLp{(}@*)(*@\HLJLni{1}@*)(*@\HLJLoB{+}@*)(*@\HLJLn{beta}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{xi}@*)(*@\HLJLoB{{\textasciicircum}}@*)(*@\HLJLni{2}@*)(*@\HLJLp{)}@*)
+(*@\HLJLn{Pi}@*)(*@\HLJLp{[}@*)(*@\HLJLni{1}@*)(*@\HLJLp{,}@*)(*@\HLJLni{3}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{kappa}@*)
+
+(*@\HLJLcs{{\#}{\#}{\#}{\#}Eq}@*) (*@\HLJLcs{2}@*) (*@\HLJLcs{and}@*) (*@\HLJLcs{3:}@*) (*@\HLJLcs{dummy}@*) (*@\HLJLcs{equations{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}}@*)
+
+(*@\HLJLn{G0}@*)(*@\HLJLp{[}@*)(*@\HLJLni{2}@*)(*@\HLJLp{,}@*)(*@\HLJLni{2}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{1}@*)
+(*@\HLJLn{G1}@*)(*@\HLJLp{[}@*)(*@\HLJLni{2}@*)(*@\HLJLp{,}@*)(*@\HLJLni{1}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{1}@*)
+
+(*@\HLJLn{G0}@*)(*@\HLJLp{[}@*)(*@\HLJLni{3}@*)(*@\HLJLp{,}@*)(*@\HLJLni{3}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{1}@*)
+(*@\HLJLn{G1}@*)(*@\HLJLp{[}@*)(*@\HLJLni{3}@*)(*@\HLJLp{,}@*)(*@\HLJLni{2}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{1}@*)
+
+(*@\HLJLcs{{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}}@*) (*@\HLJLcs{Eq}@*) (*@\HLJLcs{4:}@*) (*@\HLJLcs{Labour}@*) (*@\HLJLcs{supply}@*) (*@\HLJLcs{{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}}@*)
+
+(*@\HLJLn{G1}@*)(*@\HLJLp{[}@*)(*@\HLJLni{4}@*)(*@\HLJLp{,}@*)(*@\HLJLni{1}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLoB{-}@*)(*@\HLJLn{rho}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{beta}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{xi}@*)
+(*@\HLJLn{G1}@*)(*@\HLJLp{[}@*)(*@\HLJLni{4}@*)(*@\HLJLp{,}@*)(*@\HLJLni{2}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{rho}@*)(*@\HLJLoB{*}@*)(*@\HLJLp{(}@*)(*@\HLJLni{1}@*)(*@\HLJLoB{+}@*)(*@\HLJLn{beta}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{xi}@*)(*@\HLJLoB{{\textasciicircum}}@*)(*@\HLJLni{2}@*)(*@\HLJLp{)}@*)
+(*@\HLJLn{G1}@*)(*@\HLJLp{[}@*)(*@\HLJLni{4}@*)(*@\HLJLp{,}@*)(*@\HLJLni{3}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLoB{-}@*)(*@\HLJLn{rho}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{xi}@*)
+(*@\HLJLn{G1}@*)(*@\HLJLp{[}@*)(*@\HLJLni{4}@*)(*@\HLJLp{,}@*)(*@\HLJLni{8}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLoB{-}@*)(*@\HLJLni{1}@*)
+
+(*@\HLJLn{Pi}@*)(*@\HLJLp{[}@*)(*@\HLJLni{4}@*)(*@\HLJLp{,}@*)(*@\HLJLni{2}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{rho}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{beta}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{xi}@*)
+
+(*@\HLJLcs{{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}}@*)  (*@\HLJLcs{Eq}@*) (*@\HLJLcs{5:}@*) (*@\HLJLcs{Production}@*) (*@\HLJLcs{Function}@*) (*@\HLJLcs{{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}}@*)
+
+(*@\HLJLn{G1}@*)(*@\HLJLp{[}@*)(*@\HLJLni{5}@*)(*@\HLJLp{,}@*)(*@\HLJLni{5}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLp{(}@*)(*@\HLJLni{1}@*)(*@\HLJLoB{-}@*)(*@\HLJLn{theta}@*)(*@\HLJLp{)}@*)
+(*@\HLJLn{G1}@*)(*@\HLJLp{[}@*)(*@\HLJLni{5}@*)(*@\HLJLp{,}@*)(*@\HLJLni{6}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLoB{-}@*)(*@\HLJLni{1}@*)
+(*@\HLJLn{G1}@*)(*@\HLJLp{[}@*)(*@\HLJLni{5}@*)(*@\HLJLp{,}@*)(*@\HLJLni{7}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{theta}@*)
+(*@\HLJLn{G1}@*)(*@\HLJLp{[}@*)(*@\HLJLni{5}@*)(*@\HLJLp{,}@*)(*@\HLJLni{9}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{1}@*)
+
+(*@\HLJLcs{{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}}@*) (*@\HLJLcs{Eq}@*) (*@\HLJLcs{6:}@*) (*@\HLJLcs{capital}@*) (*@\HLJLcs{flux}@*) (*@\HLJLcs{{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}}@*)
+
+(*@\HLJLn{G0}@*)(*@\HLJLp{[}@*)(*@\HLJLni{6}@*)(*@\HLJLp{,}@*)(*@\HLJLni{7}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{1}@*)
+
+(*@\HLJLn{G1}@*)(*@\HLJLp{[}@*)(*@\HLJLni{6}@*)(*@\HLJLp{,}@*)(*@\HLJLni{2}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLoB{-}@*)(*@\HLJLp{(}@*)(*@\HLJLn{r{\_}bar}@*)(*@\HLJLoB{/}@*)(*@\HLJLn{theta}@*) (*@\HLJLoB{-}@*) (*@\HLJLn{delta}@*)(*@\HLJLp{)}@*)
+(*@\HLJLn{G1}@*)(*@\HLJLp{[}@*)(*@\HLJLni{6}@*)(*@\HLJLp{,}@*)(*@\HLJLni{6}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{r{\_}bar}@*)(*@\HLJLoB{/}@*)(*@\HLJLn{theta}@*)
+(*@\HLJLn{G1}@*)(*@\HLJLp{[}@*)(*@\HLJLni{6}@*)(*@\HLJLp{,}@*)(*@\HLJLni{7}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLp{(}@*)(*@\HLJLni{1}@*)(*@\HLJLoB{-}@*)(*@\HLJLn{delta}@*)(*@\HLJLp{)}@*)
+
+(*@\HLJLcs{{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}}@*) (*@\HLJLcs{Eq}@*) (*@\HLJLcs{7:}@*) (*@\HLJLcs{capital}@*) (*@\HLJLcs{return}@*) (*@\HLJLcs{{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}}@*)
+
+(*@\HLJLn{G1}@*)(*@\HLJLp{[}@*)(*@\HLJLni{7}@*)(*@\HLJLp{,}@*)(*@\HLJLni{4}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLoB{-}@*)(*@\HLJLni{1}@*)
+(*@\HLJLn{G1}@*)(*@\HLJLp{[}@*)(*@\HLJLni{7}@*)(*@\HLJLp{,}@*)(*@\HLJLni{6}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{1}@*)
+(*@\HLJLn{G1}@*)(*@\HLJLp{[}@*)(*@\HLJLni{7}@*)(*@\HLJLp{,}@*)(*@\HLJLni{7}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLoB{-}@*)(*@\HLJLni{1}@*)
+
+(*@\HLJLcs{{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}}@*) (*@\HLJLcs{Eq}@*) (*@\HLJLcs{8:}@*) (*@\HLJLcs{wage}@*) (*@\HLJLcs{{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}}@*)
+
+(*@\HLJLn{G1}@*)(*@\HLJLp{[}@*)(*@\HLJLni{8}@*)(*@\HLJLp{,}@*)(*@\HLJLni{5}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLoB{-}@*)(*@\HLJLni{1}@*)
+(*@\HLJLn{G1}@*)(*@\HLJLp{[}@*)(*@\HLJLni{8}@*)(*@\HLJLp{,}@*)(*@\HLJLni{6}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{1}@*)
+(*@\HLJLn{G1}@*)(*@\HLJLp{[}@*)(*@\HLJLni{8}@*)(*@\HLJLp{,}@*)(*@\HLJLni{8}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLoB{-}@*)(*@\HLJLni{1}@*)
+
+(*@\HLJLcs{{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}}@*) (*@\HLJLcs{Eq}@*) (*@\HLJLcs{9:}@*) (*@\HLJLcs{autoregressive}@*) (*@\HLJLcs{shock}@*) (*@\HLJLcs{{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}}@*)
+
+(*@\HLJLn{G0}@*)(*@\HLJLp{[}@*)(*@\HLJLni{9}@*)(*@\HLJLp{,}@*)(*@\HLJLni{9}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{1}@*)
+
+(*@\HLJLn{G1}@*)(*@\HLJLp{[}@*)(*@\HLJLni{9}@*)(*@\HLJLp{,}@*)(*@\HLJLni{9}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{gamma}@*)
+
+(*@\HLJLn{Psi}@*)(*@\HLJLp{[}@*)(*@\HLJLni{9}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{1}@*)
+
+(*@\HLJLn{sol2}@*) (*@\HLJLoB{=}@*) (*@\HLJLnf{gensys}@*)(*@\HLJLp{(}@*)(*@\HLJLn{G0}@*)(*@\HLJLp{,}@*)(*@\HLJLn{G1}@*)(*@\HLJLp{,}@*)(*@\HLJLn{Psi}@*)(*@\HLJLp{,}@*)(*@\HLJLn{Pi}@*)(*@\HLJLp{)}@*)
+
+(*@\HLJLn{irf2}@*) (*@\HLJLoB{=}@*) (*@\HLJLnf{irf}@*)(*@\HLJLp{(}@*)(*@\HLJLn{sol2}@*)(*@\HLJLp{,}@*)(*@\HLJLni{100}@*)(*@\HLJLp{,}@*)(*@\HLJLnfB{0.01}@*)(*@\HLJLp{)}@*)
+\end{lstlisting}
+
+
+Sanity check: with $\sigma=1$ and $\xi=0$, the new model collapses into the old model. The solution should be close between the two of them:
+
+
+\begin{lstlisting}
+(*@\HLJLnf{plot}@*)(*@\HLJLp{(}@*)(*@\HLJLn{irf2}@*)(*@\HLJLp{[}@*)(*@\HLJLoB{:}@*)(*@\HLJLp{,}@*)(*@\HLJLni{1}@*)(*@\HLJLp{],}@*) (*@\HLJLn{w}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{2}@*)(*@\HLJLp{,}@*) (*@\HLJLn{label}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}Modified}@*) (*@\HLJLs{Model"{}}@*)(*@\HLJLp{)}@*)
+(*@\HLJLnf{plot!}@*)(*@\HLJLp{(}@*)(*@\HLJLn{irf1}@*)(*@\HLJLp{[}@*)(*@\HLJLoB{:}@*)(*@\HLJLp{,}@*)(*@\HLJLni{1}@*)(*@\HLJLp{],}@*) (*@\HLJLn{w}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{2}@*)(*@\HLJLp{,}@*) (*@\HLJLn{label}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}Hansen{\textquotesingle}s}@*) (*@\HLJLs{Model"{}}@*)(*@\HLJLp{)}@*)
+(*@\HLJLnf{title!}@*)(*@\HLJLp{(}@*)(*@\HLJLs{"{}c"{}}@*)(*@\HLJLp{)}@*)
+\end{lstlisting}
+
+\includegraphics[width=\linewidth]{figures/yvan_5_1.pdf}
+
+\begin{lstlisting}
+(*@\HLJLnf{plot}@*)(*@\HLJLp{(}@*)(*@\HLJLn{irf2}@*)(*@\HLJLp{[}@*)(*@\HLJLoB{:}@*)(*@\HLJLp{,}@*)(*@\HLJLni{4}@*)(*@\HLJLp{],}@*) (*@\HLJLn{w}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{2}@*)(*@\HLJLp{,}@*) (*@\HLJLn{label}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}Modified}@*) (*@\HLJLs{Model"{}}@*)(*@\HLJLp{)}@*)
+(*@\HLJLnf{plot!}@*)(*@\HLJLp{(}@*)(*@\HLJLn{irf1}@*)(*@\HLJLp{[}@*)(*@\HLJLoB{:}@*)(*@\HLJLp{,}@*)(*@\HLJLni{2}@*)(*@\HLJLp{],}@*) (*@\HLJLn{w}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{2}@*)(*@\HLJLp{,}@*) (*@\HLJLn{label}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}Hansen{\textquotesingle}s}@*) (*@\HLJLs{Model"{}}@*)(*@\HLJLp{)}@*)
+(*@\HLJLnf{title!}@*)(*@\HLJLp{(}@*)(*@\HLJLs{"{}r"{}}@*)(*@\HLJLp{)}@*)
+\end{lstlisting}
+
+\includegraphics[width=\linewidth]{figures/yvan_6_1.pdf}
+
+\begin{lstlisting}
+(*@\HLJLnf{plot}@*)(*@\HLJLp{(}@*)(*@\HLJLn{irf2}@*)(*@\HLJLp{[}@*)(*@\HLJLoB{:}@*)(*@\HLJLp{,}@*)(*@\HLJLni{5}@*)(*@\HLJLp{],}@*) (*@\HLJLn{w}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{2}@*)(*@\HLJLp{,}@*) (*@\HLJLn{label}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}Modified}@*) (*@\HLJLs{Model"{}}@*)(*@\HLJLp{)}@*)
+(*@\HLJLnf{plot!}@*)(*@\HLJLp{(}@*)(*@\HLJLn{irf1}@*)(*@\HLJLp{[}@*)(*@\HLJLoB{:}@*)(*@\HLJLp{,}@*)(*@\HLJLni{3}@*)(*@\HLJLp{],}@*) (*@\HLJLn{w}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{2}@*)(*@\HLJLp{,}@*) (*@\HLJLn{label}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}Hansen{\textquotesingle}s}@*) (*@\HLJLs{Model"{}}@*)(*@\HLJLp{)}@*)
+(*@\HLJLnf{title!}@*)(*@\HLJLp{(}@*)(*@\HLJLs{"{}h"{}}@*)(*@\HLJLp{)}@*)
+\end{lstlisting}
+
+\includegraphics[width=\linewidth]{figures/yvan_7_1.pdf}
+
+\begin{lstlisting}
+(*@\HLJLnf{plot}@*)(*@\HLJLp{(}@*)(*@\HLJLn{irf2}@*)(*@\HLJLp{[}@*)(*@\HLJLoB{:}@*)(*@\HLJLp{,}@*)(*@\HLJLni{6}@*)(*@\HLJLp{],}@*) (*@\HLJLn{w}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{2}@*)(*@\HLJLp{,}@*) (*@\HLJLn{label}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}Modified}@*) (*@\HLJLs{Model"{}}@*)(*@\HLJLp{)}@*)
+(*@\HLJLnf{plot!}@*)(*@\HLJLp{(}@*)(*@\HLJLn{irf1}@*)(*@\HLJLp{[}@*)(*@\HLJLoB{:}@*)(*@\HLJLp{,}@*)(*@\HLJLni{4}@*)(*@\HLJLp{],}@*) (*@\HLJLn{w}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{2}@*)(*@\HLJLp{,}@*) (*@\HLJLn{label}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}Hansen{\textquotesingle}s}@*) (*@\HLJLs{Model"{}}@*)(*@\HLJLp{)}@*)
+(*@\HLJLnf{title!}@*)(*@\HLJLp{(}@*)(*@\HLJLs{"{}y"{}}@*)(*@\HLJLp{)}@*)
+\end{lstlisting}
+
+\includegraphics[width=\linewidth]{figures/yvan_8_1.pdf}
+
+\begin{lstlisting}
+(*@\HLJLnf{plot}@*)(*@\HLJLp{(}@*)(*@\HLJLn{irf2}@*)(*@\HLJLp{[}@*)(*@\HLJLoB{:}@*)(*@\HLJLp{,}@*)(*@\HLJLni{7}@*)(*@\HLJLp{],}@*) (*@\HLJLn{w}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{2}@*)(*@\HLJLp{,}@*) (*@\HLJLn{label}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}Modified}@*) (*@\HLJLs{Model"{}}@*)(*@\HLJLp{)}@*)
+(*@\HLJLnf{plot!}@*)(*@\HLJLp{(}@*)(*@\HLJLn{irf1}@*)(*@\HLJLp{[}@*)(*@\HLJLoB{:}@*)(*@\HLJLp{,}@*)(*@\HLJLni{5}@*)(*@\HLJLp{],}@*) (*@\HLJLn{w}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{2}@*)(*@\HLJLp{,}@*) (*@\HLJLn{label}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}Hansen{\textquotesingle}s}@*) (*@\HLJLs{Model"{}}@*)(*@\HLJLp{)}@*)
+(*@\HLJLnf{title!}@*)(*@\HLJLp{(}@*)(*@\HLJLs{"{}k"{}}@*)(*@\HLJLp{)}@*)
+\end{lstlisting}
+
+\includegraphics[width=\linewidth]{figures/yvan_9_1.pdf}
+
+\begin{lstlisting}
+(*@\HLJLnf{plot}@*)(*@\HLJLp{(}@*)(*@\HLJLn{irf2}@*)(*@\HLJLp{[}@*)(*@\HLJLoB{:}@*)(*@\HLJLp{,}@*)(*@\HLJLni{8}@*)(*@\HLJLp{],}@*) (*@\HLJLn{w}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{2}@*)(*@\HLJLp{,}@*) (*@\HLJLn{label}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}Modified}@*) (*@\HLJLs{Model"{}}@*)(*@\HLJLp{)}@*)
+(*@\HLJLnf{plot!}@*)(*@\HLJLp{(}@*)(*@\HLJLn{irf1}@*)(*@\HLJLp{[}@*)(*@\HLJLoB{:}@*)(*@\HLJLp{,}@*)(*@\HLJLni{6}@*)(*@\HLJLp{],}@*) (*@\HLJLn{w}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{2}@*)(*@\HLJLp{,}@*) (*@\HLJLn{label}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}Hansen{\textquotesingle}s}@*) (*@\HLJLs{Model"{}}@*)(*@\HLJLp{)}@*)
+(*@\HLJLnf{title!}@*)(*@\HLJLp{(}@*)(*@\HLJLs{"{}w"{}}@*)(*@\HLJLp{)}@*)
+\end{lstlisting}
+
+\includegraphics[width=\linewidth]{figures/yvan_10_1.pdf}
+
+\begin{lstlisting}
+(*@\HLJLnf{plot}@*)(*@\HLJLp{(}@*)(*@\HLJLn{irf2}@*)(*@\HLJLp{[}@*)(*@\HLJLoB{:}@*)(*@\HLJLp{,}@*)(*@\HLJLni{9}@*)(*@\HLJLp{],}@*) (*@\HLJLn{w}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{2}@*)(*@\HLJLp{,}@*) (*@\HLJLn{label}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}Modified}@*) (*@\HLJLs{Model"{}}@*)(*@\HLJLp{)}@*)
+(*@\HLJLnf{plot!}@*)(*@\HLJLp{(}@*)(*@\HLJLn{irf1}@*)(*@\HLJLp{[}@*)(*@\HLJLoB{:}@*)(*@\HLJLp{,}@*)(*@\HLJLni{7}@*)(*@\HLJLp{],}@*) (*@\HLJLn{w}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{2}@*)(*@\HLJLp{,}@*) (*@\HLJLn{label}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}Hansen{\textquotesingle}s}@*) (*@\HLJLs{Model"{}}@*)(*@\HLJLp{)}@*)
+(*@\HLJLnf{title!}@*)(*@\HLJLp{(}@*)(*@\HLJLso{L"{}{\textbackslash}lambda"{}}@*)(*@\HLJLp{)}@*)
+\end{lstlisting}
+
+\includegraphics[width=\linewidth]{figures/yvan_11_1.pdf}
+
+Close enough. Let's use the values in Dennis(2008):
+
+
+\begin{lstlisting}
+(*@\HLJLn{theta}@*) (*@\HLJLoB{=}@*) (*@\HLJLnfB{0.36}@*)
+(*@\HLJLn{delta}@*) (*@\HLJLoB{=}@*) (*@\HLJLnfB{0.025}@*)
+(*@\HLJLn{beta}@*) (*@\HLJLoB{=}@*) (*@\HLJLnfB{0.99}@*)
+(*@\HLJLn{A}@*) (*@\HLJLoB{=}@*) (*@\HLJLnfB{1.72}@*)
+(*@\HLJLn{h0}@*) (*@\HLJLoB{=}@*) (*@\HLJLnfB{0.58}@*)
+(*@\HLJLn{gamma}@*) (*@\HLJLoB{=}@*) (*@\HLJLnfB{0.95}@*)
+(*@\HLJLn{sig}@*) (*@\HLJLoB{=}@*) (*@\HLJLnfB{3.18}@*) (*@\HLJLcs{{\#}CRRA}@*) (*@\HLJLcs{coeficient}@*)
+(*@\HLJLn{xi}@*) (*@\HLJLoB{=}@*) (*@\HLJLnfB{0.832}@*) (*@\HLJLcs{{\#}{\#}habit}@*) (*@\HLJLcs{formation}@*)
+
+(*@\HLJLn{r{\_}bar}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{1}@*)(*@\HLJLoB{/}@*)(*@\HLJLn{beta}@*)(*@\HLJLoB{-}@*)(*@\HLJLp{(}@*)(*@\HLJLni{1}@*)(*@\HLJLoB{-}@*)(*@\HLJLn{delta}@*)(*@\HLJLp{)}@*)
+(*@\HLJLn{B}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{A}@*)(*@\HLJLoB{*}@*)(*@\HLJLnf{log}@*)(*@\HLJLp{(}@*)(*@\HLJLni{1}@*)(*@\HLJLoB{-}@*)(*@\HLJLn{h0}@*)(*@\HLJLp{)}@*)(*@\HLJLoB{/}@*)(*@\HLJLn{h0}@*)
+
+(*@\HLJLn{rho}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{sig}@*)(*@\HLJLoB{/}@*)(*@\HLJLp{((}@*)(*@\HLJLni{1}@*)(*@\HLJLoB{-}@*)(*@\HLJLn{xi}@*)(*@\HLJLp{)}@*)(*@\HLJLoB{*}@*)(*@\HLJLp{(}@*)(*@\HLJLni{1}@*)(*@\HLJLoB{-}@*)(*@\HLJLn{beta}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{xi}@*)(*@\HLJLp{))}@*)
+(*@\HLJLn{kappa}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{beta}@*)(*@\HLJLoB{*}@*)(*@\HLJLp{(}@*)(*@\HLJLni{1}@*)(*@\HLJLoB{-}@*)(*@\HLJLn{beta}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{xi}@*)(*@\HLJLp{)}@*)(*@\HLJLoB{*}@*)(*@\HLJLp{(}@*)(*@\HLJLni{1}@*)(*@\HLJLoB{-}@*)(*@\HLJLn{xi}@*)(*@\HLJLp{)}@*)(*@\HLJLoB{/}@*)(*@\HLJLp{(}@*)(*@\HLJLn{sig}@*)(*@\HLJLoB{*}@*)(*@\HLJLp{(}@*)(*@\HLJLni{1}@*)(*@\HLJLoB{+}@*)(*@\HLJLn{beta}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{xi}@*)(*@\HLJLoB{{\textasciicircum}}@*)(*@\HLJLni{2}@*)(*@\HLJLp{))}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{r{\_}bar}@*)
+
+(*@\HLJLn{G0}@*) (*@\HLJLoB{=}@*) (*@\HLJLnf{zeros}@*)(*@\HLJLp{(}@*)(*@\HLJLni{9}@*)(*@\HLJLp{,}@*)(*@\HLJLni{9}@*)(*@\HLJLp{)}@*)
+(*@\HLJLn{G1}@*) (*@\HLJLoB{=}@*) (*@\HLJLnf{zeros}@*)(*@\HLJLp{(}@*)(*@\HLJLni{9}@*)(*@\HLJLp{,}@*)(*@\HLJLni{9}@*)(*@\HLJLp{)}@*)
+(*@\HLJLn{Pi}@*) (*@\HLJLoB{=}@*) (*@\HLJLnf{zeros}@*)(*@\HLJLp{(}@*)(*@\HLJLni{9}@*)(*@\HLJLp{,}@*)(*@\HLJLni{3}@*)(*@\HLJLp{)}@*)
+(*@\HLJLn{Psi}@*) (*@\HLJLoB{=}@*) (*@\HLJLnf{zeros}@*)(*@\HLJLp{(}@*)(*@\HLJLni{9}@*)(*@\HLJLp{)}@*)
+
+(*@\HLJLcs{{\#}{\#}{\#}{\#}{\#}{\#}}@*) (*@\HLJLcs{Filling}@*) (*@\HLJLcs{the}@*) (*@\HLJLcs{matrices}@*) (*@\HLJLcs{{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}}@*)
+
+(*@\HLJLcs{{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}}@*) (*@\HLJLcs{Eq}@*) (*@\HLJLcs{1:}@*) (*@\HLJLcs{Euler}@*) (*@\HLJLcs{{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}}@*)
+
+(*@\HLJLn{G0}@*)(*@\HLJLp{[}@*)(*@\HLJLni{1}@*)(*@\HLJLp{,}@*)(*@\HLJLni{1}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{beta}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{xi}@*)(*@\HLJLoB{/}@*)(*@\HLJLp{(}@*)(*@\HLJLni{1}@*)(*@\HLJLoB{+}@*)(*@\HLJLn{beta}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{xi}@*)(*@\HLJLoB{{\textasciicircum}}@*)(*@\HLJLni{2}@*)(*@\HLJLp{)}@*)
+(*@\HLJLn{G0}@*)(*@\HLJLp{[}@*)(*@\HLJLni{1}@*)(*@\HLJLp{,}@*)(*@\HLJLni{2}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLoB{-}@*)(*@\HLJLni{1}@*)(*@\HLJLoB{-}@*)(*@\HLJLn{beta}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{xi}@*)(*@\HLJLoB{/}@*)(*@\HLJLp{(}@*)(*@\HLJLni{1}@*)(*@\HLJLoB{+}@*)(*@\HLJLn{beta}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{xi}@*)(*@\HLJLoB{{\textasciicircum}}@*)(*@\HLJLni{2}@*)(*@\HLJLp{)}@*)
+(*@\HLJLn{G0}@*)(*@\HLJLp{[}@*)(*@\HLJLni{1}@*)(*@\HLJLp{,}@*)(*@\HLJLni{4}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{kappa}@*)
+
+(*@\HLJLn{G1}@*)(*@\HLJLp{[}@*)(*@\HLJLni{1}@*)(*@\HLJLp{,}@*)(*@\HLJLni{3}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{xi}@*)(*@\HLJLoB{/}@*)(*@\HLJLp{(}@*)(*@\HLJLni{1}@*)(*@\HLJLoB{+}@*)(*@\HLJLn{beta}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{xi}@*)(*@\HLJLoB{{\textasciicircum}}@*)(*@\HLJLni{2}@*)(*@\HLJLp{)}@*)
+(*@\HLJLn{G1}@*)(*@\HLJLp{[}@*)(*@\HLJLni{1}@*)(*@\HLJLp{,}@*)(*@\HLJLni{2}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLoB{-}@*)(*@\HLJLni{1}@*)(*@\HLJLoB{-}@*)(*@\HLJLn{xi}@*)(*@\HLJLoB{/}@*)(*@\HLJLp{(}@*)(*@\HLJLni{1}@*)(*@\HLJLoB{+}@*)(*@\HLJLn{beta}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{xi}@*)(*@\HLJLoB{{\textasciicircum}}@*)(*@\HLJLni{2}@*)(*@\HLJLp{)}@*)
+
+(*@\HLJLn{Pi}@*)(*@\HLJLp{[}@*)(*@\HLJLni{1}@*)(*@\HLJLp{,}@*)(*@\HLJLni{1}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{beta}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{xi}@*)(*@\HLJLoB{/}@*)(*@\HLJLp{(}@*)(*@\HLJLni{1}@*)(*@\HLJLoB{+}@*)(*@\HLJLn{beta}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{xi}@*)(*@\HLJLoB{{\textasciicircum}}@*)(*@\HLJLni{2}@*)(*@\HLJLp{)}@*)
+(*@\HLJLn{Pi}@*)(*@\HLJLp{[}@*)(*@\HLJLni{1}@*)(*@\HLJLp{,}@*)(*@\HLJLni{2}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLoB{-}@*)(*@\HLJLni{1}@*)(*@\HLJLoB{-}@*)(*@\HLJLn{beta}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{xi}@*)(*@\HLJLoB{/}@*)(*@\HLJLp{(}@*)(*@\HLJLni{1}@*)(*@\HLJLoB{+}@*)(*@\HLJLn{beta}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{xi}@*)(*@\HLJLoB{{\textasciicircum}}@*)(*@\HLJLni{2}@*)(*@\HLJLp{)}@*)
+(*@\HLJLn{Pi}@*)(*@\HLJLp{[}@*)(*@\HLJLni{1}@*)(*@\HLJLp{,}@*)(*@\HLJLni{3}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{kappa}@*)
+
+(*@\HLJLcs{{\#}{\#}{\#}{\#}Eq}@*) (*@\HLJLcs{2}@*) (*@\HLJLcs{and}@*) (*@\HLJLcs{3:}@*) (*@\HLJLcs{dummy}@*) (*@\HLJLcs{equations{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}}@*)
+
+(*@\HLJLn{G0}@*)(*@\HLJLp{[}@*)(*@\HLJLni{2}@*)(*@\HLJLp{,}@*)(*@\HLJLni{2}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{1}@*)
+(*@\HLJLn{G1}@*)(*@\HLJLp{[}@*)(*@\HLJLni{2}@*)(*@\HLJLp{,}@*)(*@\HLJLni{1}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{1}@*)
+
+(*@\HLJLn{G0}@*)(*@\HLJLp{[}@*)(*@\HLJLni{3}@*)(*@\HLJLp{,}@*)(*@\HLJLni{3}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{1}@*)
+(*@\HLJLn{G1}@*)(*@\HLJLp{[}@*)(*@\HLJLni{3}@*)(*@\HLJLp{,}@*)(*@\HLJLni{2}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{1}@*)
+
+(*@\HLJLcs{{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}}@*) (*@\HLJLcs{Eq}@*) (*@\HLJLcs{4:}@*) (*@\HLJLcs{Labour}@*) (*@\HLJLcs{supply}@*) (*@\HLJLcs{{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}}@*)
+
+(*@\HLJLn{G1}@*)(*@\HLJLp{[}@*)(*@\HLJLni{4}@*)(*@\HLJLp{,}@*)(*@\HLJLni{1}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLoB{-}@*)(*@\HLJLn{rho}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{beta}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{xi}@*)
+(*@\HLJLn{G1}@*)(*@\HLJLp{[}@*)(*@\HLJLni{4}@*)(*@\HLJLp{,}@*)(*@\HLJLni{2}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{rho}@*)(*@\HLJLoB{*}@*)(*@\HLJLp{(}@*)(*@\HLJLni{1}@*)(*@\HLJLoB{+}@*)(*@\HLJLn{beta}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{xi}@*)(*@\HLJLoB{{\textasciicircum}}@*)(*@\HLJLni{2}@*)(*@\HLJLp{)}@*)
+(*@\HLJLn{G1}@*)(*@\HLJLp{[}@*)(*@\HLJLni{4}@*)(*@\HLJLp{,}@*)(*@\HLJLni{3}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLoB{-}@*)(*@\HLJLn{rho}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{xi}@*)
+(*@\HLJLn{G1}@*)(*@\HLJLp{[}@*)(*@\HLJLni{4}@*)(*@\HLJLp{,}@*)(*@\HLJLni{8}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLoB{-}@*)(*@\HLJLni{1}@*)
+
+(*@\HLJLn{Pi}@*)(*@\HLJLp{[}@*)(*@\HLJLni{4}@*)(*@\HLJLp{,}@*)(*@\HLJLni{2}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{rho}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{beta}@*)(*@\HLJLoB{*}@*)(*@\HLJLn{xi}@*)
+
+(*@\HLJLcs{{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}}@*)  (*@\HLJLcs{Eq}@*) (*@\HLJLcs{5:}@*) (*@\HLJLcs{Production}@*) (*@\HLJLcs{Function}@*) (*@\HLJLcs{{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}}@*)
+
+(*@\HLJLn{G1}@*)(*@\HLJLp{[}@*)(*@\HLJLni{5}@*)(*@\HLJLp{,}@*)(*@\HLJLni{5}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLp{(}@*)(*@\HLJLni{1}@*)(*@\HLJLoB{-}@*)(*@\HLJLn{theta}@*)(*@\HLJLp{)}@*)
+(*@\HLJLn{G1}@*)(*@\HLJLp{[}@*)(*@\HLJLni{5}@*)(*@\HLJLp{,}@*)(*@\HLJLni{6}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLoB{-}@*)(*@\HLJLni{1}@*)
+(*@\HLJLn{G1}@*)(*@\HLJLp{[}@*)(*@\HLJLni{5}@*)(*@\HLJLp{,}@*)(*@\HLJLni{7}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{theta}@*)
+(*@\HLJLn{G1}@*)(*@\HLJLp{[}@*)(*@\HLJLni{5}@*)(*@\HLJLp{,}@*)(*@\HLJLni{9}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{1}@*)
+
+(*@\HLJLcs{{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}}@*) (*@\HLJLcs{Eq}@*) (*@\HLJLcs{6:}@*) (*@\HLJLcs{capital}@*) (*@\HLJLcs{flux}@*) (*@\HLJLcs{{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}}@*)
+
+(*@\HLJLn{G0}@*)(*@\HLJLp{[}@*)(*@\HLJLni{6}@*)(*@\HLJLp{,}@*)(*@\HLJLni{7}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{1}@*)
+
+(*@\HLJLn{G1}@*)(*@\HLJLp{[}@*)(*@\HLJLni{6}@*)(*@\HLJLp{,}@*)(*@\HLJLni{2}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLoB{-}@*)(*@\HLJLp{(}@*)(*@\HLJLn{r{\_}bar}@*)(*@\HLJLoB{/}@*)(*@\HLJLn{theta}@*) (*@\HLJLoB{-}@*) (*@\HLJLn{delta}@*)(*@\HLJLp{)}@*)
+(*@\HLJLn{G1}@*)(*@\HLJLp{[}@*)(*@\HLJLni{6}@*)(*@\HLJLp{,}@*)(*@\HLJLni{6}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{r{\_}bar}@*)(*@\HLJLoB{/}@*)(*@\HLJLn{theta}@*)
+(*@\HLJLn{G1}@*)(*@\HLJLp{[}@*)(*@\HLJLni{6}@*)(*@\HLJLp{,}@*)(*@\HLJLni{7}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLp{(}@*)(*@\HLJLni{1}@*)(*@\HLJLoB{-}@*)(*@\HLJLn{delta}@*)(*@\HLJLp{)}@*)
+
+(*@\HLJLcs{{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}}@*) (*@\HLJLcs{Eq}@*) (*@\HLJLcs{7:}@*) (*@\HLJLcs{capital}@*) (*@\HLJLcs{return}@*) (*@\HLJLcs{{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}}@*)
+
+(*@\HLJLn{G1}@*)(*@\HLJLp{[}@*)(*@\HLJLni{7}@*)(*@\HLJLp{,}@*)(*@\HLJLni{4}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLoB{-}@*)(*@\HLJLni{1}@*)
+(*@\HLJLn{G1}@*)(*@\HLJLp{[}@*)(*@\HLJLni{7}@*)(*@\HLJLp{,}@*)(*@\HLJLni{6}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{1}@*)
+(*@\HLJLn{G1}@*)(*@\HLJLp{[}@*)(*@\HLJLni{7}@*)(*@\HLJLp{,}@*)(*@\HLJLni{7}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLoB{-}@*)(*@\HLJLni{1}@*)
+
+(*@\HLJLcs{{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}}@*) (*@\HLJLcs{Eq}@*) (*@\HLJLcs{8:}@*) (*@\HLJLcs{wage}@*) (*@\HLJLcs{{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}}@*)
+
+(*@\HLJLn{G1}@*)(*@\HLJLp{[}@*)(*@\HLJLni{8}@*)(*@\HLJLp{,}@*)(*@\HLJLni{5}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLoB{-}@*)(*@\HLJLni{1}@*)
+(*@\HLJLn{G1}@*)(*@\HLJLp{[}@*)(*@\HLJLni{8}@*)(*@\HLJLp{,}@*)(*@\HLJLni{6}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{1}@*)
+(*@\HLJLn{G1}@*)(*@\HLJLp{[}@*)(*@\HLJLni{8}@*)(*@\HLJLp{,}@*)(*@\HLJLni{8}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLoB{-}@*)(*@\HLJLni{1}@*)
+
+(*@\HLJLcs{{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}}@*) (*@\HLJLcs{Eq}@*) (*@\HLJLcs{9:}@*) (*@\HLJLcs{autoregressive}@*) (*@\HLJLcs{shock}@*) (*@\HLJLcs{{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}{\#}}@*)
+
+(*@\HLJLn{G0}@*)(*@\HLJLp{[}@*)(*@\HLJLni{9}@*)(*@\HLJLp{,}@*)(*@\HLJLni{9}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{1}@*)
+
+(*@\HLJLn{G1}@*)(*@\HLJLp{[}@*)(*@\HLJLni{9}@*)(*@\HLJLp{,}@*)(*@\HLJLni{9}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLn{gamma}@*)
+
+(*@\HLJLn{Psi}@*)(*@\HLJLp{[}@*)(*@\HLJLni{9}@*)(*@\HLJLp{]}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{1}@*)
+
+(*@\HLJLn{sol3}@*) (*@\HLJLoB{=}@*) (*@\HLJLnf{gensys}@*)(*@\HLJLp{(}@*)(*@\HLJLn{G0}@*)(*@\HLJLp{,}@*)(*@\HLJLn{G1}@*)(*@\HLJLp{,}@*)(*@\HLJLn{Psi}@*)(*@\HLJLp{,}@*)(*@\HLJLn{Pi}@*)(*@\HLJLp{)}@*)
+
+(*@\HLJLn{irf3}@*) (*@\HLJLoB{=}@*) (*@\HLJLnf{irf}@*)(*@\HLJLp{(}@*)(*@\HLJLn{sol3}@*)(*@\HLJLp{,}@*)(*@\HLJLni{100}@*)(*@\HLJLp{,}@*)(*@\HLJLnfB{0.01}@*)(*@\HLJLp{)}@*)
+\end{lstlisting}
+
+
+A plot of all the irfs:
+
+
+\begin{lstlisting}
+(*@\HLJLnf{plot}@*)(*@\HLJLp{(}@*)(*@\HLJLn{irf3}@*)(*@\HLJLp{[}@*)(*@\HLJLoB{:}@*)(*@\HLJLp{,}@*)(*@\HLJLni{1}@*)(*@\HLJLp{],}@*) (*@\HLJLn{w}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{2}@*)(*@\HLJLp{,}@*) (*@\HLJLn{label}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}C"{}}@*)(*@\HLJLp{)}@*)
+(*@\HLJLnf{plot!}@*)(*@\HLJLp{(}@*)(*@\HLJLn{irf3}@*)(*@\HLJLp{[}@*)(*@\HLJLoB{:}@*)(*@\HLJLp{,}@*)(*@\HLJLni{2}@*)(*@\HLJLp{],}@*) (*@\HLJLn{w}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{2}@*)(*@\HLJLp{,}@*) (*@\HLJLn{label}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}r"{}}@*)(*@\HLJLp{)}@*)
+(*@\HLJLnf{plot!}@*)(*@\HLJLp{(}@*)(*@\HLJLn{irf3}@*)(*@\HLJLp{[}@*)(*@\HLJLoB{:}@*)(*@\HLJLp{,}@*)(*@\HLJLni{5}@*)(*@\HLJLp{],}@*) (*@\HLJLn{w}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{2}@*)(*@\HLJLp{,}@*) (*@\HLJLn{label}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}h"{}}@*)(*@\HLJLp{)}@*)
+(*@\HLJLnf{plot!}@*)(*@\HLJLp{(}@*)(*@\HLJLn{irf3}@*)(*@\HLJLp{[}@*)(*@\HLJLoB{:}@*)(*@\HLJLp{,}@*)(*@\HLJLni{6}@*)(*@\HLJLp{],}@*) (*@\HLJLn{w}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{2}@*)(*@\HLJLp{,}@*) (*@\HLJLn{label}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}y"{}}@*)(*@\HLJLp{)}@*)
+(*@\HLJLnf{plot!}@*)(*@\HLJLp{(}@*)(*@\HLJLn{irf3}@*)(*@\HLJLp{[}@*)(*@\HLJLoB{:}@*)(*@\HLJLp{,}@*)(*@\HLJLni{7}@*)(*@\HLJLp{],}@*) (*@\HLJLn{w}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{2}@*)(*@\HLJLp{,}@*) (*@\HLJLn{label}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}k"{}}@*)(*@\HLJLp{)}@*)
+(*@\HLJLnf{plot!}@*)(*@\HLJLp{(}@*)(*@\HLJLn{irf3}@*)(*@\HLJLp{[}@*)(*@\HLJLoB{:}@*)(*@\HLJLp{,}@*)(*@\HLJLni{8}@*)(*@\HLJLp{],}@*) (*@\HLJLn{w}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{2}@*)(*@\HLJLp{,}@*) (*@\HLJLn{label}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}w"{}}@*)(*@\HLJLp{,}@*) (*@\HLJLn{line}@*) (*@\HLJLoB{=}@*) (*@\HLJLsc{:dash}@*)(*@\HLJLp{,}@*) (*@\HLJLn{color}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}red"{}}@*)(*@\HLJLp{)}@*)
+(*@\HLJLnf{hline!}@*)(*@\HLJLp{([}@*)(*@\HLJLni{0}@*)(*@\HLJLp{],}@*) (*@\HLJLn{color}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}black"{}}@*)(*@\HLJLp{,}@*) (*@\HLJLn{w}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{2}@*)(*@\HLJLp{,}@*) (*@\HLJLn{label}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}0"{}}@*)(*@\HLJLp{)}@*)
+\end{lstlisting}
+
+\includegraphics[width=\linewidth]{figures/yvan_13_1.pdf}
+
+\begin{lstlisting}
+(*@\HLJLnf{plot}@*)(*@\HLJLp{(}@*)(*@\HLJLn{irf3}@*)(*@\HLJLp{[}@*)(*@\HLJLoB{:}@*)(*@\HLJLp{,}@*)(*@\HLJLni{1}@*)(*@\HLJLp{],}@*) (*@\HLJLn{w}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{2}@*)(*@\HLJLp{,}@*) (*@\HLJLn{label}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}Modified}@*) (*@\HLJLs{Model"{}}@*)(*@\HLJLp{)}@*)
+(*@\HLJLnf{plot!}@*)(*@\HLJLp{(}@*)(*@\HLJLn{irf1}@*)(*@\HLJLp{[}@*)(*@\HLJLoB{:}@*)(*@\HLJLp{,}@*)(*@\HLJLni{1}@*)(*@\HLJLp{],}@*) (*@\HLJLn{w}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{2}@*)(*@\HLJLp{,}@*) (*@\HLJLn{label}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}Hansen{\textquotesingle}s}@*) (*@\HLJLs{Model"{}}@*)(*@\HLJLp{)}@*)
+(*@\HLJLnf{title!}@*)(*@\HLJLp{(}@*)(*@\HLJLs{"{}c"{}}@*)(*@\HLJLp{)}@*)
+\end{lstlisting}
+
+\includegraphics[width=\linewidth]{figures/yvan_14_1.pdf}
+
+\begin{lstlisting}
+(*@\HLJLnf{plot}@*)(*@\HLJLp{(}@*)(*@\HLJLn{irf3}@*)(*@\HLJLp{[}@*)(*@\HLJLoB{:}@*)(*@\HLJLp{,}@*)(*@\HLJLni{4}@*)(*@\HLJLp{],}@*) (*@\HLJLn{w}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{2}@*)(*@\HLJLp{,}@*) (*@\HLJLn{label}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}Modified}@*) (*@\HLJLs{Model"{}}@*)(*@\HLJLp{)}@*)
+(*@\HLJLnf{plot!}@*)(*@\HLJLp{(}@*)(*@\HLJLn{irf1}@*)(*@\HLJLp{[}@*)(*@\HLJLoB{:}@*)(*@\HLJLp{,}@*)(*@\HLJLni{2}@*)(*@\HLJLp{],}@*) (*@\HLJLn{w}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{2}@*)(*@\HLJLp{,}@*) (*@\HLJLn{label}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}Hansen{\textquotesingle}s}@*) (*@\HLJLs{Model"{}}@*)(*@\HLJLp{)}@*)
+(*@\HLJLnf{title!}@*)(*@\HLJLp{(}@*)(*@\HLJLs{"{}r"{}}@*)(*@\HLJLp{)}@*)
+\end{lstlisting}
+
+\includegraphics[width=\linewidth]{figures/yvan_15_1.pdf}
+
+\begin{lstlisting}
+(*@\HLJLnf{plot}@*)(*@\HLJLp{(}@*)(*@\HLJLn{irf3}@*)(*@\HLJLp{[}@*)(*@\HLJLoB{:}@*)(*@\HLJLp{,}@*)(*@\HLJLni{5}@*)(*@\HLJLp{],}@*) (*@\HLJLn{w}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{2}@*)(*@\HLJLp{,}@*) (*@\HLJLn{label}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}Modified}@*) (*@\HLJLs{Model"{}}@*)(*@\HLJLp{)}@*)
+(*@\HLJLnf{plot!}@*)(*@\HLJLp{(}@*)(*@\HLJLn{irf1}@*)(*@\HLJLp{[}@*)(*@\HLJLoB{:}@*)(*@\HLJLp{,}@*)(*@\HLJLni{3}@*)(*@\HLJLp{],}@*) (*@\HLJLn{w}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{2}@*)(*@\HLJLp{,}@*) (*@\HLJLn{label}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}Hansen{\textquotesingle}s}@*) (*@\HLJLs{Model"{}}@*)(*@\HLJLp{)}@*)
+(*@\HLJLnf{title!}@*)(*@\HLJLp{(}@*)(*@\HLJLs{"{}h"{}}@*)(*@\HLJLp{)}@*)
+\end{lstlisting}
+
+\includegraphics[width=\linewidth]{figures/yvan_16_1.pdf}
+
+\begin{lstlisting}
+(*@\HLJLnf{plot}@*)(*@\HLJLp{(}@*)(*@\HLJLn{irf3}@*)(*@\HLJLp{[}@*)(*@\HLJLoB{:}@*)(*@\HLJLp{,}@*)(*@\HLJLni{6}@*)(*@\HLJLp{],}@*) (*@\HLJLn{w}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{2}@*)(*@\HLJLp{,}@*) (*@\HLJLn{label}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}Modified}@*) (*@\HLJLs{Model"{}}@*)(*@\HLJLp{)}@*)
+(*@\HLJLnf{plot!}@*)(*@\HLJLp{(}@*)(*@\HLJLn{irf1}@*)(*@\HLJLp{[}@*)(*@\HLJLoB{:}@*)(*@\HLJLp{,}@*)(*@\HLJLni{4}@*)(*@\HLJLp{],}@*) (*@\HLJLn{w}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{2}@*)(*@\HLJLp{,}@*) (*@\HLJLn{label}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}Hansen{\textquotesingle}s}@*) (*@\HLJLs{Model"{}}@*)(*@\HLJLp{)}@*)
+(*@\HLJLnf{title!}@*)(*@\HLJLp{(}@*)(*@\HLJLs{"{}y"{}}@*)(*@\HLJLp{)}@*)
+\end{lstlisting}
+
+\includegraphics[width=\linewidth]{figures/yvan_17_1.pdf}
+
+\begin{lstlisting}
+(*@\HLJLnf{plot}@*)(*@\HLJLp{(}@*)(*@\HLJLn{irf3}@*)(*@\HLJLp{[}@*)(*@\HLJLoB{:}@*)(*@\HLJLp{,}@*)(*@\HLJLni{7}@*)(*@\HLJLp{],}@*) (*@\HLJLn{w}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{2}@*)(*@\HLJLp{,}@*) (*@\HLJLn{label}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}Modified}@*) (*@\HLJLs{Model"{}}@*)(*@\HLJLp{)}@*)
+(*@\HLJLnf{plot!}@*)(*@\HLJLp{(}@*)(*@\HLJLn{irf1}@*)(*@\HLJLp{[}@*)(*@\HLJLoB{:}@*)(*@\HLJLp{,}@*)(*@\HLJLni{5}@*)(*@\HLJLp{],}@*) (*@\HLJLn{w}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{2}@*)(*@\HLJLp{,}@*) (*@\HLJLn{label}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}Hansen{\textquotesingle}s}@*) (*@\HLJLs{Model"{}}@*)(*@\HLJLp{)}@*)
+(*@\HLJLnf{title!}@*)(*@\HLJLp{(}@*)(*@\HLJLs{"{}k"{}}@*)(*@\HLJLp{)}@*)
+\end{lstlisting}
+
+\includegraphics[width=\linewidth]{figures/yvan_18_1.pdf}
+
+\begin{lstlisting}
+(*@\HLJLnf{plot}@*)(*@\HLJLp{(}@*)(*@\HLJLn{irf3}@*)(*@\HLJLp{[}@*)(*@\HLJLoB{:}@*)(*@\HLJLp{,}@*)(*@\HLJLni{8}@*)(*@\HLJLp{],}@*) (*@\HLJLn{w}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{2}@*)(*@\HLJLp{,}@*) (*@\HLJLn{label}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}Modified}@*) (*@\HLJLs{Model"{}}@*)(*@\HLJLp{)}@*)
+(*@\HLJLnf{plot!}@*)(*@\HLJLp{(}@*)(*@\HLJLn{irf1}@*)(*@\HLJLp{[}@*)(*@\HLJLoB{:}@*)(*@\HLJLp{,}@*)(*@\HLJLni{6}@*)(*@\HLJLp{],}@*) (*@\HLJLn{w}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{2}@*)(*@\HLJLp{,}@*) (*@\HLJLn{label}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}Hansen{\textquotesingle}s}@*) (*@\HLJLs{Model"{}}@*)(*@\HLJLp{)}@*)
+(*@\HLJLnf{title!}@*)(*@\HLJLp{(}@*)(*@\HLJLs{"{}w"{}}@*)(*@\HLJLp{)}@*)
+\end{lstlisting}
+
+\includegraphics[width=\linewidth]{figures/yvan_19_1.pdf}
+
+\begin{lstlisting}
+(*@\HLJLnf{plot}@*)(*@\HLJLp{(}@*)(*@\HLJLn{irf3}@*)(*@\HLJLp{[}@*)(*@\HLJLoB{:}@*)(*@\HLJLp{,}@*)(*@\HLJLni{9}@*)(*@\HLJLp{],}@*) (*@\HLJLn{w}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{2}@*)(*@\HLJLp{,}@*) (*@\HLJLn{label}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}Modified}@*) (*@\HLJLs{Model"{}}@*)(*@\HLJLp{)}@*)
+(*@\HLJLnf{plot!}@*)(*@\HLJLp{(}@*)(*@\HLJLn{irf1}@*)(*@\HLJLp{[}@*)(*@\HLJLoB{:}@*)(*@\HLJLp{,}@*)(*@\HLJLni{7}@*)(*@\HLJLp{],}@*) (*@\HLJLn{w}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{2}@*)(*@\HLJLp{,}@*) (*@\HLJLn{label}@*) (*@\HLJLoB{=}@*) (*@\HLJLs{"{}Hansen{\textquotesingle}s}@*) (*@\HLJLs{Model"{}}@*)(*@\HLJLp{)}@*)
+(*@\HLJLnf{title!}@*)(*@\HLJLp{(}@*)(*@\HLJLso{L"{}{\textbackslash}lambda"{}}@*)(*@\HLJLp{)}@*)
+\end{lstlisting}
+
+\includegraphics[width=\linewidth]{figures/yvan_20_1.pdf}
+
+All the IRFs are more muted than in the model without consumption habits.
+
 
 
 \end{document}
