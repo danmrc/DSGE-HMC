@@ -1,4 +1,4 @@
-using LogDensityProblems
+using LogDensityProblems, DynamicHMC
 using Distributions, Parameters, Random
 using PositiveFactorizations, Calculus
 using Flux
@@ -60,9 +60,10 @@ dados[10,:] = log.(-dados[10,:])
 dados = Flux.normalise(dados)
 
 model_flux = Chain(
-    Dense(9,350,relu),
-    Dense(350,500,relu),
-    Dense(500,1)
+    Dense(9,20,relu),
+    Dense(20,50,relu),
+    Dense(50,50,relu),
+    Dense(50,1)
 )
 
 function make_minibatch(X, Y, siz)
@@ -72,19 +73,21 @@ function make_minibatch(X, Y, siz)
     return (X_batch, Y_batch), indexes
 end
 
-mini_batch_test = [make_minibatch(dados_x,dados_y,100) for i in 1:100]
+#mini_batch_test = [make_minibatch(dados_x,dados_y,100) for i in 1:100]
 
 loss_flux(x,y) = Flux.mse(model_flux(x),y)
 
-optim_flux = Flux.ADAM()
+optim_flux = Flux.RMSProp(0.00001)
 
 epochs_max = 100
-batch_size = 350
+batch_size = 625
 patience = 5
 
-acc(x,y) = mean([(model_flux(x)[1,i]-y[i])^2 for i in 1:batch_size])
+ofs_prop = 0.2
 
-loss = zeros(epochs_max)
+ofs_size = Int(ceil(batch_size*ofs_prop))
+
+acc(x,y) = mean([(model_flux(x)[1,i]-y[i])^2 for i in 1:length(y)])
 
 final_countdown = 0
 epoch = 2
@@ -93,24 +96,41 @@ last_update = 0
 while epoch <= epochs_max&&final_countdown <= patience
     batch,id = make_minibatch(dados[1:9,:],dados[10,:],batch_size)
     batch = [batch for i in 1:batch_size]
-    Flux.train!(loss_flux,Flux.params(model_flux),batch,optim_flux)
-    loss_in = acc(dados[1:9,id],dados[10,id])*1000
-    batch,id = make_minibatch(dados[1:9,:],dados[10,:],batch_size)
-    loss[epoch] = acc(dados[1:9,id],dados[10,id])*1000
-    println("Epoch ", epoch, " Loss out-of-sample *1000 ", loss[epoch]," Loss in-sample *1000 ", loss_in)
-    delta_loss = (loss[epoch-1] - loss[epoch])/loss[epoch]
-    if delta_loss < 1e-4
+
+    train_batch = batch[1:(ofs_size)]
+
+    train_batch_ids = id[1:(ofs_size)]
+    val_batch_ids = id[(ofs_size+1):batch_size]
+
+    loss_in_bef = acc(dados[1:9,train_batch_ids],dados[10,train_batch_ids])*1000
+    loss_val_bef = acc(dados[1:9,val_batch_ids],dados[10,val_batch_ids])*1000
+
+    Flux.train!(loss_flux,Flux.params(model_flux),train_batch,optim_flux)
+
+    loss_in_aft = acc(dados[1:9,train_batch_ids],dados[10,train_batch_ids])*1000
+    loss_val_aft = acc(dados[1:9,val_batch_ids],dados[10,val_batch_ids])*1000
+
+    delta_loss_val = loss_val_aft - loss_val_bef
+    delta_loss_in = loss_in_aft - loss_in_bef
+
+    println("Epoch ", epoch, " ΔLoss out-of-sample *1000 ", delta_loss_val," ΔLoss in-sample *1000 ", delta_loss_in)
+
+    if delta_loss_val > 1e-4
         if last_update != epoch-1
             global final_countdown = 0
-            global last_update = epoch
         end
         global final_countdown += 1
+        global last_update = epoch
     end
         global epoch += 1
 end
 
 
-idxs = sample(1:size(dados,2),1000)
+idxs = sample(1:size(dados,2),500)
 
-scatter(reshape(model_flux(dados[1:9,idxs]),1000), label = "Fit")
+scatter(reshape(model_flux(dados[1:9,idxs]),500), label = "Fit")
 scatter!(dados[10,idxs], label = "Data")
+
+scatter(reshape(model_flux(dados[1:9,idxs]),500),dados[10,idxs])
+
+acc(dados[1:9,idxs],dados[10,idxs])
