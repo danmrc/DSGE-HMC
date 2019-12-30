@@ -1,4 +1,17 @@
-include(string(pwd(),"/src/gensys.jl"))
+#### Hansen`s model and modified model
+### By Gilberto Boaretto and Daniel Coutinho
+##### License: MIT
+
+## To run this file, make sure you have packages Plots and LaTeXStrings in the system
+## The Plots are better viewed with some IDE like Jupyter or Atom.
+## Otherwise, go to the repl, press ] and type add <name-of-the-package>
+## Make sure that you have the gensys file
+
+include(string(pwd(),"/src/gensys.jl")) #Change this to where you saved gensys
+
+## A word of warning about our gensys implementation: we return the matrices from the model with a unique solution in the case of multiple solutions. This is done because the procedure is not a 100 percent debbuged and in some cases with unique solution we return a warning of no unique solution (set gamma = 0, for example)
+
+## Parameters for the original Hansen model, following McCandless book.
 
 theta = 0.36
 delta = 0.025
@@ -12,7 +25,9 @@ sig = 0.0712
 
 B = A*log(1-h0)/h0
 
-r_bar = 1/beta-(1-delta)
+r_bar = 1/beta-(1-delta) #This is the interest rate in the steady state. 
+
+## The matrices Γ_0, Γ_1, Π and Ψ for Gensys:
 
 G0 = zeros(7,7)
 G1 = zeros(7,7)
@@ -60,7 +75,7 @@ Psi[7] = 1
 
 sol1 = gensys(G0,G1,Psi,Pi)
 
-irf1 = irf(sol1,100,0.01)
+irf1 = irf(sol1,100,0.01) #yes, this takes the whole model and knows where to look in the object of the type of the model which matrices to use. Neat!
 
 using Plots
 using LaTeXStrings
@@ -71,7 +86,7 @@ plot!(irf1[:,3], w = 2, label = "h")
 plot!(irf1[:,4], w = 2, label = "y")
 plot!(irf1[:,5], w = 2, label = "k")
 plot!(irf1[:,6], w = 2, label = "w", line = :dash, color = "red")
-hline!([0], color = "black", w = 2, label = "0")
+hline!([0], color = "black", w = 2, label = "0") #zero is kind of hard to see
 
 ###########################
 ##### Modified model######
@@ -84,7 +99,7 @@ A = 1.72
 h0 = 0.58
 gamma = 0.95
 sig = 1#3.18 #CRRA coeficient
-xi = 0 ##habit formation
+xi = 0 # 0.832 #habit formation
 
 r_bar = 1/beta-(1-delta)
 B = A*log(1-h0)/h0
@@ -97,7 +112,7 @@ G1 = zeros(9,9)
 Pi = zeros(9,3)
 Psi = zeros(9)
 
-###### Filling the matrices ############
+###### Filling the matrices Γ_0, Γ_1, Π and Ψ for Gensys ############
 
 ########## Eq 1: Euler ##############
 

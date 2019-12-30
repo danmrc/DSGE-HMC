@@ -63,7 +63,7 @@ function gensys(G0,G1,Psi,Pi;verbose = true, tol = 1e-20)
 
     svd_Q2Pi = svd(Q2Pi)
     svd_aux = svd_Q2Pi.S #S is a vector
-    r = sum(abs.(svd_aux) .> tol)
+    r = sum(abs.(svd_aux) .> tol) #SVD may give a really small value that is not zeros. If it is bellow tol, we consider it zero. 
 
     #Checking existence and uniqueness see p. 46-47, Miao (2014)
     if m > r

@@ -1,14 +1,14 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Arch Linux) (preloaded format=pdflatex 2019.11.15)  22 DEC 2019 12:28
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.12.20)  30 DEC 2019 18:09
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
 **dsge_julia.tex
 (./dsge_julia.tex
-LaTeX2e <2019-10-01> patch level 1
-(/usr/share/texmf-dist/tex/latex/base/article.cls
-Document Class: article 2019/08/27 v1.4j Standard LaTeX document class
-(/usr/share/texmf-dist/tex/latex/base/size12.clo
-File: size12.clo 2019/08/27 v1.4j Standard LaTeX file (size option)
+LaTeX2e <2018-12-01>
+(/usr/local/texlive/2019/texmf-dist/tex/latex/base/article.cls
+Document Class: article 2018/09/03 v1.4i Standard LaTeX document class
+(/usr/local/texlive/2019/texmf-dist/tex/latex/base/size12.clo
+File: size12.clo 2018/09/03 v1.4i Standard LaTeX file (size option)
 )
 \c@part=\count80
 \c@section=\count81
@@ -22,21 +22,21 @@ File: size12.clo 2019/08/27 v1.4j Standard LaTeX file (size option)
 \belowcaptionskip=\skip42
 \bibindent=\dimen102
 )
-(/usr/share/texmf-dist/tex/latex/geometry/geometry.sty
+(/usr/local/texlive/2019/texmf-dist/tex/latex/geometry/geometry.sty
 Package: geometry 2018/04/16 v5.8 Page Geometry
 
-(/usr/share/texmf-dist/tex/latex/graphics/keyval.sty
+(/usr/local/texlive/2019/texmf-dist/tex/latex/graphics/keyval.sty
 Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
 \KV@toks@=\toks14
 )
-(/usr/share/texmf-dist/tex/generic/oberdiek/ifpdf.sty
+(/usr/local/texlive/2019/texmf-dist/tex/generic/oberdiek/ifpdf.sty
 Package: ifpdf 2018/09/07 v3.3 Provides the ifpdf switch
 )
-(/usr/share/texmf-dist/tex/generic/oberdiek/ifvtex.sty
+(/usr/local/texlive/2019/texmf-dist/tex/generic/oberdiek/ifvtex.sty
 Package: ifvtex 2016/05/16 v1.6 Detect VTeX and its facilities (HO)
 Package ifvtex Info: VTeX not detected.
 )
-(/usr/share/texmf-dist/tex/generic/ifxetex/ifxetex.sty
+(/usr/local/texlive/2019/texmf-dist/tex/generic/ifxetex/ifxetex.sty
 Package: ifxetex 2010/09/12 v0.6 Provides ifxetex conditional
 )
 \Gm@cnth=\count88
@@ -52,7 +52,7 @@ Package: ifxetex 2010/09/12 v0.6 Provides ifxetex conditional
 \Gm@layoutvoffset=\dimen110
 \Gm@dimlist=\toks15
 )
-(/usr/share/texmf-dist/tex/latex/lm/lmodern.sty
+(/usr/local/texlive/2019/texmf-dist/tex/latex/lm/lmodern.sty
 Package: lmodern 2009/10/30 v1.6 Latin Modern Fonts
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
 (Font)                  OT1/cmr/m/n --> OT1/lmr/m/n on input line 22.
@@ -87,53 +87,52 @@ LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
 (Font)                  OT1/cmtt/m/n --> OT1/lmtt/m/n on input line 38.
 )
-(/usr/share/texmf-dist/tex/latex/amsfonts/amssymb.sty
+(/usr/local/texlive/2019/texmf-dist/tex/latex/amsfonts/amssymb.sty
 Package: amssymb 2013/01/14 v3.01 AMS font symbols
 
-(/usr/share/texmf-dist/tex/latex/amsfonts/amsfonts.sty
+(/usr/local/texlive/2019/texmf-dist/tex/latex/amsfonts/amsfonts.sty
 Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
 \@emptytoks=\toks16
 \symAMSa=\mathgroup4
 \symAMSb=\mathgroup5
-LaTeX Font Info:    Redeclaring math symbol \hbar on input line 98.
 LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
 (Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
 ))
-(/usr/share/texmf-dist/tex/latex/amsmath/amsmath.sty
-Package: amsmath 2019/04/01 v2.17c AMS math features
+(/usr/local/texlive/2019/texmf-dist/tex/latex/amsmath/amsmath.sty
+Package: amsmath 2018/12/01 v2.17b AMS math features
 \@mathmargin=\skip43
 
 For additional information on amsmath, use the `?' option.
-(/usr/share/texmf-dist/tex/latex/amsmath/amstext.sty
+(/usr/local/texlive/2019/texmf-dist/tex/latex/amsmath/amstext.sty
 Package: amstext 2000/06/29 v2.01 AMS text
 
-(/usr/share/texmf-dist/tex/latex/amsmath/amsgen.sty
+(/usr/local/texlive/2019/texmf-dist/tex/latex/amsmath/amsgen.sty
 File: amsgen.sty 1999/11/30 v2.0 generic functions
 \@emptytoks=\toks17
 \ex@=\dimen111
 ))
-(/usr/share/texmf-dist/tex/latex/amsmath/amsbsy.sty
+(/usr/local/texlive/2019/texmf-dist/tex/latex/amsmath/amsbsy.sty
 Package: amsbsy 1999/11/29 v1.2d Bold Symbols
 \pmbraise@=\dimen112
 )
-(/usr/share/texmf-dist/tex/latex/amsmath/amsopn.sty
+(/usr/local/texlive/2019/texmf-dist/tex/latex/amsmath/amsopn.sty
 Package: amsopn 2016/03/08 v2.02 operator names
 )
 \inf@bad=\count91
-LaTeX Info: Redefining \frac on input line 227.
+LaTeX Info: Redefining \frac on input line 223.
 \uproot@=\count92
 \leftroot@=\count93
-LaTeX Info: Redefining \overline on input line 389.
+LaTeX Info: Redefining \overline on input line 385.
 \classnum@=\count94
 \DOTSCASE@=\count95
-LaTeX Info: Redefining \ldots on input line 486.
-LaTeX Info: Redefining \dots on input line 489.
-LaTeX Info: Redefining \cdots on input line 610.
+LaTeX Info: Redefining \ldots on input line 482.
+LaTeX Info: Redefining \dots on input line 485.
+LaTeX Info: Redefining \cdots on input line 606.
 \Mathstrutbox@=\box27
 \strutbox@=\box28
 \big@size=\dimen113
-LaTeX Font Info:    Redeclaring font encoding OML on input line 733.
-LaTeX Font Info:    Redeclaring font encoding OMS on input line 734.
+LaTeX Font Info:    Redeclaring font encoding OML on input line 729.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 730.
 \macc@depth=\count96
 \c@MaxMatrixCols=\count97
 \dotsspace@=\muskip10
@@ -154,48 +153,48 @@ LaTeX Font Info:    Redeclaring font encoding OMS on input line 734.
 \multlinegap=\skip44
 \multlinetaggap=\skip45
 \mathdisplay@stack=\toks21
-LaTeX Info: Redefining \[ on input line 2855.
-LaTeX Info: Redefining \] on input line 2856.
+LaTeX Info: Redefining \[ on input line 2844.
+LaTeX Info: Redefining \] on input line 2845.
 )
-(/usr/share/texmf-dist/tex/latex/tools/bm.sty
-Package: bm 2019/07/24 v1.2d Bold Symbol Support (DPC/FMi)
+(/usr/local/texlive/2019/texmf-dist/tex/latex/tools/bm.sty
+Package: bm 2017/01/16 v1.2c Bold Symbol Support (DPC/FMi)
 \symboldoperators=\mathgroup6
 \symboldletters=\mathgroup7
 \symboldsymbols=\mathgroup8
 LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 141.
-LaTeX Info: Redefining \bm on input line 209.
+LaTeX Info: Redefining \bm on input line 207.
 )
-(/usr/share/texmf-dist/tex/latex/graphics/graphicx.sty
+(/usr/local/texlive/2019/texmf-dist/tex/latex/graphics/graphicx.sty
 Package: graphicx 2017/06/01 v1.1a Enhanced LaTeX Graphics (DPC,SPQR)
 
-(/usr/share/texmf-dist/tex/latex/graphics/graphics.sty
-Package: graphics 2019/10/08 v1.3c Standard LaTeX Graphics (DPC,SPQR)
+(/usr/local/texlive/2019/texmf-dist/tex/latex/graphics/graphics.sty
+Package: graphics 2017/06/25 v1.2c Standard LaTeX Graphics (DPC,SPQR)
 
-(/usr/share/texmf-dist/tex/latex/graphics/trig.sty
+(/usr/local/texlive/2019/texmf-dist/tex/latex/graphics/trig.sty
 Package: trig 2016/01/03 v1.10 sin cos tan (DPC)
 )
-(/usr/share/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
+(/usr/local/texlive/2019/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
 File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
 )
-Package graphics Info: Driver file: pdftex.def on input line 105.
+Package graphics Info: Driver file: pdftex.def on input line 99.
 
-(/usr/share/texmf-dist/tex/latex/graphics-def/pdftex.def
+(/usr/local/texlive/2019/texmf-dist/tex/latex/graphics-def/pdftex.def
 File: pdftex.def 2018/01/08 v1.0l Graphics/color driver for pdftex
 ))
 \Gin@req@height=\dimen120
 \Gin@req@width=\dimen121
 )
-(/usr/share/texmf-dist/tex/latex/microtype/microtype.sty
-Package: microtype 2019/10/10 v2.7c Micro-typographical refinements (RS)
+(/usr/local/texlive/2019/texmf-dist/tex/latex/microtype/microtype.sty
+Package: microtype 2019/02/28 v2.7b Micro-typographical refinements (RS)
 \MT@toks=\toks22
 \MT@count=\count103
 LaTeX Info: Redefining \textls on input line 790.
 \MT@outer@kern=\dimen122
-LaTeX Info: Redefining \textmicrotypecontext on input line 1347.
+LaTeX Info: Redefining \textmicrotypecontext on input line 1336.
 \MT@listname@count=\count104
 
-(/usr/share/texmf-dist/tex/latex/microtype/microtype-pdftex.def
-File: microtype-pdftex.def 2019/10/10 v2.7c Definitions specific to pdftex (RS)
+(/usr/local/texlive/2019/texmf-dist/tex/latex/microtype/microtype-pdftex.def
+File: microtype-pdftex.def 2019/02/28 v2.7b Definitions specific to pdftex (RS)
 
 LaTeX Info: Redefining \lsstyle on input line 914.
 LaTeX Info: Redefining \lslig on input line 914.
@@ -203,17 +202,17 @@ LaTeX Info: Redefining \lslig on input line 914.
 )
 Package microtype Info: Loading configuration file microtype.cfg.
 
-(/usr/share/texmf-dist/tex/latex/microtype/microtype.cfg
-File: microtype.cfg 2019/10/10 v2.7c microtype main configuration file (RS)
+(/usr/local/texlive/2019/texmf-dist/tex/latex/microtype/microtype.cfg
+File: microtype.cfg 2019/02/28 v2.7b microtype main configuration file (RS)
 ))
-(/usr/share/texmf-dist/tex/latex/hyperref/hyperref.sty
-Package: hyperref 2019/09/28 v7.00a Hypertext links for LaTeX
+(/usr/local/texlive/2019/texmf-dist/tex/latex/hyperref/hyperref.sty
+Package: hyperref 2018/11/30 v6.88e Hypertext links for LaTeX
 
-(/usr/share/texmf-dist/tex/generic/oberdiek/hobsub-hyperref.sty
+(/usr/local/texlive/2019/texmf-dist/tex/generic/oberdiek/hobsub-hyperref.sty
 Package: hobsub-hyperref 2016/05/16 v1.14 Bundle oberdiek, subset hyperref (HO)
 
 
-(/usr/share/texmf-dist/tex/generic/oberdiek/hobsub-generic.sty
+(/usr/local/texlive/2019/texmf-dist/tex/generic/oberdiek/hobsub-generic.sty
 Package: hobsub-generic 2016/05/16 v1.14 Bundle oberdiek, subset generic (HO)
 Package: hobsub 2016/05/16 v1.14 Construct package bundles (HO)
 Package: infwarerr 2016/05/16 v1.4 Providing info/warning/error messages (HO)
@@ -226,7 +225,7 @@ Package hobsub Info: Skipping package `ifpdf' (already loaded).
 Package: etexcmds 2016/05/16 v1.6 Avoid name clashes with e-TeX commands (HO)
 Package: kvsetkeys 2016/05/16 v1.17 Key value parser (HO)
 Package: kvdefinekeys 2016/05/16 v1.4 Define keys (HO)
-Package: pdftexcmds 2019/07/25 v0.30 Utility functions of pdfTeX for LuaTeX (HO
+Package: pdftexcmds 2018/09/10 v0.29 Utility functions of pdfTeX for LuaTeX (HO
 )
 Package pdftexcmds Info: LuaTeX not detected.
 Package pdftexcmds Info: \pdf@primitive is available.
@@ -248,72 +247,72 @@ Package: atbegshi 2016/06/09 v1.18 At begin shipout hook (HO)
 Package: refcount 2016/05/16 v3.5 Data extraction from label references (HO)
 Package: hycolor 2016/05/16 v1.8 Color options for hyperref/bookmark (HO)
 )
-(/usr/share/texmf-dist/tex/latex/oberdiek/auxhook.sty
+(/usr/local/texlive/2019/texmf-dist/tex/latex/oberdiek/auxhook.sty
 Package: auxhook 2016/05/16 v1.4 Hooks for auxiliary files (HO)
 )
-(/usr/share/texmf-dist/tex/latex/oberdiek/kvoptions.sty
+(/usr/local/texlive/2019/texmf-dist/tex/latex/oberdiek/kvoptions.sty
 Package: kvoptions 2016/05/16 v3.12 Key value format for package options (HO)
 )
 \@linkdim=\dimen123
 \Hy@linkcounter=\count105
 \Hy@pagecounter=\count106
 
-(/usr/share/texmf-dist/tex/latex/hyperref/pd1enc.def
-File: pd1enc.def 2019/09/28 v7.00a Hyperref: PDFDocEncoding definition (HO)
+(/usr/local/texlive/2019/texmf-dist/tex/latex/hyperref/pd1enc.def
+File: pd1enc.def 2018/11/30 v6.88e Hyperref: PDFDocEncoding definition (HO)
 Now handling font encoding PD1 ...
 ... no UTF-8 mapping file for font encoding PD1
 )
 \Hy@SavedSpaceFactor=\count107
 
-(/usr/share/texmf-dist/tex/latex/latexconfig/hyperref.cfg
+(/usr/local/texlive/2019/texmf-dist/tex/latex/latexconfig/hyperref.cfg
 File: hyperref.cfg 2002/06/06 v1.2 hyperref configuration of TeXLive
 )
-Package hyperref Info: Hyper figures OFF on input line 4540.
-Package hyperref Info: Link nesting OFF on input line 4545.
-Package hyperref Info: Hyper index ON on input line 4548.
-Package hyperref Info: Plain pages OFF on input line 4555.
-Package hyperref Info: Backreferencing OFF on input line 4560.
+Package hyperref Info: Hyper figures OFF on input line 4519.
+Package hyperref Info: Link nesting OFF on input line 4524.
+Package hyperref Info: Hyper index ON on input line 4527.
+Package hyperref Info: Plain pages OFF on input line 4534.
+Package hyperref Info: Backreferencing OFF on input line 4539.
 Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
-Package hyperref Info: Bookmarks ON on input line 4793.
+Package hyperref Info: Bookmarks ON on input line 4772.
 \c@Hy@tempcnt=\count108
 
-(/usr/share/texmf-dist/tex/latex/url/url.sty
+(/usr/local/texlive/2019/texmf-dist/tex/latex/url/url.sty
 \Urlmuskip=\muskip11
 Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
 )
-LaTeX Info: Redefining \url on input line 5152.
+LaTeX Info: Redefining \url on input line 5125.
 \XeTeXLinkMargin=\dimen124
 \Fld@menulength=\count109
 \Field@Width=\dimen125
 \Fld@charsize=\dimen126
-Package hyperref Info: Hyper figures OFF on input line 6423.
-Package hyperref Info: Link nesting OFF on input line 6428.
-Package hyperref Info: Hyper index ON on input line 6431.
-Package hyperref Info: backreferencing OFF on input line 6438.
-Package hyperref Info: Link coloring OFF on input line 6443.
-Package hyperref Info: Link coloring with OCG OFF on input line 6448.
-Package hyperref Info: PDF/A mode OFF on input line 6453.
-LaTeX Info: Redefining \ref on input line 6493.
-LaTeX Info: Redefining \pageref on input line 6497.
+Package hyperref Info: Hyper figures OFF on input line 6380.
+Package hyperref Info: Link nesting OFF on input line 6385.
+Package hyperref Info: Hyper index ON on input line 6388.
+Package hyperref Info: backreferencing OFF on input line 6395.
+Package hyperref Info: Link coloring OFF on input line 6400.
+Package hyperref Info: Link coloring with OCG OFF on input line 6405.
+Package hyperref Info: PDF/A mode OFF on input line 6410.
+LaTeX Info: Redefining \ref on input line 6450.
+LaTeX Info: Redefining \pageref on input line 6454.
 \Hy@abspage=\count110
 \c@Item=\count111
 \c@Hfootnote=\count112
 )
 Package hyperref Info: Driver (autodetected): hpdftex.
 
-(/usr/share/texmf-dist/tex/latex/hyperref/hpdftex.def
-File: hpdftex.def 2019/09/28 v7.00a Hyperref driver for pdfTeX
+(/usr/local/texlive/2019/texmf-dist/tex/latex/hyperref/hpdftex.def
+File: hpdftex.def 2018/11/30 v6.88e Hyperref driver for pdfTeX
 \Fld@listcount=\count113
 \c@bookmark@seq@number=\count114
 
-(/usr/share/texmf-dist/tex/latex/oberdiek/rerunfilecheck.sty
+(/usr/local/texlive/2019/texmf-dist/tex/latex/oberdiek/rerunfilecheck.sty
 Package: rerunfilecheck 2016/05/16 v1.8 Rerun checks for auxiliary files (HO)
 Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 82.
 )
 \Hy@SectionHShift=\skip47
 )
-(/usr/share/texmf-dist/tex/latex/natbib/natbib.sty
+(/usr/local/texlive/2019/texmf-dist/tex/latex/natbib/natbib.sty
 Package: natbib 2010/09/13 8.31b (PWD, AO)
 \bibhang=\skip48
 \bibsep=\skip49
@@ -322,11 +321,11 @@ LaTeX Info: Redefining \cite on input line 694.
 )
 Package hyperref Info: Option `colorlinks' set `true' on input line 21.
 
-(/usr/share/texmf-dist/tex/latex/upquote/upquote.sty
+(/usr/local/texlive/2019/texmf-dist/tex/latex/upquote/upquote.sty
 Package: upquote 2012/04/19 v1.3 upright-quote and grave-accent glyphs in verba
 tim
 
-(/usr/share/texmf-dist/tex/latex/base/textcomp.sty
+(/usr/local/texlive/2019/texmf-dist/tex/latex/base/textcomp.sty
 Package: textcomp 2018/08/11 v2.0j Standard LaTeX package
 Package textcomp Info: Sub-encoding information:
 (textcomp)               5 = only ISO-Adobe without \textcurrency
@@ -341,13 +340,13 @@ Package textcomp Info: Sub-encoding information:
 (textcomp)             See the documentation for details.
 Package textcomp Info: Setting ? sub-encoding to TS1/1 on input line 79.
 
-(/usr/share/texmf-dist/tex/latex/base/ts1enc.def
+(/usr/local/texlive/2019/texmf-dist/tex/latex/base/ts1enc.def
 File: ts1enc.def 2001/06/05 v3.0e (jk/car/fm) Standard LaTeX file
 Now handling font encoding TS1 ...
 ... processing UTF-8 mapping file for font encoding TS1
 
-(/usr/share/texmf-dist/tex/latex/base/ts1enc.dfu
-File: ts1enc.dfu 2019/07/11 v1.2j UTF-8 support for inputenc
+(/usr/local/texlive/2019/texmf-dist/tex/latex/base/ts1enc.dfu
+File: ts1enc.dfu 2018/10/05 v1.2f UTF-8 support for inputenc
    defining Unicode char U+00A2 (decimal 162)
    defining Unicode char U+00A3 (decimal 163)
    defining Unicode char U+00A4 (decimal 164)
@@ -417,8 +416,6 @@ File: ts1enc.dfu 2019/07/11 v1.2j UTF-8 support for inputenc
    defining Unicode char U+25E6 (decimal 9702)
    defining Unicode char U+25EF (decimal 9711)
    defining Unicode char U+266A (decimal 9834)
-   defining Unicode char U+27E8 (decimal 10216)
-   defining Unicode char U+27E9 (decimal 10217)
    defining Unicode char U+FEFF (decimal 65279)
 ))
 LaTeX Info: Redefining \oldstylenums on input line 334.
@@ -485,7 +482,7 @@ Package textcomp Info: Setting pplj sub-encoding to TS1/3 on input line 407.
 Package textcomp Info: Setting ptmx sub-encoding to TS1/4 on input line 408.
 Package textcomp Info: Setting ptmj sub-encoding to TS1/4 on input line 409.
 ))
-(/usr/share/texmf-dist/tex/latex/listings/listings.sty
+(/usr/local/texlive/2019/texmf-dist/tex/latex/listings/listings.sty
 \lst@mode=\count116
 \lst@gtempboxa=\box29
 \lst@token=\toks23
@@ -499,21 +496,21 @@ Package textcomp Info: Setting ptmj sub-encoding to TS1/4 on input line 409.
 \lst@lineno=\count121
 \lst@maxwidth=\dimen130
 
-(/usr/share/texmf-dist/tex/latex/listings/lstmisc.sty
-File: lstmisc.sty 2019/09/10 1.8c (Carsten Heinz)
+(/usr/local/texlive/2019/texmf-dist/tex/latex/listings/lstmisc.sty
+File: lstmisc.sty 2019/02/27 1.8b (Carsten Heinz)
 \c@lstnumber=\count122
 \lst@skipnumbers=\count123
 \lst@framebox=\box30
 )
-(/usr/share/texmf-dist/tex/latex/listings/listings.cfg
-File: listings.cfg 2019/09/10 1.8c listings configuration
+(/usr/local/texlive/2019/texmf-dist/tex/latex/listings/listings.cfg
+File: listings.cfg 2019/02/27 1.8b listings configuration
 ))
-Package: listings 2019/09/10 1.8c (Carsten Heinz)
+Package: listings 2019/02/27 1.8b (Carsten Heinz)
 
-(/usr/share/texmf-dist/tex/latex/xcolor/xcolor.sty
+(/usr/local/texlive/2019/texmf-dist/tex/latex/xcolor/xcolor.sty
 Package: xcolor 2016/05/11 v2.12 LaTeX color extensions (UK)
 
-(/usr/share/texmf-dist/tex/latex/graphics-cfg/color.cfg
+(/usr/local/texlive/2019/texmf-dist/tex/latex/graphics-cfg/color.cfg
 File: color.cfg 2016/01/02 v1.6 sample color configuration
 )
 Package xcolor Info: Driver file: pdftex.def on input line 225.
@@ -526,7 +523,8 @@ Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1368.
 Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1369.
 Package xcolor Info: Model `Gray' substituted by `gray' on input line 1370.
 Package xcolor Info: Model `wave' substituted by `hsb' on input line 1371.
-) (./dsge_julia.aux)
+)
+(./dsge_julia.aux)
 \openout1 = `dsge_julia.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 124.
@@ -544,17 +542,15 @@ LaTeX Font Info:    ... okay on input line 124.
 LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 124.
 LaTeX Font Info:    ... okay on input line 124.
 LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 124.
-LaTeX Font Info:    Trying to load font information for TS1+cmr on input line 1
-24.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 124.
 
-(/usr/share/texmf-dist/tex/latex/base/ts1cmr.fd
+ (/usr/local/texlive/2019/texmf-dist/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    ... okay on input line 124.
-LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 1
-24.
+LaTeX Font Info:    Try loading font information for OT1+lmr on input line 124.
 
-(/usr/share/texmf-dist/tex/latex/lm/ot1lmr.fd
+ (/usr/local/texlive/2019/texmf-dist/tex/latex/lm/ot1lmr.fd
 File: ot1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 *geometry* driver: auto-detecting
@@ -593,7 +589,7 @@ File: ot1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-(/usr/share/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+(/usr/local/texlive/2019/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count124
 \scratchdimen=\dimen131
@@ -606,10 +602,10 @@ File: ot1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 \MPnumerator=\count128
 \makeMPintoPDFobject=\count129
 \everyMPtoPDFconversion=\toks25
-) (/usr/share/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
+) (/usr/local/texlive/2019/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
 Package: epstopdf-base 2016/05/15 v2.6 Base part for package epstopdf
 
-(/usr/share/texmf-dist/tex/latex/oberdiek/grfext.sty
+(/usr/local/texlive/2019/texmf-dist/tex/latex/oberdiek/grfext.sty
 Package: grfext 2016/05/16 v1.2 Manage graphics extensions (HO)
 )
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
@@ -619,7 +615,7 @@ Package grfext Info: Graphics extension search list:
 G,.JBIG2,.JB2,.eps]
 (grfext)             \AppendGraphicsExtensions on input line 456.
 
-(/usr/share/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
+(/usr/local/texlive/2019/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
@@ -630,22 +626,21 @@ Package microtype Info: Using default protrusion set `alltext'.
 Package microtype Info: Automatic font expansion enabled (level 2),
 (microtype)             stretch: 20, shrink: 20, step: 1, non-selected.
 Package microtype Info: Using default expansion set `basictext'.
-LaTeX Info: Redefining \showhyphens on input line 124.
 Package microtype Info: No adjustment of tracking.
 Package microtype Info: No adjustment of interword spacing.
 Package microtype Info: No adjustment of character kerning.
 
-(/usr/share/texmf-dist/tex/latex/microtype/mt-cmr.cfg
+(/usr/local/texlive/2019/texmf-dist/tex/latex/microtype/mt-cmr.cfg
 File: mt-cmr.cfg 2013/05/19 v2.2 microtype config. file: Computer Modern Roman 
 (RS)
 )
 \AtBeginShipoutBox=\box32
 Package hyperref Info: Link coloring ON on input line 124.
 
-(/usr/share/texmf-dist/tex/latex/hyperref/nameref.sty
-Package: nameref 2019/09/16 v2.46 Cross-referencing by name of section
+(/usr/local/texlive/2019/texmf-dist/tex/latex/hyperref/nameref.sty
+Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
 
-(/usr/share/texmf-dist/tex/generic/oberdiek/gettitlestring.sty
+(/usr/local/texlive/2019/texmf-dist/tex/generic/oberdiek/gettitlestring.sty
 Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 )
 \c@section@level=\count130
@@ -659,22 +654,22 @@ LaTeX Info: Redefining \nameref on input line 124.
 \openout3 = `dsge_julia.out'.
 
 \c@lstlisting=\count131
-LaTeX Font Info:    Trying to load font information for OML+lmm on input line 1
-27.
+LaTeX Font Info:    Try loading font information for OML+lmm on input line 127.
 
-(/usr/share/texmf-dist/tex/latex/lm/omllmm.fd
+
+(/usr/local/texlive/2019/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 
-127.
+LaTeX Font Info:    Try loading font information for OMS+lmsy on input line 127
+.
 
-(/usr/share/texmf-dist/tex/latex/lm/omslmsy.fd
+(/usr/local/texlive/2019/texmf-dist/tex/latex/lm/omslmsy.fd
 File: omslmsy.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 
-127.
+LaTeX Font Info:    Try loading font information for OMX+lmex on input line 127
+.
 
-(/usr/share/texmf-dist/tex/latex/lm/omxlmex.fd
+(/usr/local/texlive/2019/texmf-dist/tex/latex/lm/omxlmex.fd
 File: omxlmex.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
@@ -683,35 +678,43 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <10> on input line 127.
 LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <7> on input line 127.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 127
-.
+LaTeX Font Info:    Try loading font information for U+msa on input line 127.
 
-(/usr/share/texmf-dist/tex/latex/amsfonts/umsa.fd
+(/usr/local/texlive/2019/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-(/usr/share/texmf-dist/tex/latex/microtype/mt-msa.cfg
+(/usr/local/texlive/2019/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 127
-.
+LaTeX Font Info:    Try loading font information for U+msb on input line 127.
 
-(/usr/share/texmf-dist/tex/latex/amsfonts/umsb.fd
+(/usr/local/texlive/2019/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-(/usr/share/texmf-dist/tex/latex/microtype/mt-msb.cfg
+(/usr/local/texlive/2019/texmf-dist/tex/latex/microtype/mt-msb.cfg
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
-) [1
+)
+LaTeX Font Info:    Try loading font information for TS1+lmr on input line 127.
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
+
+(/usr/local/texlive/2019/texmf-dist/tex/latex/lm/ts1lmr.fd
+File: ts1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
+)
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <5> on input line 127.
+ [1
+
+{/usr/local/texlive/2019/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
 LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <12> on input line 151.
 LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <8> on input line 151.
 LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <6> on input line 151.
-LaTeX Font Info:    Trying to load font information for OT1+lmtt on input line 
-161.
- (/usr/share/texmf-dist/tex/latex/lm/ot1lmtt.fd
+LaTeX Font Info:    Try loading font information for OT1+lmtt on input line 161
+.
+
+(/usr/local/texlive/2019/texmf-dist/tex/latex/lm/ot1lmtt.fd
 File: ot1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 Package microtype Info: Loading generic protrusion settings for font family
@@ -720,10 +723,9 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             See the microtype manual for details.
 LaTeX Font Info:    Font shape `OT1/lmtt/bx/n' in size <10> not available
 (Font)              Font shape `OT1/lmtt/b/n' tried instead on input line 162.
-
-[2]
-LaTeX Font Info:    Trying to load font information for OMS+lmtt on input line 
-234.
+ [2]
+LaTeX Font Info:    Try loading font information for OMS+lmtt on input line 234
+.
 LaTeX Font Info:    No file OMSlmtt.fd. on input line 234.
 
 
@@ -731,9 +733,9 @@ LaTeX Font Warning: Font shape `OMS/lmtt/m/n' undefined
 (Font)              using `OMS/cmsy/m/n' instead
 (Font)              for symbol `textbackslash' on input line 234.
 
-LaTeX Font Info:    Trying to load font information for TS1+lmtt on input line 
-234.
-(/usr/share/texmf-dist/tex/latex/lm/ts1lmtt.fd
+LaTeX Font Info:    Try loading font information for TS1+lmtt on input line 234
+.
+(/usr/local/texlive/2019/texmf-dist/tex/latex/lm/ts1lmtt.fd
 File: ts1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 Package microtype Info: Loading generic protrusion settings for font family
@@ -749,42 +751,41 @@ LaTeX Font Info:    Font shape `TS1/lmtt/bx/n' in size <10> not available
 Package microtype Info: Character `texttrademark ' is missing
 (microtype)             in font `TS1/lmtt/b/n/10'.
 (microtype)             Ignoring protrusion settings for this character.
- [6] [7]
-<figures/dsge_and_julia_11_1.pdf, id=278, 578.16pt x 385.44pt>
+
+[6] [7]
+<figures/dsge_and_julia_11_1.pdf, id=277, 578.16pt x 385.44pt>
 File: figures/dsge_and_julia_11_1.pdf Graphic file (type pdf)
 <use figures/dsge_and_julia_11_1.pdf>
 Package pdftex.def Info: figures/dsge_and_julia_11_1.pdf  used on input line 51
 5.
 (pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
  [8]
-<figures/dsge_and_julia_12_1.pdf, id=314, 578.16pt x 385.44pt>
+<figures/dsge_and_julia_12_1.pdf, id=313, 578.16pt x 385.44pt>
 File: figures/dsge_and_julia_12_1.pdf Graphic file (type pdf)
 <use figures/dsge_and_julia_12_1.pdf>
 Package pdftex.def Info: figures/dsge_and_julia_12_1.pdf  used on input line 52
 3.
 (pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
-
-[9 <./figures/dsge_and_julia_11_1.pdf> <./figures/dsge_and_julia_12_1.pdf>]
-<figures/dsge_and_julia_13_1.pdf, id=332, 578.16pt x 385.44pt>
+ [9 <./figures/dsge_and_julia_11_1.pdf> <./figures/dsge_and_julia_12_1.pdf>]
+<figures/dsge_and_julia_13_1.pdf, id=331, 578.16pt x 385.44pt>
 File: figures/dsge_and_julia_13_1.pdf Graphic file (type pdf)
 <use figures/dsge_and_julia_13_1.pdf>
 Package pdftex.def Info: figures/dsge_and_julia_13_1.pdf  used on input line 53
 1.
 (pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
-<figures/dsge_and_julia_14_1.pdf, id=333, 578.16pt x 385.44pt>
+<figures/dsge_and_julia_14_1.pdf, id=332, 578.16pt x 385.44pt>
 File: figures/dsge_and_julia_14_1.pdf Graphic file (type pdf)
 <use figures/dsge_and_julia_14_1.pdf>
 Package pdftex.def Info: figures/dsge_and_julia_14_1.pdf  used on input line 53
 9.
 (pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
-
-[10 <./figures/dsge_and_julia_13_1.pdf> <./figures/dsge_and_julia_14_1.pdf>]
-[11] [12]
+ [10 <./figures/dsge_and_julia_13_1.pdf> <./figures/dsge_and_julia_14_1.pdf>] [
+11] [12]
 Package microtype Info: Character `texttrademark ' is missing
 (microtype)             in font `TS1/lmtt/m/it/10'.
 (microtype)             Ignoring protrusion settings for this character.
  [13]
-<figures/dsge_and_julia_17_1.pdf, id=454, 578.16pt x 385.44pt>
+<figures/dsge_and_julia_17_1.pdf, id=453, 578.16pt x 385.44pt>
 File: figures/dsge_and_julia_17_1.pdf Graphic file (type pdf)
 <use figures/dsge_and_julia_17_1.pdf>
 Package pdftex.def Info: figures/dsge_and_julia_17_1.pdf  used on input line 72
@@ -816,34 +817,34 @@ o[]v)
  []
 
 [17] [18] [19] [20] [21] [22]
-<figures/dsge_and_julia_25_1.pdf, id=841, 578.16pt x 385.44pt>
+<figures/dsge_and_julia_25_1.pdf, id=840, 578.16pt x 385.44pt>
 File: figures/dsge_and_julia_25_1.pdf Graphic file (type pdf)
 <use figures/dsge_and_julia_25_1.pdf>
 Package pdftex.def Info: figures/dsge_and_julia_25_1.pdf  used on input line 11
 45.
 (pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
  [23]
-<figures/dsge_and_julia_26_1.pdf, id=873, 578.16pt x 385.44pt>
+<figures/dsge_and_julia_26_1.pdf, id=872, 578.16pt x 385.44pt>
 File: figures/dsge_and_julia_26_1.pdf Graphic file (type pdf)
 <use figures/dsge_and_julia_26_1.pdf>
 Package pdftex.def Info: figures/dsge_and_julia_26_1.pdf  used on input line 11
 54.
 (pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
  [24 <./figures/dsge_and_julia_25_1.pdf> <./figures/dsge_and_julia_26_1.pdf>]
-<figures/dsge_and_julia_27_1.pdf, id=896, 578.16pt x 385.44pt>
+<figures/dsge_and_julia_27_1.pdf, id=895, 578.16pt x 385.44pt>
 File: figures/dsge_and_julia_27_1.pdf Graphic file (type pdf)
 <use figures/dsge_and_julia_27_1.pdf>
 Package pdftex.def Info: figures/dsge_and_julia_27_1.pdf  used on input line 11
 63.
 (pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
-<figures/dsge_and_julia_28_1.pdf, id=897, 578.16pt x 385.44pt>
+<figures/dsge_and_julia_28_1.pdf, id=896, 578.16pt x 385.44pt>
 File: figures/dsge_and_julia_28_1.pdf Graphic file (type pdf)
 <use figures/dsge_and_julia_28_1.pdf>
 Package pdftex.def Info: figures/dsge_and_julia_28_1.pdf  used on input line 11
 72.
 (pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
  [25 <./figures/dsge_and_julia_27_1.pdf>]
-<figures/dsge_and_julia_29_1.pdf, id=916, 578.16pt x 385.44pt>
+<figures/dsge_and_julia_29_1.pdf, id=915, 578.16pt x 385.44pt>
 File: figures/dsge_and_julia_29_1.pdf Graphic file (type pdf)
 <use figures/dsge_and_julia_29_1.pdf>
 Package pdftex.def Info: figures/dsge_and_julia_29_1.pdf  used on input line 11
@@ -851,13 +852,13 @@ Package pdftex.def Info: figures/dsge_and_julia_29_1.pdf  used on input line 11
 (pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
 
 [26 <./figures/dsge_and_julia_28_1.pdf> <./figures/dsge_and_julia_29_1.pdf>]
-<figures/dsge_and_julia_30_1.pdf, id=938, 578.16pt x 385.44pt>
+<figures/dsge_and_julia_30_1.pdf, id=937, 578.16pt x 385.44pt>
 File: figures/dsge_and_julia_30_1.pdf Graphic file (type pdf)
 <use figures/dsge_and_julia_30_1.pdf>
 Package pdftex.def Info: figures/dsge_and_julia_30_1.pdf  used on input line 11
 90.
 (pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
-<figures/dsge_and_julia_31_1.pdf, id=939, 578.16pt x 385.44pt>
+<figures/dsge_and_julia_31_1.pdf, id=938, 578.16pt x 385.44pt>
 File: figures/dsge_and_julia_31_1.pdf Graphic file (type pdf)
 <use figures/dsge_and_julia_31_1.pdf>
 Package pdftex.def Info: figures/dsge_and_julia_31_1.pdf  used on input line 11
@@ -865,251 +866,93 @@ Package pdftex.def Info: figures/dsge_and_julia_31_1.pdf  used on input line 11
 (pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
 
 [27 <./figures/dsge_and_julia_30_1.pdf>]
-<figures/dsge_and_julia_32_1.pdf, id=957, 578.16pt x 385.44pt>
+<figures/dsge_and_julia_32_1.pdf, id=956, 578.16pt x 385.44pt>
 File: figures/dsge_and_julia_32_1.pdf Graphic file (type pdf)
 <use figures/dsge_and_julia_32_1.pdf>
 Package pdftex.def Info: figures/dsge_and_julia_32_1.pdf  used on input line 12
 08.
 (pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
  [28 <./figures/dsge_and_julia_31_1.pdf> <./figures/dsge_and_julia_32_1.pdf>]
-<figures/dsge_and_julia_33_1.pdf, id=979, 578.16pt x 385.44pt>
+<figures/dsge_and_julia_33_1.pdf, id=978, 578.16pt x 385.44pt>
 File: figures/dsge_and_julia_33_1.pdf Graphic file (type pdf)
 <use figures/dsge_and_julia_33_1.pdf>
 Package pdftex.def Info: figures/dsge_and_julia_33_1.pdf  used on input line 12
 17.
 (pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
-<../3regions.png, id=982, 759.83875pt x 288.07625pt>
+<../3regions.png, id=981, 759.83875pt x 288.07625pt>
 File: ../3regions.png Graphic file (type png)
 <use ../3regions.png>
 Package pdftex.def Info: ../3regions.png  used on input line 1227.
 (pdftex.def)             Requested size: 469.47046pt x 177.99442pt.
- [29 <./figures/dsge_and_julia_33_1.pdf>] [30 <../3regions.png>]
-<figures/dsge_and_julia_35_1.pdf, id=1010, 578.16pt x 385.44pt>
-File: figures/dsge_and_julia_35_1.pdf Graphic file (type pdf)
-<use figures/dsge_and_julia_35_1.pdf>
-Package pdftex.def Info: figures/dsge_and_julia_35_1.pdf  used on input line 12
-69.
-(pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
-<figures/dsge_and_julia_36_1.pdf, id=1011, 578.16pt x 385.44pt>
-File: figures/dsge_and_julia_36_1.pdf Graphic file (type pdf)
-<use figures/dsge_and_julia_36_1.pdf>
-Package pdftex.def Info: figures/dsge_and_julia_36_1.pdf  used on input line 12
-78.
-(pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
- [31 <./figures/dsge_and_julia_35_1.pdf>]
-<figures/dsge_and_julia_37_1.pdf, id=1041, 578.16pt x 385.44pt>
-File: figures/dsge_and_julia_37_1.pdf Graphic file (type pdf)
-<use figures/dsge_and_julia_37_1.pdf>
-Package pdftex.def Info: figures/dsge_and_julia_37_1.pdf  used on input line 12
-87.
-(pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
- [32 <./figures/dsge_and_julia_36_1.pdf> <./figures/dsge_and_julia_37_1.pdf>]
-<figures/dsge_and_julia_38_1.pdf, id=1063, 578.16pt x 385.44pt>
-File: figures/dsge_and_julia_38_1.pdf Graphic file (type pdf)
-<use figures/dsge_and_julia_38_1.pdf>
-Package pdftex.def Info: figures/dsge_and_julia_38_1.pdf  used on input line 12
-96.
-(pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
-<figures/dsge_and_julia_39_1.pdf, id=1064, 578.16pt x 385.44pt>
-File: figures/dsge_and_julia_39_1.pdf Graphic file (type pdf)
-<use figures/dsge_and_julia_39_1.pdf>
-Package pdftex.def Info: figures/dsge_and_julia_39_1.pdf  used on input line 13
-05.
-(pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
- [33 <./figures/dsge_and_julia_38_1.pdf>]
-<figures/dsge_and_julia_40_1.pdf, id=1082, 578.16pt x 385.44pt>
-File: figures/dsge_and_julia_40_1.pdf Graphic file (type pdf)
-<use figures/dsge_and_julia_40_1.pdf>
-Package pdftex.def Info: figures/dsge_and_julia_40_1.pdf  used on input line 13
-14.
-(pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
- [34 <./figures/dsge_and_julia_39_1.pdf> <./figures/dsge_and_julia_40_1.pdf>]
-<figures/dsge_and_julia_41_1.pdf, id=1104, 578.16pt x 385.44pt>
-File: figures/dsge_and_julia_41_1.pdf Graphic file (type pdf)
-<use figures/dsge_and_julia_41_1.pdf>
-Package pdftex.def Info: figures/dsge_and_julia_41_1.pdf  used on input line 13
-23.
-(pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
-<figures/dsge_and_julia_42_1.pdf, id=1105, 578.16pt x 385.44pt>
-File: figures/dsge_and_julia_42_1.pdf Graphic file (type pdf)
-<use figures/dsge_and_julia_42_1.pdf>
-Package pdftex.def Info: figures/dsge_and_julia_42_1.pdf  used on input line 13
-32.
-(pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
- [35 <./figures/dsge_and_julia_41_1.pdf>]
-<figures/dsge_and_julia_43_1.pdf, id=1123, 578.16pt x 385.44pt>
-File: figures/dsge_and_julia_43_1.pdf Graphic file (type pdf)
-<use figures/dsge_and_julia_43_1.pdf>
-Package pdftex.def Info: figures/dsge_and_julia_43_1.pdf  used on input line 13
-41.
-(pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
- [36 <./figures/dsge_and_julia_42_1.pdf> <./figures/dsge_and_julia_43_1.pdf>]
-<figures/dsge_and_julia_44_1.pdf, id=1143, 578.16pt x 385.44pt>
-File: figures/dsge_and_julia_44_1.pdf Graphic file (type pdf)
-<use figures/dsge_and_julia_44_1.pdf>
-Package pdftex.def Info: figures/dsge_and_julia_44_1.pdf  used on input line 13
-58.
-(pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
-<figures/dsge_and_julia_45_1.pdf, id=1144, 578.16pt x 385.44pt>
-File: figures/dsge_and_julia_45_1.pdf Graphic file (type pdf)
-<use figures/dsge_and_julia_45_1.pdf>
-Package pdftex.def Info: figures/dsge_and_julia_45_1.pdf  used on input line 13
-67.
-(pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
- [37 <./figures/dsge_and_julia_44_1.pdf>]
-<figures/dsge_and_julia_46_1.pdf, id=1168, 578.16pt x 385.44pt>
-File: figures/dsge_and_julia_46_1.pdf Graphic file (type pdf)
-<use figures/dsge_and_julia_46_1.pdf>
-Package pdftex.def Info: figures/dsge_and_julia_46_1.pdf  used on input line 13
-76.
-(pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
- [38 <./figures/dsge_and_julia_45_1.pdf> <./figures/dsge_and_julia_46_1.pdf>]
-<figures/dsge_and_julia_47_1.pdf, id=1190, 578.16pt x 385.44pt>
-File: figures/dsge_and_julia_47_1.pdf Graphic file (type pdf)
-<use figures/dsge_and_julia_47_1.pdf>
-Package pdftex.def Info: figures/dsge_and_julia_47_1.pdf  used on input line 13
-85.
-(pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
-<figures/dsge_and_julia_48_1.pdf, id=1191, 578.16pt x 385.44pt>
-File: figures/dsge_and_julia_48_1.pdf Graphic file (type pdf)
-<use figures/dsge_and_julia_48_1.pdf>
-Package pdftex.def Info: figures/dsge_and_julia_48_1.pdf  used on input line 13
-94.
-(pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
- [39 <./figures/dsge_and_julia_47_1.pdf>]
-<figures/dsge_and_julia_49_1.pdf, id=1209, 578.16pt x 385.44pt>
-File: figures/dsge_and_julia_49_1.pdf Graphic file (type pdf)
-<use figures/dsge_and_julia_49_1.pdf>
-Package pdftex.def Info: figures/dsge_and_julia_49_1.pdf  used on input line 14
-03.
-(pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
- [40 <./figures/dsge_and_julia_48_1.pdf> <./figures/dsge_and_julia_49_1.pdf>]
-<figures/dsge_and_julia_50_1.pdf, id=1231, 578.16pt x 385.44pt>
-File: figures/dsge_and_julia_50_1.pdf Graphic file (type pdf)
-<use figures/dsge_and_julia_50_1.pdf>
-Package pdftex.def Info: figures/dsge_and_julia_50_1.pdf  used on input line 14
-12.
-(pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
-<figures/dsge_and_julia_51_1.pdf, id=1232, 578.16pt x 385.44pt>
-File: figures/dsge_and_julia_51_1.pdf Graphic file (type pdf)
-<use figures/dsge_and_julia_51_1.pdf>
-Package pdftex.def Info: figures/dsge_and_julia_51_1.pdf  used on input line 14
-21.
-(pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
- [41 <./figures/dsge_and_julia_50_1.pdf>]
-<figures/dsge_and_julia_52_1.pdf, id=1250, 578.16pt x 385.44pt>
-File: figures/dsge_and_julia_52_1.pdf Graphic file (type pdf)
-<use figures/dsge_and_julia_52_1.pdf>
-Package pdftex.def Info: figures/dsge_and_julia_52_1.pdf  used on input line 14
-30.
-(pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
- [42 <./figures/dsge_and_julia_51_1.pdf> <./figures/dsge_and_julia_52_1.pdf>]
-<figures/dsge_and_julia_53_1.pdf, id=1270, 578.16pt x 385.44pt>
-File: figures/dsge_and_julia_53_1.pdf Graphic file (type pdf)
-<use figures/dsge_and_julia_53_1.pdf>
-Package pdftex.def Info: figures/dsge_and_julia_53_1.pdf  used on input line 14
-67.
-(pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
- [43]
-<figures/dsge_and_julia_54_1.pdf, id=1296, 578.16pt x 385.44pt>
-File: figures/dsge_and_julia_54_1.pdf Graphic file (type pdf)
-<use figures/dsge_and_julia_54_1.pdf>
-Package pdftex.def Info: figures/dsge_and_julia_54_1.pdf  used on input line 14
-76.
-(pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
- [44 <./figures/dsge_and_julia_53_1.pdf> <./figures/dsge_and_julia_54_1.pdf>]
-<figures/dsge_and_julia_55_1.pdf, id=1318, 578.16pt x 385.44pt>
-File: figures/dsge_and_julia_55_1.pdf Graphic file (type pdf)
-<use figures/dsge_and_julia_55_1.pdf>
-Package pdftex.def Info: figures/dsge_and_julia_55_1.pdf  used on input line 14
-85.
-(pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
-<figures/dsge_and_julia_56_1.pdf, id=1319, 578.16pt x 385.44pt>
-File: figures/dsge_and_julia_56_1.pdf Graphic file (type pdf)
-<use figures/dsge_and_julia_56_1.pdf>
-Package pdftex.def Info: figures/dsge_and_julia_56_1.pdf  used on input line 14
-94.
-(pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
- [45 <./figures/dsge_and_julia_55_1.pdf>]
-<figures/dsge_and_julia_57_1.pdf, id=1337, 578.16pt x 385.44pt>
-File: figures/dsge_and_julia_57_1.pdf Graphic file (type pdf)
-<use figures/dsge_and_julia_57_1.pdf>
-Package pdftex.def Info: figures/dsge_and_julia_57_1.pdf  used on input line 15
-03.
-(pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
- [46 <./figures/dsge_and_julia_56_1.pdf> <./figures/dsge_and_julia_57_1.pdf>]
-<figures/dsge_and_julia_58_1.pdf, id=1359, 578.16pt x 385.44pt>
-File: figures/dsge_and_julia_58_1.pdf Graphic file (type pdf)
-<use figures/dsge_and_julia_58_1.pdf>
-Package pdftex.def Info: figures/dsge_and_julia_58_1.pdf  used on input line 15
-12.
-(pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
-<figures/dsge_and_julia_59_1.pdf, id=1360, 578.16pt x 385.44pt>
-File: figures/dsge_and_julia_59_1.pdf Graphic file (type pdf)
-<use figures/dsge_and_julia_59_1.pdf>
-Package pdftex.def Info: figures/dsge_and_julia_59_1.pdf  used on input line 15
-21.
-(pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
- [47 <./figures/dsge_and_julia_58_1.pdf>]
-<figures/dsge_and_julia_60_1.pdf, id=1378, 578.16pt x 385.44pt>
-File: figures/dsge_and_julia_60_1.pdf Graphic file (type pdf)
-<use figures/dsge_and_julia_60_1.pdf>
-Package pdftex.def Info: figures/dsge_and_julia_60_1.pdf  used on input line 15
-30.
-(pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
- [48 <./figures/dsge_and_julia_59_1.pdf> <./figures/dsge_and_julia_60_1.pdf>]
-<figures/dsge_and_julia_61_1.pdf, id=1400, 578.16pt x 385.44pt>
-File: figures/dsge_and_julia_61_1.pdf Graphic file (type pdf)
-<use figures/dsge_and_julia_61_1.pdf>
-Package pdftex.def Info: figures/dsge_and_julia_61_1.pdf  used on input line 15
-39.
-(pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
- (./dsge_julia.bbl)
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1546.
- [49 <./figures/dsge_and_julia_61_1.pdf>]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 1546.
+ [29 <./figures/dsge_and_julia_33_1.pdf>]
+
+Package natbib Warning: Citation `anderson1985' on page 30 undefined on input l
+ine 1243.
+
+[30 <../3regions.png>]
+
+Package natbib Warning: Citation `Strathmann2015a' on page 31 undefined on inpu
+t line 1245.
+
+
+Package natbib Warning: Citation `Strathmann2015a' on page 31 undefined on inpu
+t line 1245.
+
+(./dsge_julia.bbl)
+
+Package natbib Warning: There were undefined citations.
+
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1254.
+[31]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 1254.
  (./dsge_julia.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1546.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1546.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1254.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1254.
 
 Package rerunfilecheck Info: File `dsge_julia.out' has not changed.
-(rerunfilecheck)             Checksum: 4825F1AFCA838CDCA94F873F45F44B4A;771.
+(rerunfilecheck)             Checksum: 83F8C00F2D85ACF598AB23EE9C1FEAF9;689.
 
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1546.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1254.
  ) 
 Here is how much of TeX's memory you used:
- 12789 strings out of 492167
- 189483 string characters out of 6131557
- 535413 words of memory out of 5000000
- 15905 multiletter control sequences out of 15000+600000
- 70704 words of font info for 133 fonts, out of 8000000 for 9000
+ 12120 strings out of 492616
+ 178792 string characters out of 6129480
+ 531795 words of memory out of 5000000
+ 14983 multiletter control sequences out of 15000+600000
+ 79103 words of font info for 144 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 33i,10n,42p,1256b,1789s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/share/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/share/texmf-dist/fo
-nts/enc/dvips/lm/lm-mathit.enc}{/usr/share/texmf-dist/fonts/enc/dvips/lm/lm-mat
-hex.enc}{/usr/share/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/share/tex
-mf-dist/fonts/enc/dvips/lm/lm-ts1.enc}{/usr/share/texmf-dist/fonts/enc/dvips/lm
-/lm-rmtt.enc}</usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><
-/usr/share/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/share/texmf-dist/f
-onts/type1/public/lm/lmex10.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lm
-mi12.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmmi6.pfb></usr/share/tex
-mf-dist/fonts/type1/public/lm/lmmi8.pfb></usr/share/texmf-dist/fonts/type1/publ
-ic/lm/lmr12.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmr17.pfb></usr/sh
-are/texmf-dist/fonts/type1/public/lm/lmr6.pfb></usr/share/texmf-dist/fonts/type
-1/public/lm/lmr8.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmri12.pfb></
-usr/share/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/share/texmf-dist/fo
-nts/type1/public/lm/lmsy6.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmsy
-8.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmtk10.pfb></usr/share/texmf
--dist/fonts/type1/public/lm/lmtt10.pfb></usr/share/texmf-dist/fonts/type1/publi
-c/lm/lmtt12.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmtti10.pfb></usr/
-share/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on dsge_julia.pdf (49 pages, 2720916 bytes).
+ 32i,11n,38p,1256b,1797s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/local/texlive/2019/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/
+texlive/2019/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/20
+19/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc}{/usr/local/texlive/2019/texmf-d
+ist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/local/texlive/2019/texmf-dist/fonts/
+enc/dvips/lm/lm-ts1.enc}{/usr/local/texlive/2019/texmf-dist/fonts/enc/dvips/lm/
+lm-rmtt.enc}</usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/
+cmsy10.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/lm/lmbx12.pfb
+></usr/local/texlive/2019/texmf-dist/fonts/type1/public/lm/lmex10.pfb></usr/loc
+al/texlive/2019/texmf-dist/fonts/type1/public/lm/lmmi12.pfb></usr/local/texlive
+/2019/texmf-dist/fonts/type1/public/lm/lmmi6.pfb></usr/local/texlive/2019/texmf
+-dist/fonts/type1/public/lm/lmmi8.pfb></usr/local/texlive/2019/texmf-dist/fonts
+/type1/public/lm/lmr10.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/publ
+ic/lm/lmr12.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/lm/lmr17
+.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/lm/lmr6.pfb></usr/l
+ocal/texlive/2019/texmf-dist/fonts/type1/public/lm/lmr7.pfb></usr/local/texlive
+/2019/texmf-dist/fonts/type1/public/lm/lmr8.pfb></usr/local/texlive/2019/texmf-
+dist/fonts/type1/public/lm/lmri12.pfb></usr/local/texlive/2019/texmf-dist/fonts
+/type1/public/lm/lmsy10.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/pub
+lic/lm/lmsy6.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/lm/lmsy
+8.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/lm/lmtk10.pfb></us
+r/local/texlive/2019/texmf-dist/fonts/type1/public/lm/lmtt10.pfb></usr/local/te
+xlive/2019/texmf-dist/fonts/type1/public/lm/lmtt12.pfb></usr/local/texlive/2019
+/texmf-dist/fonts/type1/public/lm/lmtti10.pfb></usr/local/texlive/2019/texmf-di
+st/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on dsge_julia.pdf (31 pages, 1014385 bytes).
 PDF statistics:
- 1676 PDF objects out of 1728 (max. 8388607)
- 1476 compressed objects within 15 object streams
- 918 named destinations out of 1000 (max. 500000)
- 18227 words of extra memory for PDF output out of 20736 (max. 10000000)
+ 1246 PDF objects out of 1440 (max. 8388607)
+ 1146 compressed objects within 12 object streams
+ 740 named destinations out of 1000 (max. 500000)
+ 20132 words of extra memory for PDF output out of 20736 (max. 10000000)
 
