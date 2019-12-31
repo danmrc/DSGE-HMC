@@ -277,12 +277,12 @@ function log_like_dsge(par,data;kalman_tol = 1e-10)
     G0[24,16] = 1
     G1[24,8]  = 1
 
-    nobs = 100
+    #nobs = 100
     nobs = size(data,1) # number of observations in data
 
-    pp = size(G1,1) # number of endogenous vars
+    p = size(G1,1) # number of endogenous vars
 
-    pobs = 8
+    #pobs = 8
     pobs = size(data,2)
 
     nshocks = size(Psi,2) # number of shocks
@@ -297,7 +297,7 @@ function log_like_dsge(par,data;kalman_tol = 1e-10)
     #Sig = zeros(p,p)
     #Sig[4,4] = par[6]
 
-    G = zeros(pobs,pp)
+    G = zeros(pobs,p)
     G[1,9]  = 1 # y
     G[2,2]  = 1 # pi(t+1)
     G[3,8]  = 1 # i
@@ -328,12 +328,12 @@ function log_like_dsge(par,data;kalman_tol = 1e-10)
     y_var = reshape(y_var,size(y_var,2)) # transposição de forma a evitar problemas
     #y_var = repeat([1],p)
 
-    x_hat = repeat(y_mean,p) # initial mean of the state
-    x_var = diagm(repeat(y_var,p)) # variance initial of state
+    x_hat = zeros(p) # initial mean of the state
+    x_var = I(p) # variance initial of state
     # x_var = x_var*x_var'
     set_state!(kalman_res,x_hat,x_var)
 
-    fit = zeros(nobs,pobs) # antes de pobs (8 agora) estava 4
+    #fit = zeros(nobs,pobs) # antes de pobs (8 agora) estava 4
 
     llh = zeros(nobs)
 
@@ -341,7 +341,7 @@ function log_like_dsge(par,data;kalman_tol = 1e-10)
 
     for j in 1:(nobs-1)
         med = kalman_res.cur_x_hat
-        fit[j,:] = med
+        #fit[j,:] = med
         varian = kalman_res.cur_sigma
         #println(det(varian))
         eta = data[j+1,:] - kalman_res.G*med #mean loglike
