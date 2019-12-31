@@ -1,5 +1,11 @@
 \begin{thebibliography}{}
 
+\bibitem[\protect\citename{Anderson \& Moore, }1985]{anderson1985}
+Anderson, Gary, \& Moore, George. 1985.
+\newblock {A linear algebraic procedure for solving linear perfect foresight
+  models}.
+\newblock {\em Econ. Lett.}
+
 \bibitem[\protect\citename{Betancourt, }2017]{Betancourt2017}
 Betancourt, Michael. 2017.
 \newblock A conceptual introduction to Hamiltonian Monte Carlo.
@@ -9,12 +15,17 @@ Betancourt, Michael. 2017.
 Canova, Fabio. 2011.
 \newblock {\em {Methods for applied macroeconomic research}}.
 
+\bibitem[\protect\citename{Carvalho \& Vilela, }2015]{carvalho2015}
+Carvalho, Carlos Viana~de, \& Vilela, Andr{\'{e}}~D. 2015.
+\newblock {What lf Brazil Hadn't Floated the Real in 1999?}
+\newblock {\em Brazilian Rev. Econom.}
+
 \bibitem[\protect\citename{Gal{\'{i}}, }2009]{Gali2009}
 Gal{\'{i}}, Jordi. 2009.
 \newblock {\em {Monetary policy, inflation, and the business cycle: An
   introduction to the new Keynesian framework}}.
 
-\bibitem[\protect\citename{Gelman {\em et~al.}, }2014]{Gelman2014}
+\bibitem[\protect\citename{Gelman {\em et~al.\ }\relax, }2014]{Gelman2014}
 Gelman, Andrew, Carlin, John B~B, Stern, Hal S~S, \& Rubin, Donald B~B. 2014.
 \newblock {\em {Bayesian Data Analysis, Third Edition (Texts in Statistical
   Science)}}.
@@ -33,5 +44,13 @@ Miao, Jianjun. 2014.
 Sims, Christopher~A. 2002.
 \newblock {Solving Linear Rational Expectations Models}.
 \newblock {\em Computational Economics}.
+
+\bibitem[\protect\citename{Strathmann {\em et~al.\ }\relax,
+  }2015]{Strathmann2015a}
+Strathmann, Heiko, Sejdinovic, Dino, Livingstone, Samuel, Szabo, Zoltan, \&
+  Gretton, Arthur. 2015.
+\newblock {Gradient-free Hamiltonian Monte Carlo with efficient Kernel
+  exponential families}.
+\newblock {\em In:} {\em Adv. Neural Inf. Process. Syst.}
 
 \end{thebibliography}

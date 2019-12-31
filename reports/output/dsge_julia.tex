@@ -135,17 +135,17 @@ We implement a solver and estimation procedure for Dynamic Stochastic General Eq
 \item We need to write, given a set of parameters and some data, the likelihood. This is not trivial since the model is a VARMA. The Kalman Filter allows us to recover the fundamental shocks from the set of observables.
 
 
-\item The last step is the estimation itself. Due to the large number of parameters and the many restrictions in the parameter space, DSGE are usually estimated by Bayesian methods. We follow this approach and implement the Random Walk Metropolis Hasting (RWMH) algorithm to sample from the posterior. We also estimate using a more modern method for Markov Chain Monte Carlo (MCMC), namely Hamiltonian Monte Carlo (HMC).
+\item The last step is the estimation itself. Due to the large number of parameters and the many restrictions in the parameter space, DSGE are usually estimated by Bayesian methods. We follow this approach and implement the Random Walk Metropolis Hasting (RWMH) algorithm to sample from the posterior. We also discuss using a more modern method for Markov Chain Monte Carlo (MCMC), namely Hamiltonian Monte Carlo (HMC), and the many challenges involved.
 
 \end{enumerate}
 
-Although there is a large literature on solving and estimating DSGEs, tricks that are important from the computational point of view - many regarding floating point arithmetic - are usually not covered. We discuss a number of them and many "work around" that make algorithms work smoothly.
+Although there is a large literature on solving and estimating DSGEs, tricks that are important from the computational point of view - many regarding floating point arithmetic - are usually not covered. We discuss a number of them and many ``work around" that make algorithms work smoothly.
 
-This paper is composed as follows: the first section is this short introduction; the second one explains the model; the third explains the implementation and its various sub components. This section also show each of the components at work with the toy model and provides a quick explanation of HMC and some simulation results comparing RWMH and HMC. The last section concludes.
+This paper is composed as follows: the first section is this short introduction; the second one explains the model; the third explains the implementation and its various sub components. This section also show each of the components at work with the toy model and provides a quick explanation of HMC and the many steps using this new algorithm; section four shows the results for the model in \cite{carvalho2015} using data from Canada; the last section concludes.
 
 Before we start, let us give a short note on developing something like this: this is a large project, with many pieces that can potentially go wrong for a number of reasons - the first is, of course, human error. We are careful in implementing each step and testing it throughout before adding a new layer. Our approach is to always write one of the parts as a function, test it comparing the results with analytical results or whatever the answer is reasonable. An example of the former is our implementation of gensys, in which we can compare the impulse response functions (IRFs) given by the algorithm with the analytical IRFs; an example of the latter is computing the likelihood over a grid: we would expect that there is a local maximum around the true value of the parameters, fixing all other parameters in their true values.
 
-\section{The Model}
+\section{The models}
 \cite{Gali2009} gives a standard three equations New Keynesian DSGE model:
 
 \begin{align} 
@@ -178,8 +178,11 @@ We refer the reader to the book for understanding how to go from the optimizatio
 
 \cite{Gali2009} gives an analytical solution to the model above. We implement this and it will be useful for checking whatever we implemented Gensys right, and it gives us some idea of the size of the numerical errors in the algorithm, if any.
 
+The model in \cite{carvalho2015} is much larger: it considers a small open economy and models the rest of the world as a VAR (Vector Auto Regression). There are 40 parameters, and 22 are estimated. This is a much larger model then the toy model above. However, the same steps that are used 
+
 \section{The software}
-We implement all of this in Julia. Julia balances speed with a relatively easy to understand language: it might be slower than Fortran or C++, however it is much easier to learn. Julia is shipped with many facilities for linear algebra that will be useful. Last, but not least, there is a package system for Julia just like R and a rich ecosystem. We will use many of the packages available to skip some boring but important steps, and just focus on the algorithms that are central to solving and estimating a DSGE. One exception is the Kalman Filter, which we use the implementation by Thomas Sargent.
+
+We implement all of this in Julia. Julia balances speed with a relatively easy to understand language: it might be slower than Fortran or C++, however it is much easier to learn. Julia is shipped with many facilities for linear algebra that will be useful. Last, but not least, there is a package system for Julia just like R and a rich ecosystem. We will use many of the packages available to skip some boring but important steps, and just focus on the algorithms that are central to solving and estimating a DSGE. One exception is the Kalman Filter, which we use the implementation by Thomas Sargent\footnote{The code is in \url{https://github.com/danmrc/DSGE-HMC}}.
 
 \subsection{Gensys}
 
@@ -1247,6 +1250,58 @@ Another option to be explored is to approximate the likelihood function using so
 Following the same idea of approximating the likelihood function with a more friendly distribution - from the point of view of gradients - we tried to approximate the likelihood function using neural networks. This was not a great success, mainly because the approximation was rather poor and training and building the networks are a cumbersome process. On the bright side, this reduced the time of running the procedure to 4 hours, which is still above the RWMH.
 
 Hamiltonian Monte Carlo is being used successfully in other areas. However, since it depends of the gradient of the likelihood function  - a difficult object in the case of a DSGE model - we have to find a way around it to compute. There are a number of ways to work around this problem: either change the solver for the linear rational expectations systems or find a way to compute the gradient using a ``proxy" for the function. Although the first results are discouraging, we have some motives to proceed: mainly that HMC is more suitable to large dimension problems than RWMH, and that it might explore the distribution faster than RWMH for models with lots of parameters.   
+
+\section{A larger model}
+
+We know implement the model in \cite{carvalho2015}. This model has an external sector, consumption habits, indexation and lots of other features. We use data from Canada instead of Brazil, and so we do not give much attention to regime change. We use quarterly data from 1991 to 2011. We describe the data in Table \ref{tab:data}
+
+\begin{table}[!h]
+	\centering
+	\caption{Data Series}
+	\label{tab:data}
+	\begin{tabular}{lll}
+		\hline
+		& Series & Source\\
+		\hline
+		$y_t$ & GDP at market prices, seasonally adjusted, quarterly  & Statistics Canada\\
+		$\pi_t$ & Consumer Price Index (CPI), all-item, monthly & Statistics Canada\\
+		$i_t$ & Overnight interest rates & FRED St Louis \\
+		$tot_t$ & Terms of Trade, Index, Quarterly & Statistics Canada \\
+		$s_t$ & Exchange rate with the US, Canadian/ US dollar, Monthly & FRED St Louis \\
+		$y^{*}_t$ & USA Real GDP, seasonally adjusted, quarterly & FRED St Louis\\
+		$\pi^{*}_t$ & 
+		Consumer Price Index for All Urban Consumers: All Items, quarterly & FRED St Louis\\
+		$i^{*}_t$ & USA 5-Year Treasury yield - constant maturity, quarterly & FRED St Louis\\
+		\hline
+	\end{tabular}
+\end{table}
+
+Monthly data was converted to quarterly frequency using end of period averages for the exchange rate and cumulating over the quarter for interest rates and inflation. This is consistent with \cite{carvalho2015}. For terms of trade, we only had data for the quarterly frequency. We also passed log and used the Hodrick Prescott filter for the GDP, with $\lambda = 1600$.
+
+We run a chain of a million iterations and throw the first half away. The priors used are described on \ref{tab:prioris}.
+
+\begin{table}[!h]
+	\centering
+	\caption{Prior distribution of parameters}
+	\label{tab:prioris}
+	\footnotesize
+	\begin{tabular}{ccccccccc}
+		\hline
+		Parameter & Distribution & Mean & Std Dev & & Parameter & Distribution & Mean & Std Dev \\ \cline{1-4} \cline{6-9}
+		$h$           & Beta & 0.65 & 0.20 & & $\rho_\phi$     & Beta      & 0.50 & 0.25 \\
+		$\sigma$      & Gamma & 1.14 & 0.30 & & $\sigma_a$      & Inv. Gamma & 1.00 & 0.75 \\
+		$\eta$        & Gamma & 1.00 & 0.50 & & $\sigma_\gamma$ & Inv.Gamma & 1.00 & 0.75 \\
+		$\delta_D$    & Beta & 0.50 & 0.20 & & $\sigma_{cp}$   & Inv. Gamma & 1.00 & 0.75 \\
+		$\theta_D$    & Beta & 0.65 & 0.10 & & $\sigma_\phi$   & Inv. Gamma & 1.00 & 0.75 \\
+		$\delta_I$    & Beta & 0.50 & 0.20 & & $\rho_1$        & Beta      & 0.60 & 0.15 \\
+		$\theta_I$    & Beta & 0.65 & 0.10 & & $\rho_2$        & Beta      & 0.60 & 0.15 \\
+		$\chi$        & Gamma & 0.02 & 0.01 & & $\lambda_\pi$   & Gamma      & 2.13 & 0.50 \\
+		$\rho_a$      & Beta & 0.50 & 0.25 & & $\lambda_y$     & Gamma      & 0.25 & 0.10 \\
+		$\rho_\gamma$ & Beta & 0.50 & 0.25 & & $\lambda_s$     & Gamma      & 1.50 & 0.50 \\
+		$\rho_{cp}$   & Beta & 0.50 & 0.25 & & $\sigma_i$      & Inv. Gamma  & 1.00 & 0.75 \\
+		\hline
+	\end{tabular}
+\end{table}
 
 \bibliographystyle{authordate1}
 \bibliography{DSGE}
