@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.12.20)  30 DEC 2019 21:28
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.12.20)  30 DEC 2019 23:43
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -319,7 +319,27 @@ Package: natbib 2010/09/13 8.31b (PWD, AO)
 LaTeX Info: Redefining \cite on input line 694.
 \c@NAT@ctr=\count115
 )
-Package hyperref Info: Option `colorlinks' set `true' on input line 21.
+(/usr/local/texlive/2019/texmf-dist/tex/latex/subfigure/subfigure.sty
+Package: subfigure 2002/03/15 v2.1.5 subfigure package
+\subfigtopskip=\skip50
+\subfigcapskip=\skip51
+\subfigcaptopadj=\dimen127
+\subfigbottomskip=\skip52
+\subfigcapmargin=\dimen128
+\subfiglabelskip=\skip53
+\c@subfigure=\count116
+\c@lofdepth=\count117
+\c@subtable=\count118
+\c@lotdepth=\count119
+
+****************************************
+* Local config file subfigure.cfg used *
+****************************************
+(/usr/local/texlive/2019/texmf-dist/tex/latex/subfigure/subfigure.cfg)
+\subfig@top=\skip54
+\subfig@bottom=\skip55
+)
+Package hyperref Info: Option `colorlinks' set `true' on input line 23.
 
 (/usr/local/texlive/2019/texmf-dist/tex/latex/upquote/upquote.sty
 Package: upquote 2012/04/19 v1.3 upright-quote and grave-accent glyphs in verba
@@ -483,23 +503,23 @@ Package textcomp Info: Setting ptmx sub-encoding to TS1/4 on input line 408.
 Package textcomp Info: Setting ptmj sub-encoding to TS1/4 on input line 409.
 ))
 (/usr/local/texlive/2019/texmf-dist/tex/latex/listings/listings.sty
-\lst@mode=\count116
+\lst@mode=\count120
 \lst@gtempboxa=\box29
 \lst@token=\toks23
-\lst@length=\count117
-\lst@currlwidth=\dimen127
-\lst@column=\count118
-\lst@pos=\count119
-\lst@lostspace=\dimen128
-\lst@width=\dimen129
-\lst@newlines=\count120
-\lst@lineno=\count121
-\lst@maxwidth=\dimen130
+\lst@length=\count121
+\lst@currlwidth=\dimen129
+\lst@column=\count122
+\lst@pos=\count123
+\lst@lostspace=\dimen130
+\lst@width=\dimen131
+\lst@newlines=\count124
+\lst@lineno=\count125
+\lst@maxwidth=\dimen132
 
 (/usr/local/texlive/2019/texmf-dist/tex/latex/listings/lstmisc.sty
 File: lstmisc.sty 2019/02/27 1.8b (Carsten Heinz)
-\c@lstnumber=\count122
-\lst@skipnumbers=\count123
+\c@lstnumber=\count126
+\lst@skipnumbers=\count127
 \lst@framebox=\box30
 )
 (/usr/local/texlive/2019/texmf-dist/tex/latex/listings/listings.cfg
@@ -527,28 +547,28 @@ Package xcolor Info: Model `wave' substituted by `hsb' on input line 1371.
 (./dsge_julia.aux)
 \openout1 = `dsge_julia.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 124.
-LaTeX Font Info:    ... okay on input line 124.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 124.
-LaTeX Font Info:    ... okay on input line 124.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 124.
-LaTeX Font Info:    ... okay on input line 124.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 124.
-LaTeX Font Info:    ... okay on input line 124.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 124.
-LaTeX Font Info:    ... okay on input line 124.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 124.
-LaTeX Font Info:    ... okay on input line 124.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 124.
-LaTeX Font Info:    ... okay on input line 124.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 124.
-LaTeX Font Info:    Try loading font information for TS1+cmr on input line 124.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 126.
+LaTeX Font Info:    ... okay on input line 126.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 126.
+LaTeX Font Info:    ... okay on input line 126.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 126.
+LaTeX Font Info:    ... okay on input line 126.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 126.
+LaTeX Font Info:    ... okay on input line 126.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 126.
+LaTeX Font Info:    ... okay on input line 126.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 126.
+LaTeX Font Info:    ... okay on input line 126.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 126.
+LaTeX Font Info:    ... okay on input line 126.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 126.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 126.
 
  (/usr/local/texlive/2019/texmf-dist/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 124.
-LaTeX Font Info:    Try loading font information for OT1+lmr on input line 124.
+LaTeX Font Info:    ... okay on input line 126.
+LaTeX Font Info:    Try loading font information for OT1+lmr on input line 126.
 
  (/usr/local/texlive/2019/texmf-dist/tex/latex/lm/ot1lmr.fd
 File: ot1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
@@ -591,16 +611,16 @@ File: ot1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 
 (/usr/local/texlive/2019/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count124
-\scratchdimen=\dimen131
+\scratchcounter=\count128
+\scratchdimen=\dimen133
 \scratchbox=\box31
-\nofMPsegments=\count125
-\nofMParguments=\count126
+\nofMPsegments=\count129
+\nofMParguments=\count130
 \everyMPshowfont=\toks24
-\MPscratchCnt=\count127
-\MPscratchDim=\dimen132
-\MPnumerator=\count128
-\makeMPintoPDFobject=\count129
+\MPscratchCnt=\count131
+\MPscratchDim=\dimen134
+\MPnumerator=\count132
+\makeMPintoPDFobject=\count133
 \everyMPtoPDFconversion=\toks25
 ) (/usr/local/texlive/2019/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
 Package: epstopdf-base 2016/05/15 v2.6 Base part for package epstopdf
@@ -619,7 +639,7 @@ G,.JBIG2,.JB2,.eps]
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-LaTeX Info: Redefining \microtypecontext on input line 124.
+LaTeX Info: Redefining \microtypecontext on input line 126.
 Package microtype Info: Generating PDF output.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using default protrusion set `alltext'.
@@ -635,7 +655,7 @@ File: mt-cmr.cfg 2013/05/19 v2.2 microtype config. file: Computer Modern Roman
 (RS)
 )
 \AtBeginShipoutBox=\box32
-Package hyperref Info: Link coloring ON on input line 124.
+Package hyperref Info: Link coloring ON on input line 126.
 
 (/usr/local/texlive/2019/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
@@ -643,42 +663,42 @@ Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
 (/usr/local/texlive/2019/texmf-dist/tex/generic/oberdiek/gettitlestring.sty
 Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 )
-\c@section@level=\count130
+\c@section@level=\count134
 )
-LaTeX Info: Redefining \ref on input line 124.
-LaTeX Info: Redefining \pageref on input line 124.
-LaTeX Info: Redefining \nameref on input line 124.
+LaTeX Info: Redefining \ref on input line 126.
+LaTeX Info: Redefining \pageref on input line 126.
+LaTeX Info: Redefining \nameref on input line 126.
 
 (./dsge_julia.out) (./dsge_julia.out)
 \@outlinefile=\write3
 \openout3 = `dsge_julia.out'.
 
-\c@lstlisting=\count131
-LaTeX Font Info:    Try loading font information for OML+lmm on input line 127.
+\c@lstlisting=\count135
+LaTeX Font Info:    Try loading font information for OML+lmm on input line 129.
 
 
 (/usr/local/texlive/2019/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OMS+lmsy on input line 127
+LaTeX Font Info:    Try loading font information for OMS+lmsy on input line 129
 .
 
 (/usr/local/texlive/2019/texmf-dist/tex/latex/lm/omslmsy.fd
 File: omslmsy.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OMX+lmex on input line 127
+LaTeX Font Info:    Try loading font information for OMX+lmex on input line 129
 .
 
 (/usr/local/texlive/2019/texmf-dist/tex/latex/lm/omxlmex.fd
 File: omxlmex.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <14.4> on input line 127.
+(Font)              <14.4> on input line 129.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 127.
+(Font)              <10> on input line 129.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 127.
-LaTeX Font Info:    Try loading font information for U+msa on input line 127.
+(Font)              <7> on input line 129.
+LaTeX Font Info:    Try loading font information for U+msa on input line 129.
 
 (/usr/local/texlive/2019/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
@@ -686,7 +706,7 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 (/usr/local/texlive/2019/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 127.
+LaTeX Font Info:    Try loading font information for U+msb on input line 129.
 
 (/usr/local/texlive/2019/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
@@ -694,24 +714,24 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 (/usr/local/texlive/2019/texmf-dist/tex/latex/microtype/mt-msb.cfg
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
-LaTeX Font Info:    Try loading font information for TS1+lmr on input line 127.
+LaTeX Font Info:    Try loading font information for TS1+lmr on input line 129.
 
 
 (/usr/local/texlive/2019/texmf-dist/tex/latex/lm/ts1lmr.fd
 File: ts1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 127.
+(Font)              <5> on input line 129.
  [1
 
 {/usr/local/texlive/2019/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <12> on input line 151.
+(Font)              <12> on input line 153.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 151.
+(Font)              <8> on input line 153.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6> on input line 151.
-LaTeX Font Info:    Try loading font information for OT1+lmtt on input line 161
+(Font)              <6> on input line 153.
+LaTeX Font Info:    Try loading font information for OT1+lmtt on input line 163
 .
 
 (/usr/local/texlive/2019/texmf-dist/tex/latex/lm/ot1lmtt.fd
@@ -722,18 +742,18 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 LaTeX Font Info:    Font shape `OT1/lmtt/bx/n' in size <10> not available
-(Font)              Font shape `OT1/lmtt/b/n' tried instead on input line 162.
+(Font)              Font shape `OT1/lmtt/b/n' tried instead on input line 164.
  [2] [3]
-LaTeX Font Info:    Try loading font information for OMS+lmtt on input line 237
+LaTeX Font Info:    Try loading font information for OMS+lmtt on input line 239
 .
-LaTeX Font Info:    No file OMSlmtt.fd. on input line 237.
+LaTeX Font Info:    No file OMSlmtt.fd. on input line 239.
 
 
 LaTeX Font Warning: Font shape `OMS/lmtt/m/n' undefined
 (Font)              using `OMS/cmsy/m/n' instead
-(Font)              for symbol `textbackslash' on input line 237.
+(Font)              for symbol `textbackslash' on input line 239.
 
-LaTeX Font Info:    Try loading font information for TS1+lmtt on input line 237
+LaTeX Font Info:    Try loading font information for TS1+lmtt on input line 239
 .
 (/usr/local/texlive/2019/texmf-dist/tex/latex/lm/ts1lmtt.fd
 File: ts1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
@@ -747,37 +767,37 @@ Package microtype Info: Character `texttrademark ' is missing
 (microtype)             Ignoring protrusion settings for this character.
  [4] [5]
 LaTeX Font Info:    Font shape `TS1/lmtt/bx/n' in size <10> not available
-(Font)              Font shape `TS1/lmtt/b/n' tried instead on input line 394.
+(Font)              Font shape `TS1/lmtt/b/n' tried instead on input line 396.
 Package microtype Info: Character `texttrademark ' is missing
 (microtype)             in font `TS1/lmtt/b/n/10'.
 (microtype)             Ignoring protrusion settings for this character.
  [6]
 [7]
-<figures/dsge_and_julia_11_1.pdf, id=290, 578.16pt x 385.44pt>
+<figures/dsge_and_julia_11_1.pdf, id=286, 578.16pt x 385.44pt>
 File: figures/dsge_and_julia_11_1.pdf Graphic file (type pdf)
 <use figures/dsge_and_julia_11_1.pdf>
-Package pdftex.def Info: figures/dsge_and_julia_11_1.pdf  used on input line 51
-8.
+Package pdftex.def Info: figures/dsge_and_julia_11_1.pdf  used on input line 52
+0.
 (pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
  [8]
 <figures/dsge_and_julia_12_1.pdf, id=326, 578.16pt x 385.44pt>
 File: figures/dsge_and_julia_12_1.pdf Graphic file (type pdf)
 <use figures/dsge_and_julia_12_1.pdf>
 Package pdftex.def Info: figures/dsge_and_julia_12_1.pdf  used on input line 52
-6.
+8.
 (pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
  [9 <./figures/dsge_and_julia_11_1.pdf> <./figures/dsge_and_julia_12_1.pdf>]
 <figures/dsge_and_julia_13_1.pdf, id=344, 578.16pt x 385.44pt>
 File: figures/dsge_and_julia_13_1.pdf Graphic file (type pdf)
 <use figures/dsge_and_julia_13_1.pdf>
 Package pdftex.def Info: figures/dsge_and_julia_13_1.pdf  used on input line 53
-4.
+6.
 (pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
 <figures/dsge_and_julia_14_1.pdf, id=345, 578.16pt x 385.44pt>
 File: figures/dsge_and_julia_14_1.pdf Graphic file (type pdf)
 <use figures/dsge_and_julia_14_1.pdf>
 Package pdftex.def Info: figures/dsge_and_julia_14_1.pdf  used on input line 54
-2.
+4.
 (pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
  [10 <./figures/dsge_and_julia_13_1.pdf> <./figures/dsge_and_julia_14_1.pdf>] [
 11] [12]
@@ -788,11 +808,11 @@ Package microtype Info: Character `texttrademark ' is missing
 <figures/dsge_and_julia_17_1.pdf, id=466, 578.16pt x 385.44pt>
 File: figures/dsge_and_julia_17_1.pdf Graphic file (type pdf)
 <use figures/dsge_and_julia_17_1.pdf>
-Package pdftex.def Info: figures/dsge_and_julia_17_1.pdf  used on input line 72
-9.
+Package pdftex.def Info: figures/dsge_and_julia_17_1.pdf  used on input line 73
+1.
 (pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
  [14] [15 <./figures/dsge_and_julia_17_1.pdf>]
-Overfull \hbox (60.41731pt too wide) detected at line 766
+Overfull \hbox (60.41731pt too wide) detected at line 768
 \OML/lmm/m/it/12 r \OT1/lmr/m/n/12 = []\OMS/lmsy/m/n/12 f\OT1/lmr/m/n/12 0\OML/
 lmm/m/it/12 ; []\OT1/lmr/m/n/12 (\OML/lmm/m/it/12 `\OT1/lmr/m/n/12 (\OML/lmm/m/
 it/12 y\OMS/lmsy/m/n/12 j\OT1/lmr/m/n/12 ^^B[])) + [](\OML/lmm/m/it/12 p\OT1/lm
@@ -804,7 +824,7 @@ lmr/m/n/12 (^^B[]\OMS/lmsy/m/n/12 j\OT1/lmr/m/n/12 ^^B[]))\OMS/lmsy/m/n/12 g
  []
 
 [16]
-Overfull \hbox (688.67632pt too wide) in paragraph at lines 807--808
+Overfull \hbox (688.67632pt too wide) in paragraph at lines 809--810
 []\OT1/lmtt/m/n/10 llh[]\OT1/lmtt/b/n/10 +[][]\OT1/lmtt/m/n/10 logpdf[](prior[]
 bet,bet)[]\OT1/lmtt/b/n/10 +[][]\OT1/lmtt/m/n/10 logpdf[](prior[]epsilon,epsilo
 n)[]\OT1/lmtt/b/n/10 +[][]\OT1/lmtt/m/n/10 logpdf[](prior[]theta,theta)[]\OT1/l
@@ -889,30 +909,171 @@ Overfull \hbox (32.89702pt too wide) in paragraph at lines 1262--1277
  [][] 
  []
 
-[31] (./dsge_julia.bbl)
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1309.
- [32]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 1309.
+[31]
+<figures/carlos_mcmc_2_1.pdf, id=1045, 578.16pt x 385.44pt>
+File: figures/carlos_mcmc_2_1.pdf Graphic file (type pdf)
+<use figures/carlos_mcmc_2_1.pdf>
+Package pdftex.def Info: figures/carlos_mcmc_2_1.pdf  used on input line 1344.
+(pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
+<figures/carlos_mcmc_3_1.pdf, id=1046, 578.16pt x 385.44pt>
+File: figures/carlos_mcmc_3_1.pdf Graphic file (type pdf)
+<use figures/carlos_mcmc_3_1.pdf>
+Package pdftex.def Info: figures/carlos_mcmc_3_1.pdf  used on input line 1353.
+(pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
+<figures/carlos_mcmc_4_1.pdf, id=1047, 578.16pt x 385.44pt>
+File: figures/carlos_mcmc_4_1.pdf Graphic file (type pdf)
+<use figures/carlos_mcmc_4_1.pdf>
+Package pdftex.def Info: figures/carlos_mcmc_4_1.pdf  used on input line 1362.
+(pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
+<figures/carlos_mcmc_5_1.pdf, id=1048, 578.16pt x 385.44pt>
+File: figures/carlos_mcmc_5_1.pdf Graphic file (type pdf)
+<use figures/carlos_mcmc_5_1.pdf>
+Package pdftex.def Info: figures/carlos_mcmc_5_1.pdf  used on input line 1371.
+(pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
+<figures/carlos_mcmc_6_1.pdf, id=1049, 578.16pt x 385.44pt>
+File: figures/carlos_mcmc_6_1.pdf Graphic file (type pdf)
+<use figures/carlos_mcmc_6_1.pdf>
+Package pdftex.def Info: figures/carlos_mcmc_6_1.pdf  used on input line 1380.
+(pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
+<figures/carlos_mcmc_7_1.pdf, id=1050, 578.16pt x 385.44pt>
+File: figures/carlos_mcmc_7_1.pdf Graphic file (type pdf)
+<use figures/carlos_mcmc_7_1.pdf>
+Package pdftex.def Info: figures/carlos_mcmc_7_1.pdf  used on input line 1389.
+(pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
+<figures/carlos_mcmc_8_1.pdf, id=1051, 578.16pt x 385.44pt>
+File: figures/carlos_mcmc_8_1.pdf Graphic file (type pdf)
+<use figures/carlos_mcmc_8_1.pdf>
+Package pdftex.def Info: figures/carlos_mcmc_8_1.pdf  used on input line 1398.
+(pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
+<figures/carlos_mcmc_9_1.pdf, id=1052, 578.16pt x 385.44pt>
+File: figures/carlos_mcmc_9_1.pdf Graphic file (type pdf)
+<use figures/carlos_mcmc_9_1.pdf>
+Package pdftex.def Info: figures/carlos_mcmc_9_1.pdf  used on input line 1407.
+(pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
+<figures/carlos_mcmc_10_1.pdf, id=1053, 578.16pt x 385.44pt>
+File: figures/carlos_mcmc_10_1.pdf Graphic file (type pdf)
+<use figures/carlos_mcmc_10_1.pdf>
+Package pdftex.def Info: figures/carlos_mcmc_10_1.pdf  used on input line 1416.
+
+(pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
+<figures/carlos_mcmc_11_1.pdf, id=1054, 578.16pt x 385.44pt>
+File: figures/carlos_mcmc_11_1.pdf Graphic file (type pdf)
+<use figures/carlos_mcmc_11_1.pdf>
+Package pdftex.def Info: figures/carlos_mcmc_11_1.pdf  used on input line 1425.
+
+(pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
+<figures/carlos_mcmc_12_1.pdf, id=1055, 578.16pt x 385.44pt>
+File: figures/carlos_mcmc_12_1.pdf Graphic file (type pdf)
+<use figures/carlos_mcmc_12_1.pdf>
+Package pdftex.def Info: figures/carlos_mcmc_12_1.pdf  used on input line 1434.
+
+(pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
+<figures/carlos_mcmc_13_1.pdf, id=1056, 578.16pt x 385.44pt>
+File: figures/carlos_mcmc_13_1.pdf Graphic file (type pdf)
+<use figures/carlos_mcmc_13_1.pdf>
+Package pdftex.def Info: figures/carlos_mcmc_13_1.pdf  used on input line 1443.
+
+(pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
+<figures/carlos_mcmc_14_1.pdf, id=1057, 578.16pt x 385.44pt>
+File: figures/carlos_mcmc_14_1.pdf Graphic file (type pdf)
+<use figures/carlos_mcmc_14_1.pdf>
+Package pdftex.def Info: figures/carlos_mcmc_14_1.pdf  used on input line 1452.
+
+(pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
+<figures/carlos_mcmc_15_1.pdf, id=1058, 578.16pt x 385.44pt>
+File: figures/carlos_mcmc_15_1.pdf Graphic file (type pdf)
+<use figures/carlos_mcmc_15_1.pdf>
+Package pdftex.def Info: figures/carlos_mcmc_15_1.pdf  used on input line 1461.
+
+(pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
+<figures/carlos_mcmc_16_1.pdf, id=1059, 578.16pt x 385.44pt>
+File: figures/carlos_mcmc_16_1.pdf Graphic file (type pdf)
+<use figures/carlos_mcmc_16_1.pdf>
+Package pdftex.def Info: figures/carlos_mcmc_16_1.pdf  used on input line 1470.
+
+(pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
+<figures/carlos_mcmc_17_1.pdf, id=1060, 578.16pt x 385.44pt>
+File: figures/carlos_mcmc_17_1.pdf Graphic file (type pdf)
+<use figures/carlos_mcmc_17_1.pdf>
+Package pdftex.def Info: figures/carlos_mcmc_17_1.pdf  used on input line 1479.
+
+(pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
+<figures/carlos_mcmc_18_1.pdf, id=1061, 578.16pt x 385.44pt>
+File: figures/carlos_mcmc_18_1.pdf Graphic file (type pdf)
+<use figures/carlos_mcmc_18_1.pdf>
+Package pdftex.def Info: figures/carlos_mcmc_18_1.pdf  used on input line 1488.
+
+(pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
+<figures/carlos_mcmc_19_1.pdf, id=1062, 578.16pt x 385.44pt>
+File: figures/carlos_mcmc_19_1.pdf Graphic file (type pdf)
+<use figures/carlos_mcmc_19_1.pdf>
+Package pdftex.def Info: figures/carlos_mcmc_19_1.pdf  used on input line 1497.
+
+(pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
+<figures/carlos_mcmc_20_1.pdf, id=1063, 578.16pt x 385.44pt>
+File: figures/carlos_mcmc_20_1.pdf Graphic file (type pdf)
+<use figures/carlos_mcmc_20_1.pdf>
+Package pdftex.def Info: figures/carlos_mcmc_20_1.pdf  used on input line 1506.
+
+(pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
+<figures/carlos_mcmc_21_1.pdf, id=1064, 578.16pt x 385.44pt>
+File: figures/carlos_mcmc_21_1.pdf Graphic file (type pdf)
+<use figures/carlos_mcmc_21_1.pdf>
+Package pdftex.def Info: figures/carlos_mcmc_21_1.pdf  used on input line 1515.
+
+(pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
+<figures/carlos_mcmc_22_1.pdf, id=1065, 578.16pt x 385.44pt>
+File: figures/carlos_mcmc_22_1.pdf Graphic file (type pdf)
+<use figures/carlos_mcmc_22_1.pdf>
+Package pdftex.def Info: figures/carlos_mcmc_22_1.pdf  used on input line 1524.
+
+(pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
+<figures/carlos_mcmc_23_1.pdf, id=1066, 578.16pt x 385.44pt>
+File: figures/carlos_mcmc_23_1.pdf Graphic file (type pdf)
+<use figures/carlos_mcmc_23_1.pdf>
+Package pdftex.def Info: figures/carlos_mcmc_23_1.pdf  used on input line 1533.
+
+(pdftex.def)             Requested size: 469.47046pt x 312.98102pt.
+ [32 <./figures/carlos_mcmc_2_1.pdf>] [33 <./figures/carlos_mcmc_3_1.pdf>]
+[34 <./figures/carlos_mcmc_4_1.pdf> <./figures/carlos_mcmc_5_1.pdf>] [35 <./fig
+ures/carlos_mcmc_6_1.pdf> <./figures/carlos_mcmc_7_1.pdf>] [36 <./figures/carlo
+s_mcmc_8_1.pdf> <./figures/carlos_mcmc_9_1.pdf>] [37 <./figures/carlos_mcmc_10_
+1.pdf> <./figures/carlos_mcmc_11_1.pdf>] [38 <./figures/carlos_mcmc_12_1.pdf> <
+./figures/carlos_mcmc_13_1.pdf>] [39 <./figures/carlos_mcmc_14_1.pdf> <./figure
+s/carlos_mcmc_15_1.pdf>] [40 <./figures/carlos_mcmc_16_1.pdf> <./figures/carlos
+_mcmc_17_1.pdf>] [41 <./figures/carlos_mcmc_18_1.pdf> <./figures/carlos_mcmc_19
+_1.pdf>] [42 <./figures/carlos_mcmc_20_1.pdf> <./figures/carlos_mcmc_21_1.pdf>]
+[43 <./figures/carlos_mcmc_22_1.pdf> <./figures/carlos_mcmc_23_1.pdf>]
+(./dsge_julia.bbl [44])
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1550.
+ [45]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 1550.
  (./dsge_julia.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1309.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1309.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1550.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1550.
 
-Package rerunfilecheck Info: File `dsge_julia.out' has not changed.
-(rerunfilecheck)             Checksum: 0F7A537B3ED64B0B4770C600E50435DF;740.
 
+
+Package rerunfilecheck Warning: File `dsge_julia.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+Package rerunfilecheck Info: Checksums for `dsge_julia.out':
+(rerunfilecheck)             Before: 0F7A537B3ED64B0B4770C600E50435DF;740
+(rerunfilecheck)             After:  B65067BC4CEC2A19616B5AB1A00F32EC;786.
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1309.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1550.
  ) 
 Here is how much of TeX's memory you used:
- 12139 strings out of 492616
- 179096 string characters out of 6129480
- 532045 words of memory out of 5000000
- 14996 multiletter control sequences out of 15000+600000
+ 12462 strings out of 492616
+ 185774 string characters out of 6129480
+ 534749 words of memory out of 5000000
+ 15254 multiletter control sequences out of 15000+600000
  78976 words of font info for 143 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 32i,11n,38p,1256b,1797s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 32i,11n,38p,1256b,1822s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2019/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/lo
 cal/texlive/2019/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/20
 19/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc}{/usr/local/texlive/2019/texmf-d
@@ -939,10 +1100,10 @@ texmf-dist/fonts/type1/public/lm/lmtt10.pfb></usr/local/texlive/2019/texmf-dist
 /fonts/type1/public/lm/lmtt12.pfb></usr/local/texlive/2019/texmf-dist/fonts/typ
 e1/public/lm/lmtti10.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public
 /amsfonts/symbols/msbm10.pfb>
-Output written on dsge_julia.pdf (32 pages, 1049791 bytes).
+Output written on dsge_julia.pdf (45 pages, 1641470 bytes).
 PDF statistics:
- 1290 PDF objects out of 1440 (max. 8388607)
- 1187 compressed objects within 12 object streams
- 748 named destinations out of 1000 (max. 500000)
- 20140 words of extra memory for PDF output out of 20736 (max. 10000000)
+ 1512 PDF objects out of 1728 (max. 8388607)
+ 1328 compressed objects within 14 object streams
+ 785 named destinations out of 1000 (max. 500000)
+ 20250 words of extra memory for PDF output out of 20736 (max. 10000000)
 

@@ -8,6 +8,8 @@
 \usepackage{microtype}
 \usepackage{hyperref}
 \usepackage{natbib}
+\usepackage{subfigure}
+
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{1.2ex}
 
@@ -178,7 +180,7 @@ We refer the reader to the book for understanding how to go from the optimizatio
 
 \cite{Gali2009} gives an analytical solution to the model above. We implement this and it will be useful for checking whatever we implemented Gensys right, and it gives us some idea of the size of the numerical errors in the algorithm, if any.
 
-The model in \cite{carvalho2015} is much larger: it considers a small open economy and models the rest of the world as a VAR (Vector Auto Regression). There are 40 parameters, and 22 are estimated. This is a much larger model then the toy model above. However, the same steps that are used 
+The model in \cite{carvalho2015} is much larger: it considers a small open economy and models the rest of the world as a VAR (Vector Auto Regression). There are 40 parameters, and 22 are estimated. This is a much larger model then the toy model above. However, the same steps that are used for the toy model are used in this big model. We implement everything for the toy model and make it easy to generalize so it can be used in the larger model. This helps finding, tracking and solving bugs. If we started with a 40 parameters model it would take much longer to find the bugs and solve them\cite{}.
 
 \section{The software}
 
@@ -1067,8 +1069,6 @@ And for the second step, the algorithm has too many ifs and whiles:
 
 Finally, the step that generates the distribution, the third one:
 
-
-
 \begin{lstlisting}
 (*@\HLJLn{j}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{2}@*)
 (*@\HLJLn{rejec}@*) (*@\HLJLoB{=}@*) (*@\HLJLni{0}@*)
@@ -1302,6 +1302,247 @@ We run a chain of a million iterations and throw the first half away. The priors
 		\hline
 	\end{tabular}
 \end{table}
+
+We present the graphics for the posterior of the 22 parameters in Figure \ref{fig:posteriors_1} to Figure 23. Clearly some parameters seem a bit off, like those for $\delta_D$ and for $\theta_D$. Table 3 show the posterior mean and standard deviation  of the parameters.
+
+\begin{table}
+	\label{tab:posterior}
+	\caption{Posterior mean and standard deviation}
+\begin{tabular}{c|c|c}
+	Parameter & Mean & Std Dev\\
+	\hline
+	h & $0.801$ & $0.054$\\
+	$\sigma$ & $1.306$ & $0.05$\\
+	$\eta$ & $0.225$ & $0.057$\\
+	$\delta_D$ &$0.545$ & $0.183$\\
+	$\theta_D$ &$0.67$ & $0.116$\\
+	$\delta_I$ &$0.624$ & $0.155$\\
+	$\theta_I$ &$0.701$ & $0.099$\\
+	$\chi$ &$0.011$ & $0.006$\\
+	$\rho_a$ &$0.583$ & $0.167$\\
+	$\rho_\gamma$ &$0.326$ & $0.198$\\
+	$\rho_{cp}$ &$0.778$ & $0.136$\\
+	$\rho_\phi$ &$0.769$ & $0.194$\\
+	$\sigma_a$ &$1.604$ & $1.655$\\
+	$\sigma_\gamma$ &$2.414$ & $1.571$\\
+	$\sigma_{cp}$ &$1.993$ & $1.268$\\
+	$\sigma_\phi$ &$3.255$ & $2.402$\\
+	$\rho_1$ &$0.432$ & $0.098$\\
+	$\rho_2$ &$0.452$ & $0.09$\\
+	$\lambda_\pi$ & $2.122$ & $0.5$\\
+	$\lambda_y$ &$0.229$ & $0.102$\\
+	$\lambda_s$ &$1.592$ & $0.518$\\
+	$\sigma_i$ &$6.645$ & $3.261$\\
+	\end{tabular}
+\end{table}
+
+\begin{figure}
+
+\label{fig:posteriors_1}
+\caption{Posteriors of estimated parameters}
+
+\includegraphics[width=\linewidth]{figures/carlos_mcmc_2_1.pdf}
+
+\end{figure}
+
+\begin{figure}
+	
+	\label{fig:posteriors_2}
+	\caption{Posteriors of estimated parameters}
+
+\includegraphics[width=\linewidth]{figures/carlos_mcmc_3_1.pdf}
+
+\end{figure}
+
+\begin{figure}
+	
+	\label{fig:posteriors_3}
+	\caption{Posteriors of estimated parameters}
+
+\includegraphics[width=\linewidth]{figures/carlos_mcmc_4_1.pdf}
+
+\end{figure}
+
+\begin{figure}
+	
+	\label{fig:posteriors_4}
+	\caption{Posteriors of estimated parameters}
+
+\includegraphics[width=\linewidth]{figures/carlos_mcmc_5_1.pdf}
+
+\end{figure}
+
+\begin{figure}
+	
+	\label{fig:posteriors_5}
+	\caption{Posteriors of estimated parameters}
+
+\includegraphics[width=\linewidth]{figures/carlos_mcmc_6_1.pdf}
+
+\end{figure}
+
+\begin{figure}
+	
+	\label{fig:posteriors_6}
+	\caption{Posteriors of estimated parameters}
+
+\includegraphics[width=\linewidth]{figures/carlos_mcmc_7_1.pdf}
+
+\end{figure}
+
+\begin{figure}
+	
+	\label{fig:posteriors_7}
+	\caption{Posteriors of estimated parameters}
+
+\includegraphics[width=\linewidth]{figures/carlos_mcmc_8_1.pdf}
+
+\end{figure}
+
+\begin{figure}
+	
+	\label{fig:posteriors_8}
+	\caption{Posteriors of estimated parameters}
+
+\includegraphics[width=\linewidth]{figures/carlos_mcmc_9_1.pdf}
+
+\end{figure}
+
+\begin{figure}
+	
+	\label{fig:posteriors_9}
+	\caption{Posteriors of estimated parameters}
+
+\includegraphics[width=\linewidth]{figures/carlos_mcmc_10_1.pdf}
+
+\end{figure}
+
+\begin{figure}
+	
+	\label{fig:posteriors_10}
+	\caption{Posteriors of estimated parameters}
+
+\includegraphics[width=\linewidth]{figures/carlos_mcmc_11_1.pdf}
+
+\end{figure}
+
+\begin{figure}
+	
+	\label{fig:posteriors_11}
+	\caption{Posteriors of estimated parameters}
+
+\includegraphics[width=\linewidth]{figures/carlos_mcmc_12_1.pdf}
+
+\end{figure}
+
+\begin{figure}
+	
+	\label{fig:posteriors_12}
+	\caption{Posteriors of estimated parameters}
+
+\includegraphics[width=\linewidth]{figures/carlos_mcmc_13_1.pdf}
+
+\end{figure}
+
+\begin{figure}
+	
+	\label{fig:posteriors_13}
+	\caption{Posteriors of estimated parameters}
+
+\includegraphics[width=\linewidth]{figures/carlos_mcmc_14_1.pdf}
+
+\end{figure}
+
+\begin{figure}
+	
+	\label{fig:posteriors_14}
+	\caption{Posteriors of estimated parameters}
+
+\includegraphics[width=\linewidth]{figures/carlos_mcmc_15_1.pdf}
+
+\end{figure}
+
+\begin{figure}
+	
+	\label{fig:posteriors_15}
+	\caption{Posteriors of estimated parameters}
+
+\includegraphics[width=\linewidth]{figures/carlos_mcmc_16_1.pdf}
+
+\end{figure}
+
+\begin{figure}
+	
+	\label{fig:posteriors_16}
+	\caption{Posteriors of estimated parameters}
+
+\includegraphics[width=\linewidth]{figures/carlos_mcmc_17_1.pdf}
+
+\end{figure}
+
+\begin{figure}
+	
+	\label{fig:posteriors_17}
+	\caption{Posteriors of estimated parameters}
+
+\includegraphics[width=\linewidth]{figures/carlos_mcmc_18_1.pdf}
+
+\end{figure}
+
+\begin{figure}
+	
+	\label{fig:posteriors_18}
+	\caption{Posteriors of estimated parameters}
+
+\includegraphics[width=\linewidth]{figures/carlos_mcmc_19_1.pdf}
+
+\end{figure}
+
+\begin{figure}
+	
+	\label{fig:posteriors_19}
+	\caption{Posteriors of estimated parameters}
+
+\includegraphics[width=\linewidth]{figures/carlos_mcmc_20_1.pdf}
+
+\end{figure}
+
+\begin{figure}
+	
+	\label{fig:posteriors_20}
+	\caption{Posteriors of estimated parameters}
+
+\includegraphics[width=\linewidth]{figures/carlos_mcmc_21_1.pdf}
+
+\end{figure}
+
+\begin{figure}
+	
+	\label{fig:posteriors_21}
+	\caption{Posteriors of estimated parameters}
+
+\includegraphics[width=\linewidth]{figures/carlos_mcmc_22_1.pdf}
+
+\end{figure}
+
+\begin{figure}
+	
+	\label{fig:posteriors_22}
+	\caption{Posteriors of estimated parameters}
+
+\includegraphics[width=\linewidth]{figures/carlos_mcmc_23_1.pdf}
+
+\end{figure}
+
+\section{Conclusion}
+
+This work shows the step by step required to solve a DSGE model. We implement the main parts of the software: the solver for the system of rational expectations, the likelihood and the Random Walk Metropolis Hasting. Due to time constraints, we could not implement the Kalman Filter nor test it against Dynare, which is unfortunate. Due to technical constraints, we could not implement the Hamiltonian Monte Carlo yet. 
+
+Some of the steps used packages, like the variable transformation in the likelihood to allow the RWMH to work - this is more a technical step and does not provide many insights about how the procedure works. On the other hand, from \texttt{gensys} to the RWMH, we used little more than the usual Linear Algebra routines and loops. This gives us many insights in how each step is done and the many pitfalls one can find, notably in the numerical front. 
+
+We prove the concept using a small model that we have full control and is easy to work with. We show that our code works nicely in the small mode, which gives us confidence to go to a larger one. We go to a larger model, in which some gaps remain.  
+
+The Hamiltonian Monte Carlo is still an issue that will be explored. It promises to walk around the parameter space in a smarter way than the Random Walk does. It has shown its potential do handle large problems in other areas - the Stan project is an example of code built to work with problems using HMC. The main requirement is the gradient, that is tough to compute in a DSGE model, given the many layers involved in building the likelihood. At the moment, I could not find any implementation of software differentiation that could handle the generalized Schur decomposition. 
 
 \bibliographystyle{authordate1}
 \bibliography{DSGE}
