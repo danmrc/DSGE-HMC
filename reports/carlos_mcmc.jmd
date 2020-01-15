@@ -4,7 +4,7 @@ author: Daniel Coutinho
 date: October, 2019
 options:
   md2tex:
-    out_path: output/carvalho_vilela_mcmc.tex
+    out_path: /home/danielc/Documentos/dados_carlos/carvalho_vilela_mcmc.tex
   md2html:
       out_path: output/carvalho_vilela_mcmc.html
   out_path: output/carvalho_vilela_mcmc.md
@@ -15,95 +15,95 @@ options:
 
 using JLD
 
-pars_convertidos = load("/home/danielc/Documentos/GitHub/DSGE-HMC/data/mcmc_carlos_convertido.jld")["pars"]
+pars_convertidos = load("/home/danielc/Documentos/dados_carlos/mcmc_carlos_conv2.jld")["pars"]
 
 using StatsPlots, LaTeXStrings
 ```
 
 ```julia
-StatsPlots.density(pars_convertidos[500_001:1000000,1], label= L"h")
+StatsPlots.density(pars_convertidos[400_001:800_000,1], label= L"h")
 ```
 
 ```julia
-StatsPlots.density(pars_convertidos[500_001:1000000,2], label= L"\sigma")
+StatsPlots.density(pars_convertidos[400_001:800_000,2], label= L"\sigma")
 ```
 
 ```julia
-StatsPlots.density(pars_convertidos[500_001:1000000,3], label= L"\eta")
+StatsPlots.density(pars_convertidos[400_001:800_000,3], label= L"\eta")
 ```
 
 ```julia
-StatsPlots.density(pars_convertidos[500_001:1000000,4], label= L"\delta_D")
+StatsPlots.density(pars_convertidos[400_001:800_000,4], label= L"\delta_D")
 ```
 
 ```julia
-StatsPlots.density(pars_convertidos[500_001:1000000,5], label= L"\theta_D")
+StatsPlots.density(pars_convertidos[400_001:800_000,5], label= L"\theta_D")
 ```
 
 ```julia
-StatsPlots.density(pars_convertidos[500_001:1000000,6], label= L"\delta_I")
+StatsPlots.density(pars_convertidos[400_001:800_000,6], label= L"\delta_I")
 ```
 
 ```julia
-StatsPlots.density(pars_convertidos[500_001:1000000,7], label= L"\theta_I")
+StatsPlots.density(pars_convertidos[400_001:800_000,7], label= L"\theta_I")
 ```
 
 ```julia
-StatsPlots.density(pars_convertidos[500_001:1000000,8], label= L"\chi")
+StatsPlots.density(pars_convertidos[400_001:800_000,8], label= L"\chi")
 ```
 
 ```julia
-StatsPlots.density(pars_convertidos[500_001:1000000,9], label= L"\rho_a")
+StatsPlots.density(pars_convertidos[400_001:800_000,9], label= L"\rho_a")
 ```
 
 ```julia
-StatsPlots.density(pars_convertidos[500_001:1000000,10], label= L"\rho_\gamma")
+StatsPlots.density(pars_convertidos[400_001:800_000,10], label= L"\rho_\gamma")
 ```
 
 ```julia
-StatsPlots.density(pars_convertidos[500_001:1000000,11], label= L"\rho_cp")
+StatsPlots.density(pars_convertidos[400_001:800_000,11], label= L"\rho_cp")
 ```
 
 ```julia
-StatsPlots.density(pars_convertidos[500_001:1000000,12], label= L"\rho_\phi")
+StatsPlots.density(pars_convertidos[400_001:800_000,12], label= L"\rho_\phi")
 ```
 
 ```julia
-StatsPlots.density(pars_convertidos[500_001:1000000,13], label= L"\sigma_a")
+StatsPlots.density(pars_convertidos[400_001:800_000,13], label= L"\sigma_a")
 ```
 
 ```julia
-StatsPlots.density(pars_convertidos[500_001:1000000,14], label= L"\sigma_\gamma")
+StatsPlots.density(pars_convertidos[400_001:800_000,14], label= L"\sigma_\gamma")
 ```
 
 ```julia
-StatsPlots.density(pars_convertidos[500_001:1000000,15], label= L"\sigma_cp")
+StatsPlots.density(pars_convertidos[400_001:800_000,15], label= L"\sigma_cp")
 ```
 
 ```julia
-StatsPlots.density(pars_convertidos[500_001:1000000,16], label= L"\sigma_\phi")
+StatsPlots.density(pars_convertidos[400_001:800_000,16], label= L"\sigma_\phi")
 ```
 
 ```julia
-StatsPlots.density(pars_convertidos[500_001:1000000,17], label= L"\rho_1")
+StatsPlots.density(pars_convertidos[400_001:800_000,17], label= L"\rho_1")
 ```
 
 ```julia
-StatsPlots.density(pars_convertidos[500_001:1000000,18], label= L"\rho_2")
+StatsPlots.density(pars_convertidos[400_001:800_000,18], label= L"\rho_2")
 ```
 
 ```julia
-StatsPlots.density(pars_convertidos[500_001:1000000,19], label= L"\lambda_\pi")
+StatsPlots.density(pars_convertidos[400_001:800_000,19], label= L"\lambda_\pi")
 ```
 
 ```julia
-StatsPlots.density(pars_convertidos[500_001:1000000,20], label= L"\lambda_y")
+StatsPlots.density(pars_convertidos[400_001:800_000,20], label= L"\lambda_y")
 ```
 
 ```julia
-StatsPlots.density(pars_convertidos[500_001:1000000,21], label= L"\lambda_s")
+StatsPlots.density(pars_convertidos[400_001:800_000,21], label= L"\lambda_s")
 ```
 
 ```julia
-StatsPlots.density(pars_convertidos[500_001:1000000,22], label= L"\sigma_i")
+StatsPlots.density(pars_convertidos[400_001:800_000,22], label= L"\sigma_i")
 ```

@@ -8,9 +8,9 @@ include(string(pwd(),"/mcmc/foos_carlos.jl"))
 
 dados = DataFrame(CSV.file("data/canada_data.csv"))
 
-dados = Array(dados)[:,2:6]
+dados = Array(dados)[:,2:9]
 
-par_cal = [0.25; 0.989; 1.66; # alfa, beta, phi
+par_cal = [0.67; 0.989; 1.66; # alfa, beta, phi
       #-0.34; -7.12; -8.98; # A0
        -40.66; -0.4467; -84.6557;
        0.872; 1.34e-3; 4.911e-05; -29.87; -0.212738; 0.002511; -84.1538; 0.31; 0.9410; # A1
@@ -25,7 +25,7 @@ P = TransformedLogDensity(t,prob)
 
 unif = Uniform(0,1)
 
-num_iter = 100000
+num_iter = 1_000_000
 
 pars_aceitos = zeros(num_iter,22)
 
@@ -33,7 +33,7 @@ par_chute = randn(22)
 
 nll(x) = -1*LogDensityProblems.logdensity(P,x)
 
-mode = optimize(nll,par_chute, NelderMead(),Optim.Options(iterations =100_000))
+mode = optimize(nll,par_chute, NelderMead(),Optim.Options(iterations =50_000))
 
 start_par = mode.minimizer
 
@@ -41,7 +41,7 @@ start_par = mode.minimizer
 
 npar = 22
 
-coef_escala = 0.0075 #2.4/sqrt(npar)
+coef_escala = 0.0075
 
 hes = -Calculus.hessian(x->LogDensityProblems.logdensity(P,x),start_par)
 
@@ -57,16 +57,18 @@ hes_inv = hes_inv.L*hes_inv.L'
 
 isposdef(hes_inv)
 
-pars_aceitos[1,:] = start_par
+pars_aceitos[1,:] = pars_inicio
+
+scale_matrix = cov(pars_aceitos[1:4000,:])
 
 j = 2
 rejec = 0
 
 while j <= num_iter
-    kernel_velho = MvNormal(pars_aceitos[j-1,:],coef_escala*hes_inv)
+    kernel_velho = MvNormal(pars_aceitos[j-1,:],coef_escala*scale_matrix)
     novo_par = rand(kernel_velho)
     #pars_aceitos[j,2:10] = novo_par
-    kernel_novo = MvNormal(novo_par,coef_escala*hes_inv)
+    kernel_novo = MvNormal(novo_par,coef_escala*scale_matrix)
 
     teste = LogDensityProblems.logdensity(P,novo_par)
     if isnan(teste)
