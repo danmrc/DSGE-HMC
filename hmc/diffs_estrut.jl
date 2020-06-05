@@ -9,33 +9,34 @@ using ForwardDiff
 
 include(string(pwd(),"/misc/aux_matrix.jl"))
 
-function dF1_tau(Gamma_0, Gamma_1, A,l,n)
+function dF1_tau(Gamma_0, Gamma_1, A,l)
     # l is the number of observables
     # n is the number of shocks
     m = size(Gamma_0,1)
-    nn = Int(n^2*(n+1)^2/4)
-    dvecA = [I(m^2) zeros(m*l,m*l) zeros(nn,nn)]
+    nn = Int(m*(m+1)/2)
+    dvecA = [I(m^2) zeros(m^2,m*l+nn)]
     (kron(-A', Gamma_1) - kron(I(m), Gamma_0) + kron(I(m),Gamma_1*A))* dvecA
 end
 
 function dF1_theta(dGamma_0,dGamma_1,dGamma_2,A)
-    dv_size = size(dGamma_0,1)*size(dGamma_0,2)
+    m = size(A,1)
+    #dv_size = size(dGamma_0,1)*size(dGamma_0,2)
     #dGamma_0 = vecc(dGamma_0)
     #dGamma_1 = vecc(dGamma_1,dv_size,1)
     #dGamma_2 = vecc(dGamma_2)
-    kron(A',I(m))* dGamma_0 - (A'*A',I(m))* dGamma_1 - dGamma_2
+    kron(A',I(m))* dGamma_0 - kron(A'*A',I(m))* dGamma_1 - dGamma_2
 end
 
 #this is a vech
-function dF2_tau(Gamma_0, Gamma_1, Gamma_2, A, Omega,ln)
+function dF2_tau(Gamma_0, Gamma_1, Gamma_2, A, Omega,l)
     m = size(Gamma_0,1)
     b_aux = (Gamma_0 - Gamma_1*A)*Omega
     Dm = duplication_matrix(m)
     Kmm = commutation_matrix(m,m)
+    nn = Int(m*(m+1)/2)
 
-    dvecA = [I(m^2), zeros(m*l,m*l),zeros(nn,nn)]
-    dvecOmega = [zeros(m^2,m^2), zeros(m*l,m*l), I(nn)]
-
+    dvecA = [I(m^2) zeros(m^2,m*l+nn)]
+    dvecOmega = [zeros(nn,m^2+m*l) I(nn)]
     res = (kron(b_aux,Gamma_1) + kron(Gamma_1, b_aux)*Kmm)*dvecA + kron(Gamma_0 - Gamma_1*A,Gamma_0 - Gamma_1*A)*Dm*dvecOmega
     return(pinv(Dm)*res)
 end
@@ -45,9 +46,8 @@ function dF2_theta(Gamma_0, Gamma_1, Gamma_3, dGamma_0, dGamma_1, dGamma_3, Omeg
     b_aux = Gamma_0 - Gamma_1*A
     Dm = duplication_matrix(m)
     Kmm = commutation_matrix(m,m)
-    nn = Int(n^2*(n+1)^2/4)
 
-    dv_size = dim(dGamma_0,1)*size(dGamma_0,2)
+    dv_size = size(dGamma_0,1)*size(dGamma_0,2)
     #dGamma_0 = vecc(dGamma_0)
     #dGamma_1 = vecc(dGamma_1)
     #dGamma_2 = vecc(dGamma_2)
@@ -59,23 +59,11 @@ function dF2_theta(Gamma_0, Gamma_1, Gamma_3, dGamma_0, dGamma_1, dGamma_3, Omeg
     res = pinv(Dm)*res
 end
 
-function dtheta(Gamma_0,Gamma_1,Gamma_2,Gamma_3, dGamma_0, dGamma_1, dGamma_2, dGamma_3, A, Omega)
+function dtheta(Gamma_0,Gamma_1,Gamma_2,Gamma_3, dGamma_0, dGamma_1, dGamma_2, dGamma_3, A, Omega,l)
     Df_theta = [dF1_theta(dGamma_0,dGamma_1,dGamma_2,A);dF2_theta(Gamma_0, Gamma_1, Gamma_3, dGamma_0, dGamma_1, dGamma_3, Omega, A)]
-    Df_tau = [dF1_tau(Gamma_0, Gamma_1, A); dF2_tau(Gamma_0, Gamma_1, Gamma_2, A, Omega)]
-    return inv(Df_theta)*Df_tau
+    Df_tau = [dF1_tau(Gamma_0, Gamma_1, A,l); dF2_tau(Gamma_0, Gamma_1, Gamma_2, A, Omega,l)]
+    return pinv(Df_theta)*Df_tau
 end
-
-#order to par
-#1 alfa
-#2 beta
-#3 epsilon
-#4 theta
-#5 sig
-#6 sigma: this is the std dev of the innovation
-#7 phi
-#8 phi_pi
-#9 phi_y
-#10 rho_v
 
 ## These are the gensys matrices
 
@@ -92,12 +80,12 @@ end
 #10 rho_v
 
 
-GAMMA_0(par) = [par[2]  0    0  0;
+GAMMA_0_foo(par) = [par[2]  0    0  0;
            1    par[5]  0  0;
            0    0    0  0;
            0    0    0  1]
 
-function GAMMA_1(par)
+function GAMMA_1_foo(par)
     THETA = (1-par[1])/(1-par[1]+par[1]*par[3])
     lamb = (1-par[4])*(1-par[2]*par[4])/par[4]*THETA
     kappa = lamb*(par[5]+(par[7]+par[1])/(1-par[1]))
@@ -107,9 +95,9 @@ function GAMMA_1(par)
             0        0      0   par[10]]
 end
 
-PSI(par) = [0; 0; 0; 1]
+PSI_foo(par) = [0; 0; 0; 1]
 
-PI(par) = [par[2]  0;
+PI_foo(par) = [par[2]  0;
       1    par[5];
       0    0;
       0    0]
@@ -157,16 +145,16 @@ Gamma_3(par) = [0 0 0 0;
 
 ## Diff for the model
 
-function diff_mod(par)
+function diff_mod(par,l)
     Gamma0 = Gamma_0(par)
     Gamma1 = Gamma_1(par)
     Gamma2 = Gamma_2(par)
     Gamma3 = Gamma_3(par)
 
-    G0 = GAMMA_0(par)
-    G1 = GAMMA_1(par)
-    Psi = PSI(par)
-    Pi = PI(par)
+    G0 = GAMMA_0_foo(par)
+    G1 = GAMMA_1_foo(par)
+    Psi = PSI_foo(par)
+    Pi = PI_foo(par)
 
     dGamma0 = ForwardDiff.jacobian(Gamma_0,par)
     dGamma1 = ForwardDiff.jacobian(Gamma_1,par)
@@ -175,8 +163,7 @@ function diff_mod(par)
 
     gen_sol = gensys(G0,G1,Psi,Pi)
     A = gen_sol.Theta1
-    Omega = gen_sol.Theta2'*gen_sol.Theta2
-
-    diff = dtheta(Gamma0,Gamma1,Gamma2,Gamma3, dGamma0, dGamma1, dGamma2, dGamma3, A, Omega)
+    Omega = gen_sol.Theta2*gen_sol.Theta2'
+    diff = dtheta(Gamma0,Gamma1,Gamma2,Gamma3, dGamma0, dGamma1, dGamma2, dGamma3, A, Omega,l)
     return diff
 end
