@@ -1,4 +1,5 @@
-include("../src/likelihood_v2.jl")
+#include("../src/likelihood_v2.jl")
+include("../src/likelihood_and_diff.jl")
 
 using Distributions, TransformVariables
 

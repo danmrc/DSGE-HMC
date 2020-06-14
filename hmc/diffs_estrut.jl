@@ -7,6 +7,7 @@
 
 using ForwardDiff
 
+include(string(pwd(),"/src/gensys.jl"))
 include(string(pwd(),"/misc/aux_matrix.jl"))
 
 function dF1_tau(Gamma_0, Gamma_1, A,l)
@@ -144,6 +145,11 @@ Gamma_3(par) = [0 0 0 0;
                0 0 0 par[6]]
 
 ## Diff for the model
+# Now it will be a #estrut par x ## reduce form par
+# In which the reduced form depends of 3 matrices, in the following order
+# A, that governs the auto regressive part of the reduce form: first 16 cols
+# C that govens the observation matrix in the Kalman Filter (usually should be all zeros): 4 columns
+# Omega, that is BB' in which B governs the shock transmission: remaining 10 columns (it is a vech!)
 
 function diff_mod(par,l)
     Gamma0 = Gamma_0(par)

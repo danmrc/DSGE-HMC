@@ -36,9 +36,6 @@ function vecc(A)
     return reshape(A',n,1)
 end
 
-m = 2
-n = 2
-
 function commutation_matrix(m,n)
     mat = zeros(m*n,m*n)
     seq = 1:(m*n)
@@ -49,5 +46,3 @@ function commutation_matrix(m,n)
     end
     return mat
 end
-
-commutation_matrix(3,3)
