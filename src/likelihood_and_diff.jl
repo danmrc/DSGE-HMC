@@ -59,8 +59,9 @@ function log_like_dsge(par,data;kalman_tol = 1e-10)
     p = size(GAMMA_1,1) #number of endogenous vars
 
     sol = gensys(GAMMA_0,GAMMA_1,PSI,PI; verbose = false)
+
     if sum(sol.eu) != 2
-        return -99999999999
+        return -9999999999, repeat([0],length(par))
     end
 
     #Sig = zeros(p,p)
@@ -122,7 +123,7 @@ function log_like_dsge(par,data;kalman_tol = 1e-10)
 
         if teste_cond < kalman_tol
             llh[j] = -500
-            dll[j] = 0
+            dll[j,:] .= 0
         #elseif det(P) <= 0
         #    llh[j] = -500
         else

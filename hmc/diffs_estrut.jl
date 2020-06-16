@@ -167,7 +167,7 @@ function diff_mod(par,l)
     dGamma2 = ForwardDiff.jacobian(Gamma_2,par)
     dGamma3 = ForwardDiff.jacobian(Gamma_3,par)
 
-    gen_sol = gensys(G0,G1,Psi,Pi)
+    gen_sol = gensys(G0,G1,Psi,Pi, verbose = false)
     A = gen_sol.Theta1
     Omega = gen_sol.Theta2*gen_sol.Theta2'
     diff = dtheta(Gamma0,Gamma1,Gamma2,Gamma3, dGamma0, dGamma1, dGamma2, dGamma3, A, Omega,l)
