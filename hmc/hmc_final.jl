@@ -36,8 +36,8 @@ integrator = Leapfrog(initial_ϵ)
 #   - multinomial sampling scheme,
 #   - generalised No-U-Turn criteria, and
 #   - windowed adaption for step-size and diagonal mass matrix
-proposal = HMCDA{MultinomialTS}(integrator,200*initial_ϵ)
-adaptor = MassMatrixAdaptor(metric)#StanHMCAdaptor(MassMatrixAdaptor(metric), StepSizeAdaptor(0.8, integrator))
+proposal = NUTS{MultinomialTS,GeneralisedNoUTurn}(integrator)
+adaptor = StanHMCAdaptor(MassMatrixAdaptor(metric), StepSizeAdaptor(0.65, integrator))#StanHMCAdaptor(MassMatrixAdaptor(metric), StepSizeAdaptor(0.8, integrator))
 
 # Run the sampler to draw samples from the specified Gaussian, where
 #   - `samples` will store the samples
@@ -58,8 +58,6 @@ StatsPlots.density(to_positive.(tab[:,2]))
 vline!([true_pars[2]])
 StatsPlots.density(to_unit.(tab[:,3]))
 vline!([true_pars[3]])
-StatsPlots.density(to_positive.(tab[:,4]))
-vline!([true_pars[4]])
 StatsPlots.density(to_positive.(tab[:,4]))
 vline!([true_pars[4]])
 StatsPlots.density(to_positive.(tab[:,5]))
