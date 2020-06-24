@@ -83,6 +83,8 @@ accept = 0
 
 old_par = reshape(mapslices(mode,pars_tuning,dims = 1),50)
 
+leap_dist = Normal(leap_step,0.05)
+
 for j = 1:n_samples
     psi = rand(mom_dist)
     old_psi = psi
