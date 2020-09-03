@@ -90,6 +90,7 @@ function log_like_dsge(par,data;kalman_tol = 1e-10)
 
     d_reduc = diff_mod(par,l)
     dA = d_reduc[:,1:16]
+    dA[dA .< eps()] .= 0 #force whatever is bellow the eps to become zero
     dG = d_reduc[:,17:20]
     dQ = d_reduc[:,21:30]
     dR = zeros(size(par,1),1)
@@ -101,7 +102,8 @@ function log_like_dsge(par,data;kalman_tol = 1e-10)
     S0 = zeros(p,p)
 
     g_x_hat_l = zeros(size(par,1),p)
-    d_Sl = zeros(size(par,1),size(S0,1)^2) #vec, not vech
+    P = kalman_res.G*S0*kalman_res.G' + kalman_res.R
+    d_Sl = diff_S0(A,S0,dA,dQ) #vec, not vech
 
     for j in 1:(nobs-1)
         med = kalman_res.cur_x_hat
@@ -129,7 +131,7 @@ function log_like_dsge(par,data;kalman_tol = 1e-10)
         else
             llh[j] = -(p*log(2*pi) + logdet(P) .+ eta'*p_inv*eta)/2
             QuantEcon.update!(kalman_res,data[j+1,:])
-            dll[j,:] = -1/2*vec(p_inv)'*d_p' - eta'*p_inv*g_eta' -1/2*(kron(eta'*p_inv, eta*p_inv)*d_p') #updating the kalman estimates
+            dll[j,:] = -1/2*(tr(p_inv)*d_p - (eta'*p_inv)[1]*g_eta -((eta'*p_inv)[1]*d_p*p_inv*eta)) #updating the kalman estimates
         end #end if
         #println(kalman_res.cur_sigma)
         #println(det(varian))

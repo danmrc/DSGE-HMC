@@ -38,3 +38,12 @@ function diff_ll(P,y,grad_y,dP)
     P_inv = inv(P)
     return -1/2*vec(P_inv)'*dP' - y'*P_inv*grad_y' -1/2*kron(y'*P_inv,y*P_inv)*dP'
 end
+
+function diff_S0(A,S0,dA,dQ)
+    n = size(A,1)
+    Knn = commutation_matrix(n,n)
+    b1 = (kron(A*S0,I(n)) + kron(I(n),A*S0)*Knn)*dA'
+    ba = I(n^2) - kron(A,A)
+    bb = b1 +duplication_matrix(n)*dQ'
+    return transpose(inv(ba)*bb)
+end

@@ -38,7 +38,7 @@ function dF2_tau(Gamma_0, Gamma_1, Gamma_2, A, Omega,l)
 
     dvecA = [I(m^2) zeros(m^2,m*l+nn)]
     dvecOmega = [zeros(nn,m^2+m*l) I(nn)]
-    res = (kron(b_aux,Gamma_1) + kron(Gamma_1, b_aux)*Kmm)*dvecA + kron(Gamma_0 - Gamma_1*A,Gamma_0 - Gamma_1*A)*Dm*dvecOmega
+    res = -(kron(b_aux,Gamma_1) + kron(Gamma_1, b_aux)*Kmm)*dvecA + kron(Gamma_0 - Gamma_1*A,Gamma_0 - Gamma_1*A)*Dm*dvecOmega
     return(pinv(Dm)*res)
 end
 
@@ -56,7 +56,7 @@ function dF2_theta(Gamma_0, Gamma_1, Gamma_3, dGamma_0, dGamma_1, dGamma_3, Omeg
     b1 = kron(b_aux*Omega, I(m)) + kron(I(m), b_aux*Omega)*Kmm
     b2 = kron(b_aux*Omega*A',I(m)) + kron(I(m),b_aux*Omega)*Kmm
     b3 = kron(Gamma_3,I(m)) + kron(I(m),Gamma_3)*Kmm
-    res = b1*dGamma_0 + b2*dGamma_1 + b3*dGamma_3
+    res = b1*dGamma_0 - b2*dGamma_1 - b3*dGamma_3
     res = pinv(Dm)*res
 end
 
@@ -96,7 +96,7 @@ function GAMMA_1_foo(par)
             0        0      0   par[10]]
 end
 
-PSI_foo(par) = [0; 0; 0; 1]
+PSI_foo(par) = [0; 0; 0; par[6]]
 
 PI_foo(par) = [par[2]  0;
       1    par[5];
