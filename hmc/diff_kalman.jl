@@ -36,7 +36,7 @@ end
 
 function diff_ll(P,y,grad_y,dP)
     P_inv = inv(P)
-    return -1/2*vec(P_inv)'*dP' - y'*P_inv*grad_y' -1/2*kron(y'*P_inv,y*P_inv)*dP'
+    return -1/2*det(P)*vec(P_inv)'*dP' - y'*P_inv*grad_y' + 1/2*y'*P_inv*dP'*P_inv*y
 end
 
 function diff_S0(A,S0,dA,dQ)

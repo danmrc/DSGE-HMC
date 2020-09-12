@@ -10,11 +10,12 @@ using ForwardDiff
 include(string(pwd(),"/src/gensys.jl"))
 include(string(pwd(),"/misc/aux_matrix.jl"))
 
-function dF1_tau(Gamma_0, Gamma_1, A,l)
+function dF1_tau(Gamma_0, Gamma_1, A,l,Gamma_3)
     # l is the number of observables
     # n is the number of shocks
     m = size(Gamma_0,1)
-    nn = Int(m*(m+1)/2)
+    n = size(Gamma_3,2)
+    nn = Int(n*(n+1)/2)
     dvecA = [I(m^2) zeros(m^2,m*l+nn)]
     (kron(-A', Gamma_1) - kron(I(m), Gamma_0) + kron(I(m),Gamma_1*A))* dvecA
 end
@@ -34,7 +35,8 @@ function dF2_tau(Gamma_0, Gamma_1, Gamma_2, A, Omega,l)
     b_aux = (Gamma_0 - Gamma_1*A)*Omega
     Dm = duplication_matrix(m)
     Kmm = commutation_matrix(m,m)
-    nn = Int(m*(m+1)/2)
+    n = size(Omega,2)
+    nn = Int(n*(n+1)/2)
 
     dvecA = [I(m^2) zeros(m^2,m*l+nn)]
     dvecOmega = [zeros(nn,m^2+m*l) I(nn)]
@@ -62,8 +64,8 @@ end
 
 function dtheta(Gamma_0,Gamma_1,Gamma_2,Gamma_3, dGamma_0, dGamma_1, dGamma_2, dGamma_3, A, Omega,l)
     Df_theta = [dF1_theta(dGamma_0,dGamma_1,dGamma_2,A);dF2_theta(Gamma_0, Gamma_1, Gamma_3, dGamma_0, dGamma_1, dGamma_3, Omega, A)]
-    Df_tau = [dF1_tau(Gamma_0, Gamma_1, A,l); dF2_tau(Gamma_0, Gamma_1, Gamma_2, A, Omega,l)]
-    return pinv(Df_theta)*Df_tau
+    Df_tau = [dF1_tau(Gamma_0, Gamma_1, A,l,Gamma_3); dF2_tau(Gamma_0, Gamma_1, Gamma_2, A, Omega,l)]
+    return pinv(Df_tau)*Df_theta
 end
 
 ## These are the gensys matrices

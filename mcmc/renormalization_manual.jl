@@ -37,7 +37,9 @@ function dens(par,data)
     phi_y = to_positive(par[9])
     rho_v = to_unit(par[10])
 
-    renorm = renormalization(par)
+    renorm_par = [alfa;bet;epsilon;theta;sig;s2;phi;phi_pi;phi_y;rho_v]
+
+    renorm = renormalization(renorm_par)
     jacob = abs(prod(renorm))
 
     log_p_bet(bet) = logpdf(prior_bet,bet)
@@ -66,7 +68,9 @@ function dens_and_grad(par,data)
     phi_y = to_positive(par[9])
     rho_v = to_unit(par[10])
 
-    renorm = renormalization(par)
+    renorm_par = [alfa;bet;epsilon;theta;sig;s2;phi;phi_pi;phi_y;rho_v]
+
+    renorm = renormalization(renorm_par)
     jacob = abs(prod(renorm))
 
     renorm_diff = ForwardDiff.gradient(x->abs(prod(renormalization(x))),par) #derivate of abs det of Jacobian matrix

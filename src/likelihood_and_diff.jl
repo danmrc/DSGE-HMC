@@ -89,6 +89,7 @@ function log_like_dsge(par,data;kalman_tol = 1e-10)
     fit = zeros(nobs,4)
 
     d_reduc = diff_mod(par,l)
+    d_reduc = d_reduc'
     dA = d_reduc[:,1:16]
     dA[dA .< eps()] .= 0 #force whatever is bellow the eps to become zero
     dG = d_reduc[:,17:20]
@@ -130,8 +131,8 @@ function log_like_dsge(par,data;kalman_tol = 1e-10)
         #    llh[j] = -500
         else
             llh[j] = -(p*log(2*pi) + logdet(P) .+ eta'*p_inv*eta)/2
-            QuantEcon.update!(kalman_res,data[j+1,:])
             dll[j,:] = -1/2*(tr(p_inv)*d_p - (eta'*p_inv)[1]*g_eta -((eta'*p_inv)[1]*d_p*p_inv*eta)) #updating the kalman estimates
+            QuantEcon.update!(kalman_res,data[j+1,:])
         end #end if
         #println(kalman_res.cur_sigma)
         #println(det(varian))

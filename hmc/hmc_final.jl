@@ -15,9 +15,15 @@ yy,shocks = simulate_dsge(GAMMA_0,GAMMA_1,PSI,PI,500)
 ell(par) = dens([1/3;par],yy[:,2])
 ell_grad(par) = dens_and_grad([1/3;par],yy[:,2])
 
+ff(par) = log_like_dsge(par,yy[:,2])[1]
+
 from_unit(x) = -log(1/x-1)
 from_pos(x) = log(x)
 from_one_to_inf(x) = log(x-1)
+
+par = [1/3;0.99;6;2/3;1;1;1;1.5;0.5/4;0.5]
+
+ll,dd = log_like_dsge(par,yy[:,2])
 
 aa = [from_unit(0.99),from_pos(6),from_unit(2/3),from_pos(1),from_pos(1),from_pos(1),from_one_to_inf(1.5),from_pos(0.5/4),from_unit(0.5)]
 
@@ -41,7 +47,7 @@ integrator = JitteredLeapfrog(initial_ϵ,1.0)
 #   - multinomial sampling scheme,
 #   - generalised No-U-Turn criteria, and
 #   - windowed adaption for step-size and diagonal mass matrix
-proposal = StaticTrajectory(integrator,100)#NUTS{MultinomialTS,ClassicNoUTurn}(integrator) #
+proposal = NUTS{MultinomialTS,ClassicNoUTurn}(integrator) #StaticTrajectory(integrator,100)#
 adaptor = StanHMCAdaptor(MassMatrixAdaptor(metric), StepSizeAdaptor(0.65, integrator))#StanHMCAdaptor(MassMatrixAdaptor(metric), StepSizeAdaptor(0.8, integrator))
 
 # Run the sampler to draw samples from the specified Gaussian, where
