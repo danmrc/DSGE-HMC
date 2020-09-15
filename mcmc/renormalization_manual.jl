@@ -6,9 +6,13 @@ to_unit(x) = 1/(1+exp(-x))
 to_positive(x) = exp(x)
 to_one_inf(x) = exp(x) + 1
 
-d_to_unit(x) = exp(x)/(exp(-x)+1)^2
+d_to_unit(x) = exp(-x)/(exp(-x)+1)^2
 d_to_positive(x) = exp(x)
 d_to_one_inf(x) = exp(x)
+
+d2_to_unit(x) = -exp(-x)*(1-exp(-x))/(1+exp(-x))^3
+d2_to_positive(x) = exp(x)
+d2_to_one_inf(x) = exp(x)
 
 function renormalization(par)
 
@@ -39,7 +43,7 @@ function dens(par,data)
 
     renorm_par = [alfa;bet;epsilon;theta;sig;s2;phi;phi_pi;phi_y;rho_v]
 
-    renorm = renormalization(renorm_par)
+    renorm = renormalization(par)
     jacob = abs(prod(renorm))
 
     log_p_bet(bet) = logpdf(prior_bet,bet)
@@ -51,8 +55,8 @@ function dens(par,data)
     log_p_phi_pi(phi_pi) = logpdf(prior_phi_pi,phi_pi)
     log_p_phi_y(phi_y) = logpdf(prior_phi_y,phi_y)
     log_p_rho_v(rho_v) = logpdf(prior_rho_v,rho_v)
-    llh,dll = log_like_dsge([alfa,bet,epsilon,theta,sig,s2,phi,phi_pi,phi_y,rho_v],data)
-    llh = llh + size(data,1)*log(jacob) + log_p_bet(bet) + log_p_epsilon(epsilon) + log_p_theta(theta) + log_p_sig(sig) + log_p_s2(s2) + log_p_phi(phi) + log_p_phi_pi(phi_pi) + log_p_phi_y(phi_y) + log_p_rho_v(rho_v) + sum(log.(renorm))
+    llh,dll = log_like_dsge(renorm_par,data)
+    llh = llh + log(jacob) + log_p_bet(bet) + log_p_epsilon(epsilon) + log_p_theta(theta) + log_p_sig(sig) + log_p_s2(s2) + log_p_phi(phi) + log_p_phi_pi(phi_pi) + log_p_phi_y(phi_y) + log_p_rho_v(rho_v) + sum(log.(renorm))
     return llh
 end
 
@@ -70,7 +74,7 @@ function dens_and_grad(par,data)
 
     renorm_par = [alfa;bet;epsilon;theta;sig;s2;phi;phi_pi;phi_y;rho_v]
 
-    renorm = renormalization(renorm_par)
+    renorm = renormalization(par)
     jacob = abs(prod(renorm))
 
     renorm_diff = ForwardDiff.gradient(x->abs(prod(renormalization(x))),par) #derivate of abs det of Jacobian matrix
@@ -88,10 +92,18 @@ function dens_and_grad(par,data)
     log_p_phi_y(phi_y) = logpdf(prior_phi_y,phi_y)
     log_p_rho_v(rho_v) = logpdf(prior_rho_v,rho_v)
 
-    llh,dll = log_like_dsge([alfa,bet,epsilon,theta,sig,s2,phi,phi_pi,phi_y,rho_v],data)
-    llh = llh + size(data,1)*log(jacob) + log_p_bet(bet) + log_p_epsilon(epsilon) + log_p_theta(theta) + log_p_sig(sig) + log_p_s2(s2) + log_p_phi(phi) + log_p_phi_pi(phi_pi) + log_p_phi_y(phi_y) + log_p_rho_v(rho_v) + sum(log.(abs.(renorm)))
+    ## Derivates for the priors
+
+    diff_prior = [ForwardDiff.derivative(log_p_bet,bet); ForwardDiff.derivative(log_p_epsilon,epsilon); ForwardDiff.derivative(log_p_theta,theta); ForwardDiff.derivative(log_p_sig,sig); ForwardDiff.derivative(log_p_s2,s2); ForwardDiff.derivative(log_p_phi,phi); ForwardDiff.derivative(log_p_phi_pi,phi_pi); ForwardDiff.derivative(log_p_phi_y,phi_y); ForwardDiff.derivative(log_p_rho_v,rho_v)]
+
+    diff_prior_cor = [d2_to_unit(par[2]);d2_to_positive(par[3]);d2_to_unit(par[4]);d2_to_positive(par[5]);d2_to_positive(par[6]);d2_to_positive(par[7]);d2_to_one_inf(par[8]);d2_to_positive(par[9]);d2_to_unit(par[10])]
+
+    llh,dll = log_like_dsge(renorm_par,data)
+    llh = llh +log(jacob) + log_p_bet(bet) + log_p_epsilon(epsilon) + log_p_theta(theta) + log_p_sig(sig) + log_p_s2(s2) + log_p_phi(phi) + log_p_phi_pi(phi_pi) + log_p_phi_y(phi_y) + log_p_rho_v(rho_v) + sum(log.(abs.(renorm)))
+
     dll = dll[2:10]
-    dll = dll .*renorm + size(data,1)*diff_correction + [ForwardDiff.derivative(log_p_bet,bet); ForwardDiff.derivative(log_p_epsilon,epsilon); ForwardDiff.derivative(log_p_theta,theta); ForwardDiff.derivative(log_p_sig,sig); ForwardDiff.derivative(log_p_s2,s2); ForwardDiff.derivative(log_p_phi,phi); ForwardDiff.derivative(log_p_phi_pi,phi_pi); ForwardDiff.derivative(log_p_phi_y,phi_y); ForwardDiff.derivative(log_p_rho_v,rho_v);]
+
+    dll = dll .*renorm + diff_correction + diff_prior.*renorm + diff_prior_cor./renorm
 
     return llh,dll
 end

@@ -23,7 +23,7 @@ from_one_to_inf(x) = log(x-1)
 
 par = [1/3;0.99;6;2/3;1;1;1;1.5;0.5/4;0.5]
 
-ll,dd = log_like_dsge(par,yy[:,2])
+ll1,dd1 = log_like_dsge(par,yy[:,2])
 
 aa = [from_unit(0.99),from_pos(6),from_unit(2/3),from_pos(1),from_pos(1),from_pos(1),from_one_to_inf(1.5),from_pos(0.5/4),from_unit(0.5)]
 
