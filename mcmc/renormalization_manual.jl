@@ -10,7 +10,7 @@ d_to_unit(x) = exp(-x)/(exp(-x)+1)^2
 d_to_positive(x) = exp(x)
 d_to_one_inf(x) = exp(x)
 
-d2_to_unit(x) = -exp(-x)*(1-exp(-x))/(1+exp(-x))^3
+d2_to_unit(x) = ForwardDiff.derivative(xx->abs(d_to_unit(xx)),x)
 d2_to_positive(x) = exp(x)
 d2_to_one_inf(x) = exp(x)
 

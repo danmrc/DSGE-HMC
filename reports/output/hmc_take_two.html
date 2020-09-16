@@ -884,7 +884,7 @@ dF2_theta &#40;generic function with 1 method&#41;
 <span class='hljl-k'>function</span><span class='hljl-t'> </span><span class='hljl-nf'>dtheta</span><span class='hljl-p'>(</span><span class='hljl-n'>Gamma_0</span><span class='hljl-p'>,</span><span class='hljl-n'>Gamma_1</span><span class='hljl-p'>,</span><span class='hljl-n'>Gamma_2</span><span class='hljl-p'>,</span><span class='hljl-n'>Gamma_3</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>dGamma_0</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>dGamma_1</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>dGamma_2</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>dGamma_3</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>A</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>Omega</span><span class='hljl-p'>,</span><span class='hljl-n'>l</span><span class='hljl-p'>)</span><span class='hljl-t'>
     </span><span class='hljl-n'>Df_theta</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-nf'>dF1_theta</span><span class='hljl-p'>(</span><span class='hljl-n'>dGamma_0</span><span class='hljl-p'>,</span><span class='hljl-n'>dGamma_1</span><span class='hljl-p'>,</span><span class='hljl-n'>dGamma_2</span><span class='hljl-p'>,</span><span class='hljl-n'>A</span><span class='hljl-p'>);</span><span class='hljl-nf'>dF2_theta</span><span class='hljl-p'>(</span><span class='hljl-n'>Gamma_0</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>Gamma_1</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>Gamma_3</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>dGamma_0</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>dGamma_1</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>dGamma_3</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>Omega</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>A</span><span class='hljl-p'>)]</span><span class='hljl-t'>
     </span><span class='hljl-n'>Df_tau</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-nf'>dF1_tau</span><span class='hljl-p'>(</span><span class='hljl-n'>Gamma_0</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>Gamma_1</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>A</span><span class='hljl-p'>,</span><span class='hljl-n'>l</span><span class='hljl-p'>);</span><span class='hljl-t'> </span><span class='hljl-nf'>dF2_tau</span><span class='hljl-p'>(</span><span class='hljl-n'>Gamma_0</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>Gamma_1</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>Gamma_2</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>A</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>Omega</span><span class='hljl-p'>,</span><span class='hljl-n'>l</span><span class='hljl-p'>)]</span><span class='hljl-t'>
-    </span><span class='hljl-k'>return</span><span class='hljl-t'> </span><span class='hljl-nf'>pinv</span><span class='hljl-p'>(</span><span class='hljl-n'>Df_theta</span><span class='hljl-p'>)</span><span class='hljl-oB'>*</span><span class='hljl-n'>Df_tau</span><span class='hljl-t'>
+    </span><span class='hljl-k'>return</span><span class='hljl-t'> </span><span class='hljl-nf'>pinv</span><span class='hljl-p'>(</span><span class='hljl-n'>Df_tau</span><span class='hljl-p'>)</span><span class='hljl-oB'>*</span><span class='hljl-n'>Df_theta</span><span class='hljl-t'>
 </span><span class='hljl-k'>end</span>
 </pre>
 
@@ -1075,15 +1075,15 @@ L(\tilde{\theta}) = \prod_{i=1}^{T} f_{\theta}(h^{-1}(\tilde{\theta}),y_t|Y_{t-1
 <p>We want to work with the log likelihood, <span class="math">$\ell(\tilde{\theta})$</span>:</p>
 <p class="math">\[
 \ell(\tilde{\theta}) := \sum_{t=1}^T \left(\log(f_{\theta}(h^{-1}(\tilde{\theta}),y_t|Y_{t-1})) + \log(|J|)\right) = \\
-= \sum_{t=1}^T \log(f_{\theta}(h^{-1}(\tilde{\theta}),y_t|Y_{t-1}))) + T\log(|J|)
+= \sum_{t=1}^T \log(f_{\theta}(h^{-1}(\tilde{\theta}),y_t|Y_{t-1}))) + \log(|J|)
 \]</p>
 <p>Since we will work with <span class="math">$\log(f)$</span>, lets call it <span class="math">$\mathcal{F}$</span>:</p>
 <p class="math">\[
-\ell(\tilde{\theta}) = \sum_{t=1}^T \mathcal{F}(h^{-1}(\tilde{\theta}),y_t|Y_{t-1}))) + T\log(|J|)
+\ell(\tilde{\theta}) = \sum_{t=1}^T \mathcal{F}(h^{-1}(\tilde{\theta}),y_t|Y_{t-1}))) + \log(|J|)
 \]</p>
-<p>When we take the derivate we will have the hard problem of dealing with the derivate of the absolute value function. There are two solutions: &#40;a&#41; ignore and let software solve and pray for the best &#40;b&#41; argue that we can use sub-gradients since <span class="math">$abs$</span> is convex. We do &#40;a&#41; knowing &#40;b&#41;. So the partial derivate is:</p>
+<p>Previously I got it wrong because I put the sample size times the Jacobian, but this clearly is wrong &#40;if <span class="math">$|J| \neq 0$</span>, then the likelihood would diverge asymptotically&#41;. When we take the derivate we will have the hard problem of dealing with the derivate of the absolute value function. There are two solutions: &#40;a&#41; ignore and let software solve and pray for the best &#40;b&#41; argue that we can use sub-gradients since <span class="math">$abs$</span> is convex. We do &#40;a&#41; knowing &#40;b&#41;. So the partial derivate is:</p>
 <p class="math">\[
-\frac{\partial \ell}{\partial \tilde{\theta}_j} = \sum_{t=1}^{T} \frac{\partial\mathcal{F}(h^{-1}(\tilde{\theta}))}{\partial \tilde{\theta}_j}\frac{\partial h^{-1}(\tilde{\theta})}{\partial \tilde{\theta}_j} + T \frac{\partial \log(|J|)}{\partial \tilde{\theta}_j}
+\frac{\partial \ell}{\partial \tilde{\theta}_j} = \sum_{t=1}^{T} \frac{\partial\mathcal{F}(h^{-1}(\tilde{\theta}))}{\partial \theta_j}\frac{\partial h^{-1}(\tilde{\theta})}{\partial \tilde{\theta}_j} + \frac{\partial \log(|J|)}{\partial \tilde{\theta}_j}
 \]</p>
 <p>And we now that:</p>
 <p class="math">\[
@@ -1097,7 +1097,7 @@ L(\tilde{\theta}) = \prod_{i=1}^{T} f_{\theta}(h^{-1}(\tilde{\theta}),y_t|Y_{t-1
 \]</p>
 <p>Notice that <span class="math">$P(\theta) = \prod_{i=1}^{p} P_i(\theta_i)$</span>. Using the reparametrization, we have, for any given i:</p>
 <p class="math">\[
-P_i(\tilde{\theta}) = P_i(h_i^{-1}(\tilde{\theta}_i) \frac{dh^{-1}(\tilde{\theta}_i)}{d\tilde{\theta}_i}
+P_i(\tilde{\theta}) = P_i(h_i^{-1}(\tilde{\theta}_i)) \bigg\lvert\frac{dh^{-1}(\tilde{\theta}_i)}{d\tilde{\theta}_i}\bigg\lvert
 \]</p>
 <p>So <span class="math">$\log(P(\theta)) = \sum_{i=1}^{p} \log(P_i(\theta_i))$</span> and for the reparametrization we will have:</p>
 <p class="math">\[
@@ -1105,9 +1105,13 @@ P_i(\tilde{\theta}) = P_i(h_i^{-1}(\tilde{\theta}_i) \frac{dh^{-1}(\tilde{\theta
 \]</p>
 <p>So we can write the posterior as:</p>
 <p class="math">\[
-\log(\mathcal{P}(\tilde{\theta}|Y)) = \ell(\tilde{\theta}) + \sum_{i=1}^{p} \log(P_i(\tilde{\theta}_i)) + \sum_{i=1}^{p} \log\left(\frac{dh_i^{-1}(\tilde{\theta}_i)}{d\tilde{\theta}_i}\right)
+\log(\mathcal{P}(\tilde{\theta}|Y)) = \ell(\tilde{\theta}) + \sum_{i=1}^{p} \log(P_i(h^{-1}(\tilde{\theta}_i))) + \sum_{i=1}^{p} \log\left(\frac{dh_i^{-1}(\tilde{\theta}_i)}{d\tilde{\theta}_i}\right)
 \]</p>
-<p>Thats all done in the <code>renormalization_manual.jl</code> file.</p>
+<p>Now lets differentiate the posterior with respect to <span class="math">$\tilde{\theta}_j$</span>. We got the derivative of the loglikelihood previously, so we are just going :</p>
+<p class="math">\[
+\frac{\partial \log(\mathcal{P})}{\partial \tilde{\theta}_j} = \frac{\partial \ell}{\partial \tilde{\theta}_j} + \frac{\partial P_i(\theta)}{\partial \theta_j}\frac{d h^{-1}}{d \tilde{\theta}_j} + \left(\frac{dh^{-1}}{d\tilde{\theta}_j}\right)^{-1} \frac{d abs(dh_{\tilde{\theta}_j}^{-1})}{d\tilde{\theta_j}}
+\]</p>
+<p>I represented the derivative of <span class="math">$h^{-1}$</span> with respect to <span class="math">$\tilde{\theta}_j$</span> using the subscript notation so it would not get to cumbersome. In Julia, thats all done in the <code>renormalization_manual.jl</code> file.</p>
 <p>The functions that I used for reparametrization are &#40;those are <span class="math">$h^{-1}$</span>, since they take the whole line and reduce it to the restricted area&#41;:</p>
 <ul>
 <li><p>Positive parameters: exp&#40;x&#41;</p>
@@ -1207,7 +1211,7 @@ dens_and_grad &#40;generic function with 1 method&#41;
         <div class="footer">
           <p>
             Published from <a href="hmc_take_two.jmd">hmc_take_two.jmd</a>
-            using <a href="http://github.com/JunoLab/Weave.jl">Weave.jl</a> v0.10.3 on 2020-09-03.
+            using <a href="http://github.com/JunoLab/Weave.jl">Weave.jl</a> v0.10.3 on 2020-09-15.
           </p>
         </div>
       </div>

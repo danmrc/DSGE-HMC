@@ -265,7 +265,7 @@ The following function join all the pieces:
 function dtheta(Gamma_0,Gamma_1,Gamma_2,Gamma_3, dGamma_0, dGamma_1, dGamma_2, dGamma_3, A, Omega,l)
     Df_theta = [dF1_theta(dGamma_0,dGamma_1,dGamma_2,A);dF2_theta(Gamma_0, Gamma_1, Gamma_3, dGamma_0, dGamma_1, dGamma_3, Omega, A)]
     Df_tau = [dF1_tau(Gamma_0, Gamma_1, A,l); dF2_tau(Gamma_0, Gamma_1, Gamma_2, A, Omega,l)]
-    return pinv(Df_theta)*Df_tau
+    return pinv(Df_tau)*Df_theta
 end
 ```
 
@@ -444,19 +444,19 @@ We want to work with the log likelihood, $\ell(\tilde{\theta})$:
 
 $$
 \ell(\tilde{\theta}) := \sum_{t=1}^T \left(\log(f_{\theta}(h^{-1}(\tilde{\theta}),y_t|Y_{t-1})) + \log(|J|)\right) = \\
-= \sum_{t=1}^T \log(f_{\theta}(h^{-1}(\tilde{\theta}),y_t|Y_{t-1}))) + T\log(|J|)
+= \sum_{t=1}^T \log(f_{\theta}(h^{-1}(\tilde{\theta}),y_t|Y_{t-1}))) + \log(|J|)
 $$
 
 Since we will work with $\log(f)$, lets call it $\mathcal{F}$:
 
 $$
-\ell(\tilde{\theta}) = \sum_{t=1}^T \mathcal{F}(h^{-1}(\tilde{\theta}),y_t|Y_{t-1}))) + T\log(|J|)
+\ell(\tilde{\theta}) = \sum_{t=1}^T \mathcal{F}(h^{-1}(\tilde{\theta}),y_t|Y_{t-1}))) + \log(|J|)
 $$
 
-When we take the derivate we will have the hard problem of dealing with the derivate of the absolute value function. There are two solutions: (a) ignore and let software solve and pray for the best (b) argue that we can use sub-gradients since $abs$ is convex. We do (a) knowing (b). So the partial derivate is:
+Previously I got it wrong because I put the sample size times the Jacobian, but this clearly is wrong (if $|J| \neq 0$, then the likelihood would diverge asymptotically). When we take the derivate we will have the hard problem of dealing with the derivate of the absolute value function. There are two solutions: (a) ignore and let software solve and pray for the best (b) argue that we can use sub-gradients since $abs$ is convex. We do (a) knowing (b). So the partial derivate is:
 
 $$
-\frac{\partial \ell}{\partial \tilde{\theta}_j} = \sum_{t=1}^{T} \frac{\partial\mathcal{F}(h^{-1}(\tilde{\theta}))}{\partial \tilde{\theta}_j}\frac{\partial h^{-1}(\tilde{\theta})}{\partial \tilde{\theta}_j} + T \frac{\partial \log(|J|)}{\partial \tilde{\theta}_j}
+\frac{\partial \ell}{\partial \tilde{\theta}_j} = \sum_{t=1}^{T} \frac{\partial\mathcal{F}(h^{-1}(\tilde{\theta}))}{\partial \theta_j}\frac{\partial h^{-1}(\tilde{\theta})}{\partial \tilde{\theta}_j} + \frac{\partial \log(|J|)}{\partial \tilde{\theta}_j}
 $$
 
 And we now that:
@@ -472,7 +472,7 @@ $$\mathcal{P}(\theta|Y) = L(\theta)P(\theta)
 
 Notice that $P(\theta) = \prod_{i=1}^{p} P_i(\theta_i)$. Using the reparametrization, we have, for any given i:
 
-$$P_i(\tilde{\theta}) = P_i(h_i^{-1}(\tilde{\theta}_i) \frac{dh^{-1}(\tilde{\theta}_i)}{d\tilde{\theta}_i}$$
+$$P_i(\tilde{\theta}) = P_i(h_i^{-1}(\tilde{\theta}_i)) \bigg\lvert\frac{dh^{-1}(\tilde{\theta}_i)}{d\tilde{\theta}_i}\bigg\lvert$$
 
 So $\log(P(\theta)) = \sum_{i=1}^{p} \log(P_i(\theta_i))$ and for the reparametrization we will have:
 
@@ -481,10 +481,16 @@ $$\log(P(\tilde{\theta})) = \sum_{i=1}^{p} \log(P_i(\tilde{\theta}_i)) + \log\le
 So we can write the posterior as:
 
 $$
-\log(\mathcal{P}(\tilde{\theta}|Y)) = \ell(\tilde{\theta}) + \sum_{i=1}^{p} \log(P_i(\tilde{\theta}_i)) + \sum_{i=1}^{p} \log\left(\frac{dh_i^{-1}(\tilde{\theta}_i)}{d\tilde{\theta}_i}\right)
+\log(\mathcal{P}(\tilde{\theta}|Y)) = \ell(\tilde{\theta}) + \sum_{i=1}^{p} \log(P_i(h^{-1}(\tilde{\theta}_i))) + \sum_{i=1}^{p} \log\left(\frac{dh_i^{-1}(\tilde{\theta}_i)}{d\tilde{\theta}_i}\right)
 $$
 
-Thats all done in the `renormalization_manual.jl` file.
+Now lets differentiate the posterior with respect to $\tilde{\theta}_j$. We got the derivative of the loglikelihood previously, so we are just going :
+
+$$
+\frac{\partial \log(\mathcal{P})}{\partial \tilde{\theta}_j} = \frac{\partial \ell}{\partial \tilde{\theta}_j} + \frac{\partial P_i(\theta)}{\partial \theta_j}\frac{d h^{-1}}{d \tilde{\theta}_j} + \left(\frac{dh^{-1}}{d\tilde{\theta}_j}\right)^{-1} \frac{d abs(dh_{\tilde{\theta}_j}^{-1})}{d\tilde{\theta_j}}
+$$
+
+I represented the derivative of $h^{-1}$ with respect to $\tilde{\theta}_j$ using the subscript notation so it would not get to cumbersome. In Julia, thats all done in the `renormalization_manual.jl` file.
 
 The functions that I used for reparametrization are (those are $h^{-1}$, since they take the whole line and reduce it to the restricted area):
 
