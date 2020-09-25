@@ -1,71 +1,37 @@
-#####################################
-#### Lots of things to change
-# dvecA and and dvecΩ should become their closed values expressions
-#Implement the commutation matrix
-# Change dvec(Gamma_1) etc to expression that can be evaluated
-#change every reshape for vecc, defined in the aux file
-
 using ForwardDiff
 
 include(string(pwd(),"/src/gensys.jl"))
 include(string(pwd(),"/misc/aux_matrix.jl"))
 
-function dF1_tau(Gamma_0, Gamma_1, A,l,Gamma_3)
-    # l is the number of observables
-    # n is the number of shocks
-    m = size(Gamma_0,1)
-    n = size(Gamma_3,2)
-    nn = Int(n*(n+1)/2)
-    dvecA = [I(m^2) zeros(m^2,m*l+nn)]
-    (kron(-A', Gamma_1) - kron(I(m), Gamma_0) + kron(I(m),Gamma_1*A))* dvecA
-end
-
-function dF1_theta(dGamma_0,dGamma_1,dGamma_2,A)
+function dF1_theta(A,dGamma_0,dGamma_1,dGamma_2)
     m = size(A,1)
-    #dv_size = size(dGamma_0,1)*size(dGamma_0,2)
-    #dGamma_0 = vecc(dGamma_0)
-    #dGamma_1 = vecc(dGamma_1,dv_size,1)
-    #dGamma_2 = vecc(dGamma_2)
-    kron(A',I(m))* dGamma_0 - kron(A'*A',I(m))* dGamma_1 - dGamma_2
+    return kron(A',I(m))*dGamma_0 - kron(A'^2,I(m))*dGamma_1 - dGamma_2
 end
 
-#this is a vech
-function dF2_tau(Gamma_0, Gamma_1, Gamma_2, A, Omega,l)
-    m = size(Gamma_0,1)
-    b_aux = (Gamma_0 - Gamma_1*A)*Omega
-    Dm = duplication_matrix(m)
-    Kmm = commutation_matrix(m,m)
-    n = size(Omega,2)
-    nn = Int(n*(n+1)/2)
-
-    dvecA = [I(m^2) zeros(m^2,m*l+nn)]
-    dvecOmega = [zeros(nn,m^2+m*l) I(nn)]
-    res = -(kron(b_aux,Gamma_1) + kron(Gamma_1, b_aux)*Kmm)*dvecA + kron(Gamma_0 - Gamma_1*A,Gamma_0 - Gamma_1*A)*Dm*dvecOmega
-    return(pinv(Dm)*res)
+function dF1_A(A,Gamma_0,Gamma_1)
+    m = size(A,1)
+    b1 = Gamma_0 - Gamma_1*A
+    return kron(I(m),b1) - kron(A',Gamma_1)
 end
 
-function dF2_theta(Gamma_0, Gamma_1, Gamma_3, dGamma_0, dGamma_1, dGamma_3, Omega, A)
-    m = size(Gamma_0,1)
-    b_aux = Gamma_0 - Gamma_1*A
-    Dm = duplication_matrix(m)
-    Kmm = commutation_matrix(m,m)
-
-    dv_size = size(dGamma_0,1)*size(dGamma_0,2)
-    #dGamma_0 = vecc(dGamma_0)
-    #dGamma_1 = vecc(dGamma_1)
-    #dGamma_2 = vecc(dGamma_2)
-
-    b1 = kron(b_aux*Omega, I(m)) + kron(I(m), b_aux*Omega)*Kmm
-    b2 = kron(b_aux*Omega*A',I(m)) + kron(I(m),b_aux*Omega)*Kmm
-    b3 = kron(Gamma_3,I(m)) + kron(I(m),Gamma_3)*Kmm
-    res = b1*dGamma_0 - b2*dGamma_1 - b3*dGamma_3
-    res = pinv(Dm)*res
+function dA_theta(A,Gamma_0,Gamma_1,dGamma_0,dGamma_1,dGamma_2)
+    dvecA = dF1_a(A,dGamma_0,Gamma_1)
+    dtheta = dF1_theta(A,dGamma_0,dGamma_1,dGamma_2)
+    return -inv(dvecA)*dTheta
 end
 
-function dtheta(Gamma_0,Gamma_1,Gamma_2,Gamma_3, dGamma_0, dGamma_1, dGamma_2, dGamma_3, A, Omega,l)
-    Df_theta = [dF1_theta(dGamma_0,dGamma_1,dGamma_2,A);dF2_theta(Gamma_0, Gamma_1, Gamma_3, dGamma_0, dGamma_1, dGamma_3, Omega, A)]
-    Df_tau = [dF1_tau(Gamma_0, Gamma_1, A,l,Gamma_3); dF2_tau(Gamma_0, Gamma_1, Gamma_2, A, Omega,l)]
-    return -pinv(Df_tau)*Df_theta
+function dB_theta(Gamma_0,Gamma_1,Gamma_3,A,dGamma_0,dGamma_1,dGamma_2,dGamma_3)
+    dA = dA_theta(A,Gamma_0,Gamma_1,dGamma_0,dGamma_1,dGamma_2)
+
+    m = size(A,1)
+
+    b0 = Gamma_0 - Gamma_1*A
+    b0 = inv(b0)
+
+    b1 = kron((b0*Gamma_3)', b0)
+    b2 = dGamma_0 - kron(A',I(m))*dGamma_1 - kron(I(m),Gamma_1)*dA
+
+    return -b1*b2 + kron(I(m),b0)*dGamma_3
 end
 
 ## These are the gensys matrices
@@ -171,7 +137,8 @@ function diff_mod(par,l)
 
     gen_sol = gensys(G0,G1,Psi,Pi, verbose = false)
     A = gen_sol.Theta1
-    Omega = gen_sol.Theta2*gen_sol.Theta2'
-    diff = dtheta(Gamma0,Gamma1,Gamma2,Gamma3, dGamma0, dGamma1, dGamma2, dGamma3, A, Omega,l)
-    return diff
+    dA = dA_theta(A,Gamma_0,Gamma_1,dGamma_0,dGamma_1,dGamma_2)
+    dB = dB_theta(Gamma_0,Gamma_1,Gamma_3,A,dGamma_0,dGamma_1,dGamma_2,dGamma_3)
+
+    return dA,dB
 end

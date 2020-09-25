@@ -6,7 +6,7 @@ include(string(pwd(),"/src/gensys.jl"))
 include(string(pwd(),"/hmc/diffs_estrut.jl"))
 include(string(pwd(),"/hmc/diff_kalman.jl"))
 
-function log_like_dsge(par,data;kalman_tol = 1e-10)
+function log_like_dsge(par,data;kalman_tol = 1e-10,reduce=true)
     #order to par
     #alfa
     #beta
@@ -91,9 +91,10 @@ function log_like_dsge(par,data;kalman_tol = 1e-10)
     d_reduc = diff_mod(par,l)
     d_reduc = d_reduc'
     dA = d_reduc[:,1:16]
-    dA[dA .< eps()] .= 0 #force whatever is bellow the eps to become zero
+    dA[dA .< 10*eps()] .= 0 #force whatever is bellow the eps to become zero
     dG = d_reduc[:,17:20]
     dQ = d_reduc[:,21:30]
+    dQ[dQ .< 10*eps()] .= 0
     dR = zeros(size(par,1),1)
 
     llh = zeros(nobs)
@@ -106,12 +107,12 @@ function log_like_dsge(par,data;kalman_tol = 1e-10)
     P = kalman_res.G*S0*kalman_res.G' + kalman_res.R
     d_Sl = diff_S0(A,S0,dA,dQ) #vec, not vech
 
-    for j in 1:(nobs-1)
+    for j in 1:nobs
         med = kalman_res.cur_x_hat
         fit[j,:] = med
         varian = kalman_res.cur_sigma
         #println(det(varian))
-        eta = data[j+1,:] - kalman_res.G*med #mean loglike
+        eta = data[j,:] - kalman_res.G*med #mean loglike
         P = kalman_res.G*varian*kalman_res.G' + kalman_res.R
         teste_cond = 1/cond(P)
 
@@ -131,8 +132,8 @@ function log_like_dsge(par,data;kalman_tol = 1e-10)
         #    llh[j] = -500
         else
             llh[j] = -(p*log(2*pi) + logdet(P) .+ eta'*p_inv*eta)/2
-            dll[j,:] = -1/2*(tr(p_inv)*d_p - (eta'*p_inv)[1]*g_eta -((eta'*p_inv)[1]*d_p*p_inv*eta)) #updating the kalman estimates
-            QuantEcon.update!(kalman_res,data[j+1,:])
+            dll[j,:] = -1/2*vec(p_inv)*d_p' - (eta'*p_inv)*g_eta' +1/2*kron(eta'*p_inv,eta'*p_inv)*d_p'
+            QuantEcon.update!(kalman_res,data[j,:]) #updating the kalman estimates
         end #end if
         #println(kalman_res.cur_sigma)
         #println(det(varian))
@@ -142,5 +143,9 @@ function log_like_dsge(par,data;kalman_tol = 1e-10)
     end #end for
     llh = llh[10:length(llh)]
     dll = dll[10:length(llh),:]
-    return sum(llh),sum(dll,dims=1)
+    if reduce == true
+        return sum(llh),sum(dll,dims=1)
+    else
+        return llh,dll
+    end
 end

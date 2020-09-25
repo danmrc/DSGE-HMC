@@ -5,7 +5,7 @@
 # Change dvec(Gamma_1) etc to expression that can be evaluated
 #change every reshape for vecc, defined in the aux file
 
-using ForwardDiff
+using ReverseDiff
 
 include(string(pwd(),"/src/gensys.jl"))
 include(string(pwd(),"/misc/aux_matrix.jl"))
@@ -65,7 +65,7 @@ end
 function dtheta(Gamma_0,Gamma_1,Gamma_2,Gamma_3, dGamma_0, dGamma_1, dGamma_2, dGamma_3, A, Omega,l)
     Df_theta = [dF1_theta(dGamma_0,dGamma_1,dGamma_2,A);dF2_theta(Gamma_0, Gamma_1, Gamma_3, dGamma_0, dGamma_1, dGamma_3, Omega, A)]
     Df_tau = [dF1_tau(Gamma_0, Gamma_1, A,l,Gamma_3); dF2_tau(Gamma_0, Gamma_1, Gamma_2, A, Omega,l)]
-    return -pinv(Df_tau)*Df_theta
+    return pinv(Df_tau)*Df_theta
 end
 
 ## These are the gensys matrices
@@ -164,10 +164,10 @@ function diff_mod(par,l)
     Psi = PSI_foo(par)
     Pi = PI_foo(par)
 
-    dGamma0 = ForwardDiff.jacobian(Gamma_0,par)
-    dGamma1 = ForwardDiff.jacobian(Gamma_1,par)
-    dGamma2 = ForwardDiff.jacobian(Gamma_2,par)
-    dGamma3 = ForwardDiff.jacobian(Gamma_3,par)
+    dGamma0 = ReverseDiff.jacobian(Gamma_0,par)
+    dGamma1 = ReverseDiff.jacobian(Gamma_1,par)
+    dGamma2 = ReverseDiff.jacobian(Gamma_2,par)
+    dGamma3 = ReverseDiff.jacobian(Gamma_3,par)
 
     gen_sol = gensys(G0,G1,Psi,Pi, verbose = false)
     A = gen_sol.Theta1
