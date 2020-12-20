@@ -3,10 +3,8 @@ using Statistics
 using LinearAlgebra
 
 include(string(pwd(),"/src/gensys.jl"))
-include(string(pwd(),"/src/svd_kalman.jl"))
 include(string(pwd(),"/hmc/diffs_estrut_v3.jl"))
 include(string(pwd(),"/hmc/diff_kalman.jl"))
-
 
 function solve_lyapunov_vec(A,Q)
     aux = (I - kron(A,A))
@@ -59,7 +57,7 @@ function log_like_dsge(par,data;kalman_tol = 1e-10,reduce=true)
                -phi_pi  -phi_y  1  -1;
                 0        0      0   rho_v]
 
-    PSI = [0; 0; 0; 1]
+    PSI = [0; 0; 0; par[6]]
 
     PI = [bet  0;
           1    sig;
@@ -81,11 +79,15 @@ function log_like_dsge(par,data;kalman_tol = 1e-10,reduce=true)
     G[1,2] = 1
 
     A = sol.Theta1
+    B = sol.Theta2
     A[abs.(A) .< 10*eps()] .= 0
-    R = 1e-2#[0] .+ 1e-2
-    Q = par[6]^2*sol.Theta2*sol.Theta2'
+    B[abs.(B) .< 10*eps()] .= 0
+    R = [0] .+ 1e-2
+    Q = sol.Theta2*sol.Theta2'
+    #Q_eig = eigen(Q)
+    #Q = Q_eig.vectors*diagm(repeat([mean(Q_eig.values)],p))*Q_eig.vectors'
 
-    kalman_res = svd_kalman(A,G,Q,R,0,0) #create a Kalman filter instance
+    kalman_res = Kalman(A,G,Q,R) #create a Kalman filter instance
 
     y_mean = mean(data,dims=1)
     y_var = var(data,dims=1)
@@ -93,16 +95,11 @@ function log_like_dsge(par,data;kalman_tol = 1e-10,reduce=true)
     y_var = repeat([1],p)
 
     x_hat = repeat(y_mean,p) #initial mean of the state
-    x_var = 2.0*I(4) #diagm(repeat(y_var,p))#variance initial of state
+    x_var = I(4) #diagm(repeat(y_var,p))#variance initial of state
     #x_var = x_var*x_var'
-    start!(kalman_res,x_hat,x_var)
+    set_state!(kalman_res,x_hat,x_var)
 
-    llh2 = loglikelihood(kalman_res,data)
-
-    kalman_res = svd_kalman(A,G,Q,R,0,0)
-    start!(kalman_res,x_hat,x_var)
-
-    #fit = zeros(nobs,4)
+    fit = zeros(nobs,4)
 
     dA,dB = diff_mod(par)
     #dB = dB[1:4,:]
@@ -116,18 +113,19 @@ function log_like_dsge(par,data;kalman_tol = 1e-10,reduce=true)
     dll = zeros(nobs,size(par,1))
 
     dx0 = zeros(p)
+    S0 = zeros(p,p)
 
     g_x_hat_l = zeros(size(par,1),p)
-    P = kalman_res.G*x_var*kalman_res.G' + kalman_res.R'*kalman_res.R
-    d_Sl = transpose(diff_S0(A,x_var,dA,dQ)) #vec, not vech
+    P = kalman_res.G*S0*kalman_res.G' + kalman_res.R
+    d_Sl = zeros(10,p^2)#transpose(diff_S0(A,S0,dA,dQ)) #vec, not vech
 
     for j in 1:nobs
-        med = kalman_res.state_mean
-        #fit[j,:] = med
-        varian = kalman_res.state_var'*kalman_res.state_var
+        med = kalman_res.cur_x_hat
+        fit[j,:] = med
+        varian = kalman_res.cur_sigma
         #println(det(varian))
         eta = data[j,:] - kalman_res.G*med #mean loglike
-        P = kalman_res.G*varian*kalman_res.G' + kalman_res.R'*kalman_res.R
+        P = kalman_res.G*varian*kalman_res.G' + kalman_res.R
         teste_cond = 1/cond(P)
 
         gain = (A*varian*G')*inv(P)
@@ -146,8 +144,8 @@ function log_like_dsge(par,data;kalman_tol = 1e-10,reduce=true)
         #    llh[j] = -500
         else
             llh[j] = -(p*log(2*pi) + logdet(P) .+ eta'*p_inv*eta)/2
-            dll[j,:] = -1/2*vec(p_inv)*d_p' - (eta'*p_inv)*g_eta' +1/2*kron(eta'*p_inv,eta'*p_inv)*d_p'
-            update_and_forecast!(kalman_res,data[j,:]) #updating the kalman estimates
+            dll[j,:] = -1/2*p_inv*d_p' - (eta'*p_inv)*g_eta' + 1/2*kron(eta'*p_inv,eta'*p_inv)*d_p'
+            QuantEcon.update!(kalman_res,data[j,:]) #updating the kalman estimates
         end #end if
         #println(kalman_res.cur_sigma)
         #println(det(varian))
@@ -158,7 +156,7 @@ function log_like_dsge(par,data;kalman_tol = 1e-10,reduce=true)
     llh = llh[10:length(llh)]
     dll = dll[10:length(llh),:]
     if reduce == true
-        return sum(llh2),sum(dll,dims=1)
+        return sum(llh),sum(dll,dims=1)
     else
         return llh,dll
     end

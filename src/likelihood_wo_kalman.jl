@@ -3,7 +3,7 @@ using LinearAlgebra
 using Distributions
 
 include(string(pwd(),"/src/gensys.jl"))
-include(string(pwd(),"/hmc/diffs_estrut.jl"))
+include(string(pwd(),"/hmc/diffs_estrut_v3.jl"))
 include(string(pwd(),"/misc/matrix_no_kalman.jl"))
 
 # See Scjmitt-Grohé paper on evaluating likelihoods without the Kalman filter to get the notation
@@ -114,13 +114,13 @@ function log_like_dsge(par,data;kalman_tol = 1e-10)
     R = [0] .+ 1e-8
     Q = par[6]^2*sol.Theta2*sol.Theta2'
 
-    d_reduc = diff_mod(par,l)
-    d_reduc = d_reduc'
-    dA = d_reduc[:,1:16]
-    dA[dA .< 10*eps()] .= 0 #force whatever is bellow the eps to become zero
-    dG = d_reduc[:,17:20]
-    dQ = d_reduc[:,21:30]
-    dQ[dQ .< 10*eps()] .= 0
+    dA,dB = diff_mod(par)
+    #dB = dB[1:4,:]
+    dA = dA'*I
+    dG = zeros(10,4)
+    dQ = (kron(sol.Theta2,I(p)) + kron(I(p),sol.Theta2)*commutation_matrix(4,1))*dB
+    dQ = pinv(duplication_matrix(4))*dQ
+    dQ = dQ'
     dR = zeros(size(par,1),1)
 
     Sx = solve_lyapunov_vec(A,Q)

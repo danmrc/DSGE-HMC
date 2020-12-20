@@ -9,9 +9,6 @@ include(string(pwd(),"/mcmc/renormalization_manual.jl"))
 
 yy,shocks = simulate_dsge(GAMMA_0,GAMMA_1,PSI,PI,500)
 
-#ll = dens([0,0,0,0,0,0,0,0,0,0],yy[:,2])
-#ll2,grd = dens_and_grad([0,0,0,0,0,0,0,0,0,0],yy[:,2])
-
 ell(par) = dens([1/3;par],yy[:,2])
 ell_grad(par) = dens_and_grad([1/3;par],yy[:,2])
 
@@ -23,13 +20,13 @@ from_one_to_inf(x) = log(x-1)
 
 par = [1/3;0.99;6;2/3;1;1;1;1.5;0.5/4;0.5]
 
-ll1,dd1 = log_like_dsge(par,yy[:,2])
+ll1,dd1 = log_like_dsge(par,yy[:,2])#,reduce=false)
 
 aa = [from_unit(0.99),from_pos(6),from_unit(2/3),from_pos(1),from_pos(1),from_pos(1),from_one_to_inf(1.5),from_pos(0.5/4),from_unit(0.5)]
 
 ll,dd = ell_grad(aa)
 
-m = inv(diagm(diag(dd*dd'))/500)
+#m = inv(diagm(diag(dd*dd'))/500)
 
 n_samples, n_adapts = 2_000, 1_000
 
@@ -63,21 +60,21 @@ end
 
 true_pars  = [0.99,6,2/3,1,1,1,1.5,0.5/4,0.5]
 
-StatsPlots.density(to_unit.(tab[:,1]))
-vline!([true_pars[1]])
-StatsPlots.density(to_positive.(tab[:,2]))
-vline!([true_pars[2]])
-StatsPlots.density(to_unit.(tab[:,3]))
-vline!([true_pars[3]])
-StatsPlots.density(to_positive.(tab[:,4]))
-vline!([true_pars[4]])
-StatsPlots.density(to_positive.(tab[:,5]))
-vline!([true_pars[5]])
-StatsPlots.density(to_positive.(tab[:,6]))
-vline!([true_pars[6]])
-StatsPlots.density(to_one_inf.(tab[:,7]))
-vline!([true_pars[7]])
-StatsPlots.density(to_positive.(tab[:,8]))
-vline!([true_pars[8]])
-StatsPlots.density(to_unit.(tab[:,9]))
-vline!([true_pars[9]])
+StatsPlots.density(to_unit.(tab[1:2000,1]), legend = :topleft, label = "Distribution")
+vline!([true_pars[1]],label = "True Value")
+StatsPlots.density(to_positive.(tab[1:2000,2]), label = "Distribution")
+vline!([true_pars[2]],label = "True Value")
+StatsPlots.density(to_unit.(tab[1:2000,3]), label = "Distribution")
+vline!([true_pars[3]],label = "True Value")
+StatsPlots.density(to_positive.(tab[1:2000,4]), label = "Distribution")
+vline!([true_pars[4]],label = "True Value")
+StatsPlots.density(to_positive.(tab[1:2000,5]), label = "Distribution")
+vline!([true_pars[5]],label = "True Value")
+StatsPlots.density(to_positive.(tab[1:2000,6]), label = "Distribution")
+vline!([true_pars[6]],label = "True Value")
+StatsPlots.density(to_one_inf.(tab[1:2000,7]), label = "Distribution")
+vline!([true_pars[7]],label = "True Value")
+StatsPlots.density(to_positive.(tab[1:2000,8]), label = "Distribution")
+vline!([true_pars[8]],label = "True Value")
+StatsPlots.density(to_unit.(tab[1:2000,9]), label = "Distribution")
+vline!([true_pars[9]],label = "True Value")
